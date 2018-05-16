@@ -1,0 +1,29 @@
+{
+  "name": "book-version_mern",
+  "version": "1.0.0",
+  "description": "the book-version MERN-stack project",
+  "main": "index.js",
+  "dependencies": {
+    "express": "^4.16.3"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1"
+  },
+  "scripts": {
+    "compile": "babel src --presets react,es2015 --out-dir static",
+    "watch": "babel src --presets react,es2015 --out-dir static --watch",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ShmidtAlex/MERN_book.git"
+  },
+  "author": "ShmidtAlex",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ShmidtAlex/MERN_book/issues"
+  },
+  "homepage": "https://github.com/ShmidtAlex/MERN_book#readme"
+}
