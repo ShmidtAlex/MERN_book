@@ -14,6 +14,13 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 //rewrite the above code with es2015 after installing corresponding babel-preset:
 
 var contentNode = document.getElementById('contents');
+var issues = [{
+	id: 1, status: "Open", owner: "Alex", created: new Date('2018-05-17'), effort: 5,
+	completionDate: undefined, title: "Error in console when clicking Add"
+}, {
+	id: 2, status: "Assigned", owner: "Olga", created: new Date('2018-05-01'), effort: 14,
+	completionDate: new Date('2018-06-01'), title: "Missing bottom border on panel"
+}];
 
 var IssueFilter = function (_React$Component) {
 	_inherits(IssueFilter, _React$Component);
@@ -54,10 +61,13 @@ var IssueTable = function (_React$Component2) {
 	_createClass(IssueTable, [{
 		key: "render",
 		value: function render() {
-			var borderedStyle = { border: "1px solid silver", padding: 6 };
+			//const borderedStyle = {border:"1px solid silver", padding: 6};
+			var issueRows = this.props.issues.map(function (issue) {
+				return React.createElement(IssueRow, { key: issue.id, issue: issue });
+			});
 			return React.createElement(
 				"table",
-				{ style: { borderCollapse: "collapse" } },
+				{ className: "bordered-table" },
 				React.createElement(
 					"thead",
 					null,
@@ -66,12 +76,37 @@ var IssueTable = function (_React$Component2) {
 						null,
 						React.createElement(
 							"th",
-							{ style: borderedStyle },
+							null,
 							"Id"
 						),
 						React.createElement(
 							"th",
-							{ style: borderedStyle },
+							null,
+							"Status"
+						),
+						React.createElement(
+							"th",
+							null,
+							"Owner"
+						),
+						React.createElement(
+							"th",
+							null,
+							"Created"
+						),
+						React.createElement(
+							"th",
+							null,
+							"Effort"
+						),
+						React.createElement(
+							"th",
+							null,
+							"Completion date"
+						),
+						React.createElement(
+							"th",
+							null,
 							"Title"
 						)
 					)
@@ -79,22 +114,7 @@ var IssueTable = function (_React$Component2) {
 				React.createElement(
 					"tbody",
 					null,
-					React.createElement(
-						IssueRow,
-						{ issue_id: 1 },
-						"Error in console when clicking Add"
-					),
-					React.createElement(
-						IssueRow,
-						{ issue_id: 2 },
-						"Missing bottom ",
-						React.createElement(
-							"b",
-							null,
-							"border"
-						),
-						" on panel"
-					)
+					issueRows
 				)
 			);
 		}
@@ -142,19 +162,44 @@ var IssueRow = function (_React$Component4) {
 	_createClass(IssueRow, [{
 		key: "render",
 		value: function render() {
-			var borderedStyle = { border: "1px solid silver", padding: 4 };
+			var issue = this.props.issue;
 			return React.createElement(
 				"tr",
 				null,
 				React.createElement(
 					"td",
-					{ style: borderedStyle },
-					this.props.issue_id
+					null,
+					issue.id
 				),
 				React.createElement(
 					"td",
-					{ style: borderedStyle },
-					this.props.issue_title
+					null,
+					issue.status
+				),
+				React.createElement(
+					"td",
+					null,
+					issue.owner
+				),
+				React.createElement(
+					"td",
+					null,
+					issue.created.toDateString()
+				),
+				React.createElement(
+					"td",
+					null,
+					issue.effort
+				),
+				React.createElement(
+					"td",
+					null,
+					issue.completionDate ? issue.completionDate.toDateString() : ''
+				),
+				React.createElement(
+					"td",
+					null,
+					issue.title
 				)
 			);
 		}
@@ -184,7 +229,9 @@ var IssueList = function (_React$Component5) {
 					"Issue Tracker"
 				),
 				React.createElement(IssueFilter, null),
-				React.createElement(IssueTable, null),
+				React.createElement("hr", null),
+				React.createElement(IssueTable, { issues: issues }),
+				React.createElement("hr", null),
 				React.createElement(IssueAdd, null)
 			);
 		}
