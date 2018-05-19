@@ -58,6 +58,7 @@ class IssueAdd extends React.Component {
 }
 class IssueRow extends React.Component {
 	render() {
+		console.log("how many times the render() method called?");
 		const issue = this.props.issue;
 		return (
 			<tr>
@@ -68,18 +69,42 @@ class IssueRow extends React.Component {
 				<td>{issue.effort}</td>
 				<td>{issue.completionDate ? issue.completionDate.toDateString() : ''}</td>
 				<td>{issue.title}</td>
-			</tr>
+			</tr>			
 		);
 	}
 }
 class IssueList extends React.Component {
+	constructor(){
+		super();
+		this.state = { issues: [] };
+		setTimeout(this.createTestIssue.bind(this), 2000);
+	}
+	componentDidMount(){
+		this.loadData();
+	}
+	loadData() {
+		setTimeout(() => {
+			this.setState({issues:issues});
+		}, 500);
+	}
+	createIssue(newIssue){
+		const newIssues = this.state.issues.slice();
+		newIssue.id = this.state.issues.length + 1;
+		newIssues.push(newIssue);
+		this.setState({ issues: newIssues });
+	}
+	createTestIssue(){
+		this.createIssue({
+			status:'New', owner: 'Mark', created: new Date(), title: 'Completion date should be optional',
+		});
+	}
 	render() {
 		return(
 			<div>
 				<h1>Issue Tracker</h1>
 				<IssueFilter />
 				<hr/>
-				<IssueTable issues = {issues}/>
+				<IssueTable issues = {this.state.issues}/>
 				<hr/>
 				<IssueAdd />
 			</div>
