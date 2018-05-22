@@ -77,7 +77,7 @@ class IssueAdd extends React.Component {
 	render() {
 		return(
 			<div>
-				<form action="" name="issueAdd" onSubmit={this.handleSubmit}>
+				<form name="issueAdd" onSubmit={this.handleSubmit}>
 					<input type="text" name="owner" placeholder="Owner"/>
 					<input type="text" name="title" placeholder="Title"/>
 					<button >Add</button>
@@ -87,7 +87,16 @@ class IssueAdd extends React.Component {
 	}
 }
 // some changes in app for checking nodemon
-
+const issues = [
+	{
+		id: 1, status: "Open", owner: "Alex", created: new Date('2018-05-17'), effort: 5, 
+		completionDate: undefined, title: "Error in console when clicking Add"
+	},
+	{
+		id: 2, status: "Assigned", owner: "Olga", created: new Date('2018-05-01'), effort: 14, 
+		completionDate: new Date('2018-06-01'), title: "Missing bottom border on panel"
+	}
+]
 class IssueList extends React.Component {
 	constructor(){
 		super();
