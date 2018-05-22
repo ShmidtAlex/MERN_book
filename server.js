@@ -19,4 +19,3 @@ app.get('/api/issues', (req, res) => {
 app.listen(3000, () => {
 	console.log("App started on port 3000");
 });
-//some checking for nodemon is it works or not ---OK
