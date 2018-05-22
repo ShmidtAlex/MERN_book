@@ -200,14 +200,7 @@ var IssueAdd = function (_React$Component2) {
 
 	return IssueAdd;
 }(React.Component);
-
-var issues = [{
-	id: 1, status: "Open", owner: "Alex", created: new Date('2018-05-17'), effort: 5,
-	completionDate: undefined, title: "Error in console when clicking Add"
-}, {
-	id: 2, status: "Assigned", owner: "Olga", created: new Date('2018-05-01'), effort: 14,
-	completionDate: new Date('2018-06-01'), title: "Missing bottom border on panel"
-}];
+// some changes in app for checking nodemon
 
 var IssueList = function (_React$Component3) {
 	_inherits(IssueList, _React$Component3);
@@ -266,9 +259,5 @@ var IssueList = function (_React$Component3) {
 
 	return IssueList;
 }(React.Component);
-//const continents = ['Africa', 'America', 'Asia', 'Australia', 'Europe'];
-//const message = continents.map(c => `Hello ${c}! ` ).join(' ');
-
-//const component = <p>{message}</p>;
 
 ReactDOM.render(React.createElement(IssueList, null), contentNode);

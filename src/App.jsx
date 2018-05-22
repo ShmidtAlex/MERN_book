@@ -86,17 +86,8 @@ class IssueAdd extends React.Component {
 		)
 	}
 }
+// some changes in app for checking nodemon
 
-const issues = [
-	{
-		id: 1, status: "Open", owner: "Alex", created: new Date('2018-05-17'), effort: 5, 
-		completionDate: undefined, title: "Error in console when clicking Add"
-	},
-	{
-		id: 2, status: "Assigned", owner: "Olga", created: new Date('2018-05-01'), effort: 14, 
-		completionDate: new Date('2018-06-01'), title: "Missing bottom border on panel"
-	},
-];
 class IssueList extends React.Component {
 	constructor(){
 		super();
@@ -130,9 +121,5 @@ class IssueList extends React.Component {
 		);
 	}
 }
-//const continents = ['Africa', 'America', 'Asia', 'Australia', 'Europe'];
-//const message = continents.map(c => `Hello ${c}! ` ).join(' ');
-
-//const component = <p>{message}</p>;
 
 ReactDOM.render(<IssueList/>, contentNode);
