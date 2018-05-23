@@ -22,6 +22,7 @@ app.get('/api/issues', (req, res) => {
 	const metadata = {total_count: issues.length};
 	res.json({_metadata: metadata, records: issues});
 });
+//test was done
 app.post('/api/issues', (req, res) => {
 	const newIssue = req.body;
 	newIssue.id = issues.length +1;
@@ -29,8 +30,7 @@ app.post('/api/issues', (req, res) => {
 	if (!newIssue.status) {
 		newIssue.status = "New";
 	}
-	issues.push(newIssue)
-	;
+	issues.push(newIssue);
 	res.json(newIssue);
 });
 app.listen(3000, () => {
