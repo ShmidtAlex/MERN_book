@@ -1,6 +1,6 @@
 //for some reason it doesnt work:
-// import bodyParser = from 'body-parser';
-// import express = from "express";
+// import bodyParser from 'body-parser';
+// import express from "express";
 
 const express = require("express");
 const bodyParser = require('body-parser');
@@ -26,6 +26,7 @@ app.get('/api/issues', (req, res) => {
 app.post('/api/issues', (req, res) => {
 	const newIssue = req.body;
 	newIssue.id = issues.length +1;
+	newIssue.effort = newIssue.effort
 	newIssue.created = new Date();
 	if (!newIssue.status) {
 		newIssue.status = "New";
