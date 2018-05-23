@@ -256,14 +256,20 @@ var IssueList = function (_React$Component3) {
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify(newIssue)
 			}).then(function (response) {
-				return response.json();
-			}).then(function (updatedIssue) {
-				updatedIssue.created = new Date(updatedIssue.created);
-				if (updatedIssue.completionDate) {
-					updatedIssue.completionDate = new Date(updatedIssue.completionDate);
+				if (response.ok) {
+					response.json().then(function (updatedIssue) {
+						updatedIssue.created = new Date(updatedIssue.created);
+						if (updatedIssue.completionDate) {
+							updatedIssue.completionDate = new Date(updatedIssue.completionDate);
+						}
+						var newIssues = _this5.state.issues.concat(updatedIssue);
+						_this5.setState({ issues: newIssues });
+					});
+				} else {
+					response.json().then(function (error) {
+						alert("failed to add issue: " + error.message);
+					});
 				}
-				var newIssues = _this5.state.issues.concat(updatedIssue);
-				_this5.setState({ issues: newIssues });
 			}).catch(function (err) {
 				alert("Error in sending data to server: " + err.message);
 			});

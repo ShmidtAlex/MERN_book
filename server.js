@@ -27,7 +27,7 @@ const validIssueStatus = {
 	Verified: true,
 	Closed: true
 }
-const issueFieldType{
+const issueFieldType = {
 	id: "required",
 	status: "required",
 	owner: "required",
