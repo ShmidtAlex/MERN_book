@@ -58,7 +58,7 @@ app.post('/api/issues',(req, res) => {
 	}
 	const err = validateIssue(newIssue)
 	if (err) {
-		rews.status(422).json({message: `Invalid request: ${err}` });
+		res.status(422).json({message: `Invalid request: ${err}` });
 		return;
 	}
 	issues.push(newIssue);
