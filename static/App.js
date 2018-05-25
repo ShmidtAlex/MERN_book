@@ -255,18 +255,25 @@ var IssueList = function (_React$Component3) {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify(newIssue)
+				//response = just any result of previous function (fetch in this case)
 			}).then(function (response) {
+				//console.log(response);
 				if (response.ok) {
 					response.json().then(function (updatedIssue) {
+						//console.log(updatedIssue);
 						updatedIssue.created = new Date(updatedIssue.created);
 						if (updatedIssue.completionDate) {
 							updatedIssue.completionDate = new Date(updatedIssue.completionDate);
 						}
+						//console.log(this.state.issues);
 						var newIssues = _this5.state.issues.concat(updatedIssue);
+						//console.log(newIssues);
 						_this5.setState({ issues: newIssues });
+						//console.log(this.state.issues);
 					});
 				} else {
 					response.json().then(function (error) {
+						//console.log(error);
 						alert("failed to add issue: " + error.message);
 					});
 				}

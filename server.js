@@ -2,8 +2,12 @@
 // import bodyParser from 'body-parser';
 // import express from "express";
 
-const express = require("express");
+const express = require('express');
+// const mongoose = require('mongoose');
+// const keys = require('./config/keys');
 const bodyParser = require('body-parser');
+// console.log(keys.mongoURI);
+// mongoose.connect(keys.mongoURI);
 const app = express();
 app.use(bodyParser.json());
 app.use(express.static('static'));
