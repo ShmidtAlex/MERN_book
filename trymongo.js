@@ -1,5 +1,6 @@
 'use strict'
-
+//the goal of this file is testing four different ways of async
+//calls: Callback paradigm, Promises paradigm, Generator paradigm and Async module
 const MongoClient = required('mongodb');
 
 function usage(){
@@ -28,15 +29,46 @@ if (process.argv.length < 3) {
 		usage();
 	}
 }
+//Callback paradigm
 function testWithCallbacks() {
 	MongoClient.connect('mongodb://localhost/IssueTracker', function(err, db) {
-		db.collection("issues").insertOne({id:1, name: 'A.Callback'}, 
+		db.collection("issues").insertOne({id: 1, name: 'A.Callback'}, 
 		function(err, result) {
-			console.log("result of insert: " result.insertedId);
-			db.collection('issues').find({id:1}).toArray(function(err, docs) {
+			console.log("result of insert: ", result.insertedId);
+			db.collection('issues').find({id: 1}).toArray(function(err, docs) {
 				console.log('Result of find:', docs);
 				db.close();
 			});
 		});
+	});
+}
+//Promises paradigm
+function testWithPromises () {
+	let db;
+	MongoClient.connect('mongodb://localhost/IssueTracker').then(connection => {
+		db = connection;
+		return db.collection("issues")....insertOne({ id: 1, name: 'B. Promises'});
+	}).then(result => {
+		console.log("Result of insert:", resulg.insertedId);
+		return db.collection("issues").find({id: 1}).toArray();
+	}).then(docs => {
+		console.log("Result of find: ", docs);
+		db.close();
+	})catch(err => {
+		console.log('ERROR', err);
+	});
+}
+//Generator and  co Module paradigm
+function testWithGenerator () {
+	const co = require('co');
+	co(function*(){
+		const db = yield MongoClient.connect('mongodb://localhost/IssueTracker');
+		const result = yield db.collection("issues")...insertOne({id: 1, name: 'C. Generator'});
+		console.log("Result of insert: ", result.insertedId);
+		const docs = yield db.collection('issues').find({id: 1}).toArray();
+		console.log("Result of find: ", docs);
+		db.close();
+	}).catch(err => {
+		console.log("ERROR", err);
 	});
 }
