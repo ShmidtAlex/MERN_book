@@ -4,6 +4,7 @@
   "description": "the book-version MERN-stack project",
   "main": "index.js",
   "dependencies": {
+    "async": "^2.6.1",
     "body-parser": "^1.18.3",
     "co": "^4.6.0",
     "express": "^4.16.3",

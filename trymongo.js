@@ -1,7 +1,7 @@
 'use strict'
 //the goal of this file is testing four different ways of async
 //calls: Callback paradigm, Promises paradigm, Generator paradigm and Async module
-const MongoClient = required('mongodb');
+const MongoClient = require('mongodb');
 
 function usage(){
 	console.log('Usage :');
@@ -58,7 +58,7 @@ function testWithPromises () {
 		console.log('ERROR', err);
 	});
 }
-//Generator and  co Module paradigm
+//Generator and co Module paradigm (needed to install npm co)
 function testWithGenerator () {
 	const co = require('co');
 	co(function*(){
@@ -70,5 +70,34 @@ function testWithGenerator () {
 		db.close();
 	}).catch(err => {
 		console.log("ERROR", err);
+	});
+}
+//Async module paradigm (needed to install npm async)
+function testWithAsync() {
+	const async = require('async');
+	let db;
+	async.waterfall([
+		next => {
+			MongoClient.connect('mongodb://localhost/IssueTracker', next);
+		},
+		(connection, next) => {
+			db.connection;
+			db.collection('issues').insertOne({id: 1, name: 'D. Async'}, next);
+		},
+		(insertResult, next) => {
+			console.log('Insert result: ', insertResult.insertedId);
+			db.collection('issues').find({id: 1}).toArray(next);
+		},
+		(docs, next) => {
+			console.log('Result of find:', docs);
+			db.close();
+			next(null, 'All done');
+		}
+	], (err, result) => {
+		if (err) {
+			console.log("ERROR", err);
+		} else {
+			console.log(result);
+		}
 	});
 }
