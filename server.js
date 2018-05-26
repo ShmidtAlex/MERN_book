@@ -1,4 +1,4 @@
-//for some reason it doesnt work:
+//it doesnt work, becouse we need 
 // import bodyParser from 'body-parser';
 // import express from "express";
 
@@ -6,22 +6,23 @@ const express = require('express');
 // const mongoose = require('mongoose');
 // const keys = require('./config/keys');
 const bodyParser = require('body-parser');
+const MongoClient = require('mongodb').MongoClient;
 // console.log(keys.mongoURI);
 // mongoose.connect(keys.mongoURI);
 const app = express();
 app.use(bodyParser.json());
 app.use(express.static('static'));
 
-const issues = [
-	{
-		id: 1, status: "Open", owner: "Alex", created: new Date('2018-05-17'), effort: 5, 
-		completionDate: undefined, title: "Error in console when clicking Add"
-	},
-	{
-		id: 2, status: "Assigned", owner: "Olga", created: new Date('2018-05-01'), effort: 14, 
-		completionDate: new Date('2018-06-01'), title: "Missing bottom border on panel"
-	},
-];
+// const issues = [
+// 	{
+// 		id: 1, status: "Open", owner: "Alex", created: new Date('2018-05-17'), effort: 5, 
+// 		completionDate: undefined, title: "Error in console when clicking Add"
+// 	},
+// 	{
+// 		id: 2, status: "Assigned", owner: "Olga", created: new Date('2018-05-01'), effort: 14, 
+// 		completionDate: new Date('2018-06-01'), title: "Missing bottom border on panel"
+// 	},
+// ];
 //this two objects define what is the valid object "issue"
 const validIssueStatus = {
 	New: true,
@@ -84,6 +85,13 @@ app.post('/api/issues', (req, res) => {
 	issues.push(newIssue);
 	res.json(newIssue);
 });
-app.listen(3000, () => {
-	console.log("App started on port 3000");
+let db;
+MongoClient.connect('mongodb://localhost/IssueTracker').then(connection => {
+	db = connection;
+	app.listen(3000, () => {
+		console.log("App started on port 3000");
+	});	
+}).catch(error => {
+	console.log('ERROR:', err);
 });
+
