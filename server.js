@@ -10,9 +10,8 @@ const MongoClient = require('mongodb').MongoClient;
 // console.log(keys.mongoURI);
 // mongoose.connect(keys.mongoURI);
 const app = express();
-app.use(bodyParser.json());
 app.use(express.static('static'));
-
+app.use(bodyParser.json());
 // const issues = [
 // 	{
 // 		id: 1, status: "Open", owner: "Alex", created: new Date('2018-05-17'), effort: 5, 
@@ -23,6 +22,17 @@ app.use(express.static('static'));
 // 		completionDate: new Date('2018-06-01'), title: "Missing bottom border on panel"
 // 	},
 // ];
+app.get('/api/issues', (req, res) => {
+	db.collection('issues').find().toArray().then(issues => {
+		const metadata = {total_count: issues.length};
+		res.json({_metadata: metadata, records: issues});
+	}).catch(error => {
+		console.log(error);
+		res.status(500).json({message: `Internal Server error ${error}` });
+	});
+});
+
+
 //this two objects define what is the valid object "issue"
 const validIssueStatus = {
 	New: true,
@@ -69,22 +79,19 @@ app.post('/api/issues',(req, res) => {
 	issues.push(newIssue);
 	res.json(newIssue);
 });
-app.get('/api/issues', (req, res) => {
-	const metadata = {total_count: issues.length};
-	res.json({_metadata: metadata, records: issues});
-});
+
 //test was done
-app.post('/api/issues', (req, res) => {
-	const newIssue = req.body;
-	newIssue.id = issues.length +1;
-	newIssue.effort = newIssue.effort
-	newIssue.created = new Date();
-	if (!newIssue.status) {
-		newIssue.status = "New";
-	}
-	issues.push(newIssue);
-	res.json(newIssue);
-});
+// app.post('/api/issues', (req, res) => {
+// 	const newIssue = req.body;
+// 	newIssue.id = issues.length +1;
+// 	newIssue.effort = newIssue.effort
+// 	newIssue.created = new Date();
+// 	if (!newIssue.status) {
+// 		newIssue.status = "New";
+// 	}
+// 	issues.push(newIssue);
+// 	res.json(newIssue);
+//});
 let db;
 MongoClient.connect('mongodb://localhost/IssueTracker').then(connection => {
 	db = connection;
@@ -92,6 +99,6 @@ MongoClient.connect('mongodb://localhost/IssueTracker').then(connection => {
 		console.log("App started on port 3000");
 	});	
 }).catch(error => {
-	console.log('ERROR:', err);
+	console.log('ERROR:', error);
 });
 
