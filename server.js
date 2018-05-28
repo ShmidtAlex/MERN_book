@@ -12,16 +12,7 @@ const MongoClient = require('mongodb').MongoClient;
 const app = express();
 app.use(express.static('static'));
 app.use(bodyParser.json());
-// const issues = [
-// 	{
-// 		id: 1, status: "Open", owner: "Alex", created: new Date('2018-05-17'), effort: 5, 
-// 		completionDate: undefined, title: "Error in console when clicking Add"
-// 	},
-// 	{
-// 		id: 2, status: "Assigned", owner: "Olga", created: new Date('2018-05-01'), effort: 14, 
-// 		completionDate: new Date('2018-06-01'), title: "Missing bottom border on panel"
-// 	},
-// ];
+
 app.get('/api/issues', (req, res) => {
 	db.collection('issues').find().toArray().then(issues => {
 		const metadata = {total_count: issues.length};
@@ -43,7 +34,6 @@ const validIssueStatus = {
 	Closed: true
 }
 const issueFieldType = {
-	id: "required",
 	status: "required",
 	owner: "required",
 	effort: "optional",
@@ -67,7 +57,9 @@ function validateIssue(issue) {
 }
 app.post('/api/issues',(req, res) => {
 	const newIssue = req.body;
-	newIssue.id = issues.length + 1;
+	//we don't need this one anymore
+	//newIssue.id = issues.length + 1;
+	newIssue.created = new Date();
 	if (!newIssue.status) {
 		newIssue.status = "New";
 	}
@@ -76,8 +68,16 @@ app.post('/api/issues',(req, res) => {
 		res.status(422).json({message: `Invalid request: ${err}` });
 		return;
 	}
-	issues.push(newIssue);
-	res.json(newIssue);
+	db.collection('issues').insertOne(newIssue).then(result => {
+		db.collection('issues').find({_id: result.insertedId}).limit(1).next()
+	}).then(newIssue => {
+		res.json(newIssue);
+	}).catch(error => {
+		console.log(error);
+		res.status(500).json({message: `Internal Server Error: ${error}` });
+	});
+	// issues.push(newIssue);
+	// res.json(newIssue);
 });
 
 //test was done
@@ -91,7 +91,7 @@ app.post('/api/issues',(req, res) => {
 // 	}
 // 	issues.push(newIssue);
 // 	res.json(newIssue);
-//});
+// });
 let db;
 MongoClient.connect('mongodb://localhost/IssueTracker').then(connection => {
 	db = connection.db('IssueTracker');

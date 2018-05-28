@@ -1,5 +1,5 @@
-const contentNode = document.getElementById('contents');
 
+const contentNode = document.getElementById('contents');
 class IssueFilter extends React.Component {
   render() {
     return (
@@ -65,6 +65,9 @@ class IssueAdd extends React.Component {
         <form name="issueAdd" onSubmit={this.handleSubmit}>
           <input type="text" name="owner" placeholder="Owner" />
           <input type="text" name="title" placeholder="Title" />
+          <input type="text" name="effort" placeholder="Effort" />
+          <input type="text" name="completionDate" placeholder="CompletionDate" />
+
           <button>Add</button>
         </form>
       </div>

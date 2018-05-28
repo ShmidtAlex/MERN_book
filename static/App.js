@@ -170,6 +170,8 @@ var IssueAdd = function (_React$Component2) {
           { name: 'issueAdd', onSubmit: this.handleSubmit },
           React.createElement('input', { type: 'text', name: 'owner', placeholder: 'Owner' }),
           React.createElement('input', { type: 'text', name: 'title', placeholder: 'Title' }),
+          React.createElement('input', { type: 'text', name: 'effort', placeholder: 'Effort' }),
+          React.createElement('input', { type: 'text', name: 'completionDate', placeholder: 'CompletionDate' }),
           React.createElement(
             'button',
             null,
