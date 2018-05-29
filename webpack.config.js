@@ -1,11 +1,16 @@
+//const webpack = require('webpack');
 const path = require('path');
 module.exports = {
 	mode: 'development',
-	entry: "./src/App.jsx",
+	entry: {
+		app: "./src/App.jsx",
+		vendor: ['react', 'react-dom', 'whatwg-fetch']
+	},
 	output: {
 		path: path.resolve(__dirname, "./static"),
-		filename: "app.bundle.js"
+		filename: "[name].bundle.js"
 	},
+	
 	module: {
 		rules: [
 			{
@@ -16,5 +21,5 @@ module.exports = {
 				}
 			},
 		]
-	}
+	},
 };
