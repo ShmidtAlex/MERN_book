@@ -13,6 +13,7 @@ export default class IssueAdd extends React.Component {
     this.props.createIssue({
       owner: form.owner.value,
       title: form.title.value,
+      effort: form.effort.value,
       status: 'New',
       created: new Date(),
     });
