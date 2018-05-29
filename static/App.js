@@ -38,6 +38,8 @@ var IssueFilter = function (_React$Component) {
 
   return IssueFilter;
 }(React.Component);
+//mistake
+
 
 var IssueRow = function IssueRow(props) {
   return React.createElement(
