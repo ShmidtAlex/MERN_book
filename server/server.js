@@ -1,13 +1,10 @@
-//it doesnt work, becouse we need 
-// import bodyParser from 'body-parser';
-// import express from "express";
-
-const express = require('express');
-// const mongoose = require('mongoose');
-// const keys = require('./config/keys');
-const bodyParser = require('body-parser');
-const MongoClient = require('mongodb').MongoClient;
-const Issue = require('./issue.js');
+import express from "express";
+import bodyParser from 'body-parser';
+import 'babel-polyfill';
+import { MongoClient } from 'mongodb';
+import Issue from './issue.js'
+import SourceMapSupport from 'source-map-support';
+SourceMapSupport.install();
 // console.log(keys.mongoURI);
 // mongoose.connect(keys.mongoURI);
 const app = express();
@@ -53,18 +50,8 @@ app.post('/api/issues',(req, res) => {
 	// res.json(newIssue);
 });
 
-//test was done
-// app.post('/api/issues', (req, res) => {
-// 	const newIssue = req.body;
-// 	newIssue.id = issues.length +1;
-// 	newIssue.effort = newIssue.effort
-// 	newIssue.created = new Date();
-// 	if (!newIssue.status) {
-// 		newIssue.status = "New";
-// 	}
-// 	issues.push(newIssue);
-// 	res.json(newIssue);
-// });
+//throw new Error("TEST!!!");
+
 let db;
 MongoClient.connect('mongodb://localhost/IssueTracker').then(connection => {
 	db = connection.db('IssueTracker');

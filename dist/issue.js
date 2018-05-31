@@ -1,3 +1,8 @@
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
 
 const validIssueStatus = {
 	New: true,
@@ -19,17 +24,18 @@ const issueFieldType = {
 function validateIssue(issue) {
 	for (const field in issueFieldType) {
 		const type = issueFieldType[field];
-		if(!type) {
+		if (!type) {
 			delete issue[field];
-		} else if (type === "required" && !issue[field]){
+		} else if (type === "required" && !issue[field]) {
 			return `${field} is required.`;
 		}
 	}
-	if (!validIssueStatus[issue.status]){
+	if (!validIssueStatus[issue.status]) {
 		return `${issue.staus} is a not valid status.`;
 	}
 	return null;
 }
-export default {
+exports.default = {
 	validateIssue: validateIssue
 };
+//# sourceMappingURL=issue.js.map
