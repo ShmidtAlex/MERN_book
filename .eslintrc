@@ -1,0 +1,16 @@
+{
+	"extends": "airbnb",
+	"rules": {
+		"no-console": ["off"],
+		"indent": ["error", 2],
+		"no-alert": ["off"],
+		"no-underscore-dangle": ["error", {"allow": ["_id", _metadata]}],
+		"import/extensions": [0],
+	},
+	"env": {
+		"browser": true,
+		"commonjs": true,
+		"es6": true,
+		"node": true
+	},
+}

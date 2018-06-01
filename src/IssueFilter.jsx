@@ -1,11 +1,12 @@
 
 import React from 'react';
+import PropTypes from 'prop-types';
 
 export default class IssueFilter extends React.Component {
   render() {
     return (
       <div>This is a placeholder for the Issue Filter.</div>
-    )
+    );
   }
 }
-//default
+// default

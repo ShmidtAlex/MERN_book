@@ -1,0 +1,10 @@
+{
+	"env": {
+		"node": "true",
+		"browser": "true",
+	},
+	"rules": {
+		"no-console": ["off"],
+		"no-alert": ["off"],
+	}
+}
