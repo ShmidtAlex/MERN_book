@@ -82,6 +82,7 @@ export default class IssueList extends React.Component {
       body: JSON.stringify(newIssue),
     }).then((response) => {
       if (response.ok) {
+        // response.text().then(r => console.log(r));
         response.json().then((updatedIssue) => {
           updatedIssue.created = new Date(updatedIssue.created);
           if (updatedIssue.completionDate) {
