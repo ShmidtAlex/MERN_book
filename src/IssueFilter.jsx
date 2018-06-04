@@ -1,6 +1,5 @@
 
 import React from 'react';
-import PropTypes from 'prop-types';
 
 export default class IssueFilter extends React.Component {
   render() {
