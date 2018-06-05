@@ -4,6 +4,7 @@ import 'babel-polyfill';
 
 import express from "express";
 import bodyParser from 'body-parser';
+import path from 'path';
 import { MongoClient } from 'mongodb';
 import Issue from './issue.js'
 
@@ -69,3 +70,6 @@ MongoClient.connect('mongodb://localhost/IssueTracker').then(connection => {
 	console.log('ERROR:', error);
 });
 
+app.get('*', (req, res) => {
+  res.sendFile(path.resolve('static/index.html'));
+});

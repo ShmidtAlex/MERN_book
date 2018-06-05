@@ -14,6 +14,10 @@ var _bodyParser = require('body-parser');
 
 var _bodyParser2 = _interopRequireDefault(_bodyParser);
 
+var _path = require('path');
+
+var _path2 = _interopRequireDefault(_path);
+
 var _mongodb = require('mongodb');
 
 var _issue = require('./issue.js');
@@ -77,5 +81,9 @@ _mongodb.MongoClient.connect('mongodb://localhost/IssueTracker').then(connection
   });
 }).catch(error => {
   console.log('ERROR:', error);
+});
+
+app.get('*', (req, res) => {
+  res.sendFile(_path2.default.resolve('static/index.html'));
 });
 //# sourceMappingURL=server.js.map

@@ -53,6 +53,7 @@ export default class IssueList extends React.Component {
     super();
     this.state = { issues: [] };
     this.createIssue = this.createIssue.bind(this);
+    this.setFilter = this.setFilter.bind(this);
   }
   componentDidMount() {
     this.loadData();
@@ -87,7 +88,9 @@ export default class IssueList extends React.Component {
       alert('Error in fetching data from server:', err);
     });
   }
-
+  setFilter(query){
+    this.props.router.push({ pathname: this.props.location.pathname, query });
+  }
   createIssue(newIssue) {
     fetch('/api/issues', {
       method: 'POST',
@@ -117,8 +120,7 @@ export default class IssueList extends React.Component {
   render() {
     return (
       <div>
-        <h1>Issue Tracker</h1>
-        <IssueFilter />
+        <IssueFilter setFilter={this.setFilter} />
         <hr />
         <IssueTable issues={this.state.issues} />
         <hr />
@@ -127,4 +129,7 @@ export default class IssueList extends React.Component {
     );
   }
 }
-
+IssueList.propTypes = {
+  location: PropTypes.object.isRequired,
+  router: PropTypes.object,
+}

@@ -1,21 +1,42 @@
 
 import React from 'react';
-import { Link } from 'react-router';
+//import { a  } from 'react-router';
 
 export default class IssueFilter extends React.Component {
+  constructor() {
+    super();
+    this.clearFilter = this.clearFilter.bind(this);
+    this.setFilterOpen = this.setFilterOpen.bind(this);
+    this.setFilterAssigned = this.setFilterAssigned.bind(this);
+    this.setFilterNew = this.setFilterNew.bind(this);
+  }
+  clearFilter(e) {
+    e.preventDefault();
+    this.props.setFilter({});
+  }
+  setFilterOpen(e) {
+    e.preventDefault();
+    this.props.setFilter({ status: 'Open' });
+  }
+  setFilterAssigned(e) {
+    e.preventDefault();
+    this.props.setFilter({ status: 'Assigned' });
+  }
+  setFilterNew(e) {
+    e.preventDefault();
+    this.props.setFilter({ status: 'New' });
+  }
   render() {
   	const Separator = () => <span> | </span>;
     return (
       <div>
-        <Link to="/issues">All issues</Link>
+        <a href='#' onClick={ this.clearFilter }>All issues</a >
         <Separator/>
-        <Link to={{ pathname: '/issues', query: { status: 'Open' } }}>
-          Open Issues
-        </Link>
+        <a href='#' onClick={ this.setFilterOpen }>Open Issues</a >
         <Separator/>
-        <Link to='/issues?status=Assigned'>Assigned Issues </Link>
+        <a href='#' onClick={ this.setFilterAssigned }>Assigned Issues</a >
         <Separator/>
-        <Link to='/issues?status=New'>New Issues </Link>
+        <a href='#' onClick={ this.setFilterNew }>New Issues</a >
       </div>
     );
   }
