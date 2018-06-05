@@ -11,7 +11,7 @@ const IssueRow = props => (
   <tr>
     <td>
       <Link to={`/issues/${props.issue._id}`}>
-        { props.issue._id }
+        { props.issue._id.substr(-4) }
       </Link>
     </td>
     <td>{props.issue.status}</td>
@@ -57,8 +57,16 @@ export default class IssueList extends React.Component {
   componentDidMount() {
     this.loadData();
   }
+  componentDidUpdate(prevProps) {
+    const oldQuery = prevProps.location.query;
+    const newQuery = this.props.location.query;
+    if (oldQuery.status === newQuery.status) {
+      return;
+    }
+    this.loadData();
+  }
   loadData() {
-    fetch('/api/issues').then((response) => {
+    fetch(`/api/issues${this.props.location.search}`).then(response => {
       if (response.ok) {
         response.json().then((data) => {
           console.log('Total count of records:', data._metadata.total_count);
