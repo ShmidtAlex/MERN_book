@@ -6,7 +6,7 @@ import express from "express";
 import bodyParser from 'body-parser';
 import path from 'path';
 //import mongodb driver features
-import { MongoClient } from 'mongodb';
+import { MongoClient, ObjectId } from 'mongodb';
 import Issue from './issue.js'
 //create express instance
 const app = express();
@@ -82,6 +82,32 @@ app.post('/api/issues',(req, res) => {
   });
 });
 
+app.get('/api/issues/:id', (req, res) => {
+  let issueId;
+  console.log(req.params.id);
+  try {
+    issueId = new ObjectId(req.params.id);
+  } catch(error) {
+    res.status(422).json({ message: `Invalid issue ID format : ${error}` });
+    return;
+  }
+  db.collection('issues').find({ _id: issueId }).limit(1)
+    .next()
+    .then(issue => {
+      if(!issue) {
+        res.status(404).json({ message: `No such issue: ${issueId}` });
+      } else {
+        res.json(issue);
+      }
+    })
+    .catch(error => {
+      console.log(error);
+      res.status(500).json({ message: `Internal Server Error: ${error}`});
+    });
+});
+app.get('*', (req, res) => {
+  res.sendFile(path.resolve('static/index.html'));//sendFile(path) respons that exacly file corresponds to exaxtly path
+});
 //MongoClient is an object provided by mongodb module, allows us act as a client
 //'connect' method connecting the database from Node.js
 MongoClient.connect('mongodb://localhost/IssueTracker').then(connection => {
@@ -96,6 +122,3 @@ MongoClient.connect('mongodb://localhost/IssueTracker').then(connection => {
 //returning one and only one real page in our SPA for avoid situation, when router
 //can't find correct path /api/issues,(instead it find /issues) 
 //after hitting 'reload' button in browser/ it also affects webpack.config 'historyApiFallback'
-app.get('*', (req, res) => {
-  res.sendFile(path.resolve('static/index.html'));//sendFile(path) respons that exacly file corresponds to exaxtly path
-});
