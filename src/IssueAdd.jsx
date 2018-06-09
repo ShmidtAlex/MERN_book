@@ -7,11 +7,11 @@ export default class IssueAdd extends React.Component {
     super();
     this.handleSubmit = this.handleSubmit.bind(this);
   }
-
+  //we can use parent's createIssue because of we gave it to children component in render section of IssueList component
   handleSubmit(e) {
     const form = document.forms.issueAdd;
     e.preventDefault();
-    this.props.createIssue({
+    this.props.createIssue({//it's a callback now
       owner: form.owner.value,
       title: form.title.value,
       effort: form.effort.value,

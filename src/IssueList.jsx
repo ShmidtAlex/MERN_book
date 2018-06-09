@@ -58,9 +58,11 @@ export default class IssueList extends React.Component {
   componentDidMount() {
     this.loadData();
   }
-  componentDidUpdate(prevProps) {
-    const oldQuery = prevProps.location.query;
+  //this function look for any changes in filter fields and invoked immediately after updating occurs
+  componentDidUpdate(prevProps) {//prevProps means state of props before changing
+    const oldQuery = prevProps.location.query;//location - URL address of prevProps
     const newQuery = this.props.location.query;
+    //if comparing show no changes, return prevProps as it was
     if (oldQuery.status === newQuery.status &&
         oldQuery.effort_gte === newQuery.effort_gte &&
         oldQuery.effort_lte === newQuery.effort_lte) {
@@ -69,17 +71,19 @@ export default class IssueList extends React.Component {
     this.loadData();
   }
   loadData() {
+    //this.props.location.search = ?effort_gte=some_number&status(filter value in unparsed URL)
     fetch(`/api/issues${this.props.location.search}`).then(response => {
-      if (response.ok) {
+      if (response.ok) {// ok = true and means, that response was successful
         response.json().then((data) => {
-          console.log('Total count of records:', data._metadata.total_count);
-          data.records.forEach((issue) => {
-            issue.created = new Date(issue.created);
-            if (issue.completionDate) {
-              issue.completionDate = new Date(issue.completionDate);
+          //data is a variable, which get data from server, _metadata is an object of that data
+          console.log('Total count of records:', data._metadata.total_count);//total count is a property of metadata
+          data.records.forEach((issue) => {//records is a property which keeps issues = [{...}] inside it
+            issue.created = new Date(issue.created);//assign date of creation issue
+            if (issue.completionDate) { // if user appointed date to complete issue
+              issue.completionDate = new Date(issue.completionDate);//take this and put in object Date()
             }
           });
-          this.setState({ issues: data.records });
+          this.setState({ issues: data.records });//then change the state issues:[] to real issues data
         });
       } else {
         response.json().then((error) => {
@@ -90,10 +94,14 @@ export default class IssueList extends React.Component {
       alert('Error in fetching data from server:', err);
     });
   }
-  setFilter(query){
+  //this method calls from the IssueFilter component
+  setFilter(query){//takes 'query' which is an object f.e.g.{ status: 'Open', effort_gte: '10', effort_lte: '11'} according to filter settings
+    //and push it to browser URL as a query string looks like ?effort_gte=10&effort_lte=11&status=Open
     this.props.router.push({ pathname: this.props.location.pathname, query });
   }
+  //this method calls from the IssueAdd component
   createIssue(newIssue) {
+    //send new issue data to server instead of posting it directly on the client
     fetch('/api/issues', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

@@ -21,11 +21,9 @@ let db;
 //this API is designed for finding issues by filter
 //'/api' is a prefix, which shows that issues is an API, it's not path
 app.get('/api/issues', (req, res) => {
-  //by default filter is empty object
-  const filter = {};
-  //if in parsed query string from request from client there is any status,
-  if (req.query.status) {
-    //than filter became not empty, and it's status is equal status from parsed query string
+  const filter = {};//by default filter is empty object
+  if (req.query.status) {//if in parsed query string from request from client there is any status,
+    //now filter's status is equal to status from parsed query string
     filter.status = req.query.status;
   }
   if (req.query.effort_lte || req.query.effort_gte) {
@@ -39,16 +37,16 @@ app.get('/api/issues', (req, res) => {
   }
   //any collection in mongo DB has method 'collection', which allows us supply the name
   //of collection (issues in this case), to indicate exactly which collection from data base
-	db.collection('issues').find(filter).toArray()
-	.then(issues => {
+  db.collection('issues').find(filter).toArray()
+  .then(issues => {
     //returning document given by find(filter) method 
-		const metadata = { total_count: issues.length };
-		res.json({ _metadata: metadata, records: issues });
-	})
-	.catch(error => {
-		console.log(error);
-		res.status(500).json({ message: `Internal Server error ${error}` });
-	});
+    const metadata = { total_count: issues.length };
+    res.json({ _metadata: metadata, records: issues });
+  })
+  .catch(error => {
+    console.log(error);
+    res.status(500).json({ message: `Internal Server error ${error}` });
+  });
 });
 
 
@@ -58,8 +56,7 @@ app.post('/api/issues',(req, res) => {
   //req.body containts the body of created new issue, it's valid for post 
   //NOTE: req.body will be undefined, if there is no middleware (bodyParser f.e.x) for interpret
   const newIssue = req.body;
-  //because of we have no filed for setting date, we assign it here
-  newIssue.created = new Date();
+  newIssue.created = new Date();//because of we have no filed for setting date, we assign it here
   //if created issue doesn't have any status from user initally, assign status 'New'
   if (!newIssue.status) {
     newIssue.status = 'New';
@@ -73,7 +70,6 @@ app.post('/api/issues',(req, res) => {
   //before insert validate newIssue by cleanupIssue function from imported Issue variable
   db.collection('issues').insertOne(Issue.cleanupIssue(newIssue)).then(result => 
     //while it's inserting, it gets new id, which stored in property insertedId
-    //.limit(1) shows, that we only
     db.collection('issues').find({_id: result.insertedId}).limit(1)
     .next()
   )
@@ -91,14 +87,15 @@ app.post('/api/issues',(req, res) => {
 MongoClient.connect('mongodb://localhost/IssueTracker').then(connection => {
   //assign our connection with mongo database (called IssueTracker) to global varibale db
 	db = connection.db('IssueTracker');
-  //start express server after getting connection
-	app.listen(3000, () => {
+	app.listen(3000, () => {//start express server after getting connection
 		console.log("App started on port 3000");
 	});	
 }).catch(error => {
 	console.log('ERROR:', error);
 });
-
+//returning one and only one real page in our SPA for avoid situation, when router
+//can't find correct path /api/issues,(instead it find /issues) 
+//after hitting 'reload' button in browser/ it also affects webpack.config 'historyApiFallback'
 app.get('*', (req, res) => {
-  res.sendFile(path.resolve('static/index.html'));
+  res.sendFile(path.resolve('static/index.html'));//sendFile(path) respons that exacly file corresponds to exaxtly path
 });

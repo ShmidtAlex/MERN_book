@@ -4,24 +4,27 @@ import PropTypes from 'prop-types';
 //import { a  } from 'react-router';
 
 export default class IssueFilter extends React.Component {
-  constructor(props) {
+  constructor(props) {//props means props given from parent component (setFilter in this case)
     super(props);
-    this.state = {
-      status: props.initFilter.status || '',
-      effort_gte: props.initFilter.effort_gte || '',
-      effort_lte: props.initFilter.effort_lte,
+    this.state = {//this is initial state of filter: any value from previous filtering or ''
+      status: props.initFilter.status || '',//initFilter is a variable, which is a part of state
+      effort_gte: props.initFilter.effort_gte || '',//initFilter connects state and displayed value
+      effort_lte: props.initFilter.effort_lte || '',//so, when we change initFilter, displayed value changing too
       changed: false,
-    }
+    } 
+
     this.onChangeStatus = this.onChangeStatus.bind(this);
     this.onChangeEffortGte = this.onChangeEffortGte.bind(this);
     this.onChangeEffortLte = this.onChangeEffortLte.bind(this);
     this.resetFilter = this.resetFilter.bind(this);
     this.applyFilter = this.applyFilter.bind(this);
     this.clearFilter = this.clearFilter.bind(this);
-    this.setFilterOpen = this.setFilterOpen.bind(this);
-    this.setFilterAssigned = this.setFilterAssigned.bind(this);
-    this.setFilterNew = this.setFilterNew.bind(this);
   }
+  //author of the book uses this method despite warning on React official documentation(ROD)
+  //he says it because of componentWillReceiveProps make code more readable and clear
+  //it's invoked whenever the props are changing, before a mounted component r e s e i v e s new props
+  //and update this.state on the fly
+
   componentWillReceiveProps(newProps) {
     this.setState({
       status: newProps.initFilter.status || '',
@@ -30,6 +33,8 @@ export default class IssueFilter extends React.Component {
       changed: false,
     });
   }
+  //should be invoked by clicking corresponding button in filter section
+  //clear any filter settings before applying, similar to clearFilter, but before sending data
   resetFilter() {
     this.setState({
       status: this.props.initFilter.status || '',
@@ -42,21 +47,10 @@ export default class IssueFilter extends React.Component {
     e.preventDefault();
     this.props.setFilter({});
   }
-  setFilterOpen(e) {
-    e.preventDefault();
-    this.props.setFilter({ status: 'Open' });
-  }
-  setFilterAssigned(e) {
-    e.preventDefault();
-    this.props.setFilter({ status: 'Assigned' });
-  }
-  setFilterNew(e) {
-    e.preventDefault();
-    this.props.setFilter({ status: 'New' });
-  }
   onChangeStatus(e){
     this.setState({ status: e.target.value, changed: true });
   }
+  //next two functions check if values in effort fields are digital, and if they are, change state variable
   onChangeEffortGte(e) {
     const effortString = e.target.value;
     if (effortString.match(/^\d*$/)) {
@@ -70,7 +64,7 @@ export default class IssueFilter extends React.Component {
     }
   }
   applyFilter() {
-    const newFilter = {};
+    const newFilter = {};//variable for keeping each new filter settings
     if (this.state.status) {
       newFilter.status = this.state.status;
     }
@@ -80,7 +74,8 @@ export default class IssueFilter extends React.Component {
     if (this.state.effort_lte) {
       newFilter.effort_lte = this.state.effort_lte;
     }
-    this.props.setFilter(newFilter);
+    this.props.setFilter(newFilter);//this is parent props setFilter, with parameters from variable
+    //newFilter
   }
   
   render() {
@@ -101,7 +96,7 @@ export default class IssueFilter extends React.Component {
         &nbsp;-&nbsp;
         <input size={5} value={this.state.effort_lte} onChange={this.onChangeEffortLte}/>
         <button onClick={this.applyFilter}> Apply</button>
-        <button onClick={this.resetFilter} disabled={this.state.changed}> Reset</button>
+        <button onClick={this.resetFilter} disabled={!this.state.changed}> Reset</button>
         <button onClick={this.clearFilter}> Clear</button>
       </div>
     );
