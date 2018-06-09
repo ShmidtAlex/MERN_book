@@ -82,9 +82,7 @@ export default class IssueFilter extends React.Component {
     }
     this.props.setFilter(newFilter);
   }
-  clearFilter(){
-    this.props.setFilter({});
-  }
+  
   render() {
     return (
       <div>
