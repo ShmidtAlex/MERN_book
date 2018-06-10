@@ -45,14 +45,15 @@ export default class IssueEdit extends React.Component {
     });
   }
   render() {
+    const issue = this.state.issue;
     return (
       <div>
         <form>
-          ID: {this.state.issue._id}
+          ID: {issue._id}
           <br/>
           Created: {this.state.issue.created}
           <br/>
-          Status: <select name='status' value={this.state.issue.status} onChange={this.onChange}>
+          Status: <select name='status' value={issue.status} onChange={this.onChange}>
             <option value="New">New</option>
             <option value="Open">Open</option>
             <option value="Assigned">Assigned</option>
@@ -61,13 +62,13 @@ export default class IssueEdit extends React.Component {
             <option value="Closed">Closed</option>
           </select>
           <br/>
-          Owner: <input name="owner" value={this.state.issue.owner} onChange={this.onChange}/>
+          Owner: <input name="owner" value={issue.owner} onChange={this.onChange}/>
           <br/>
-          Effort: <input name="effort" value={this.state.issue.effort} onChange={this.onChange}/>
+          Effort: <input name="effort" value={issue.effort} onChange={this.onChange}/>
           <br/>
-          Completion Date: <input name="completionDate" value={this.state.issue.completionDate} onChange={this.onChange}/>
+          Completion Date: <input name="completionDate" value={issue.completionDate} onChange={this.onChange}/>
           <br/>
-          Title: <input name="title" size={50} value={this.state.issue.title} onChange={this.onChange}/>
+          Title: <input name="title" size={50} value={issue.title} onChange={this.onChange}/>
           <br/>
           <button type="submit">Submit</button>
           <Link to="/issues">Back to issue list</Link>
