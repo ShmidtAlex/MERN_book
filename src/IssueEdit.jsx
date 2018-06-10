@@ -7,6 +7,7 @@ export default class IssueEdit extends React.Component {
     super();
     this.state = {
       issue: {
+        //these are the properties of issue object and names for each inputs both
         _id:'', title: '', status: '', owner: '', effort: '', 
         completionDate: '', created: '',
       },
@@ -21,18 +22,27 @@ export default class IssueEdit extends React.Component {
       this.loadData();
     }
   }
+  //this works only without submit yet
   onChange(event){
+    //clone state object to empty object 'issue' for the purpose of access to the 'name' properties of inputs
     const issue = Object.assign({}, this.state.issue);
+    //f.e.g: event.target.name = status, event.target.value = New; 
+    //we use property of issue for identify name of input
     issue[event.target.name] = event.target.value;
+    //change this.state object conserning to new status
     this.setState({ issue });
   }
   loadData() {
+    //this.props.params.id means the issue id
     fetch(`/api/issues/${this.props.params.id}`).then(response => {
       if(response.ok) {
         response.json().then(issue => {
+          //convert date to string
           issue.created = new Date(issue.created).toDateString();
+          //if issue.comletionDate NOT equal null, convert given new Date object to string, else - leave it empty
           issue.completionDate = issue.completionDate != null ? new Date(issue.completionDate).toDateString() : '';
           issue.effort = issue.effort != null ? issue.effort.toString() : '';
+          //change this.state accordingly converted data
           this.setState({ issue });
         });
       } else {
@@ -51,8 +61,10 @@ export default class IssueEdit extends React.Component {
         <form>
           ID: {issue._id}
           <br/>
-          Created: {this.state.issue.created}
+          Created: {issue.created}
           <br/>
+        {/*every input, including 'select', has 'name' property for differetiate one from one for onChange
+          function, which is common method for all of the inputs*/}
           Status: <select name='status' value={issue.status} onChange={this.onChange}>
             <option value="New">New</option>
             <option value="Open">Open</option>
@@ -62,6 +74,7 @@ export default class IssueEdit extends React.Component {
             <option value="Closed">Closed</option>
           </select>
           <br/>
+        {/*'this' helps us identify a target of event in onChange() function*/}
           Owner: <input name="owner" value={issue.owner} onChange={this.onChange}/>
           <br/>
           Effort: <input name="effort" value={issue.effort} onChange={this.onChange}/>
