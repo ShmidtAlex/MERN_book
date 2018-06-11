@@ -101,7 +101,7 @@ app.get('/api/issues/:id', (req, res) => {
   let issueId;
   console.log(req.params.id);
   try {
-    issueId = new _mongodb.ObjectId(req.params.id);
+    issueId = new _mongodb.ObjectId(req.params.id); //for using ObjectId() you need import it from mongodb
   } catch (error) {
     res.status(422).json({ message: `Invalid issue ID format : ${error}` });
     return;

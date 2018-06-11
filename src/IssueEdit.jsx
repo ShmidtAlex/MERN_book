@@ -27,7 +27,7 @@ export default class IssueEdit extends React.Component {
     //clone state object to empty object 'issue' for the purpose of access to the 'name' properties of inputs
     const issue = Object.assign({}, this.state.issue);
     //f.e.g: event.target.name = status, event.target.value = New; 
-    //we use property of issue for identify name of input
+    //we use target's name as a key in the state object to set the value in the state object
     issue[event.target.name] = event.target.value;
     //change this.state object conserning to new status
     this.setState({ issue });

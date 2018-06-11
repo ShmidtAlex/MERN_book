@@ -105,17 +105,17 @@ export default class IssueList extends React.Component {
     fetch('/api/issues', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(newIssue),
-    }).then((response) => {
+      body: JSON.stringify(newIssue),//data of newIssue itself in json format
+    }).then((response) => {//getting only newIssue, rather than all list of issues from server
       if (response.ok) {
         // response.text().then(r => console.log(r));
         response.json().then((updatedIssue) => {
-          updatedIssue.created = new Date(updatedIssue.created);
+          updatedIssue.created = new Date(updatedIssue.created);//because of it had no date of creation before this moment
           if (updatedIssue.completionDate) {
             updatedIssue.completionDate = new Date(updatedIssue.completionDate);
           }
-          const newIssues = this.state.issues.concat(updatedIssue);
-          this.setState({ issues: newIssues });
+          const newIssues = this.state.issues.concat(updatedIssue);//add new issue, gotted from the server to list
+          this.setState({ issues: newIssues });//change the old state to new state
         });
       } else {
         response.json().then((error) => {
