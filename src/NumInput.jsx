@@ -6,6 +6,7 @@ export default class NumInput extends React.Component {
     super(props);
     //local state with transient state
     this.state = { value: this.format(props.value) };
+    console.log(this.state);
     this.onBlur = this.onBlur.bind(this);
     this.onChange = this.onChange.bind(this);
   }
@@ -24,13 +25,14 @@ export default class NumInput extends React.Component {
   }
   format(num) {
     //convert number to string, otherwise leave the field empty
-    return num !-null ? num.toString() : '';
+    return num !=null ? num.toString() : '';
   }
   unformat(str) {
     //convert string to a number, check if it is a number really, and put it 
     //into the field, otherwise put null value to the field
     const val = parseInt(str, 10);
-    return isNan(val) ? null : val;
+    console.log(val);
+    return isNaN(val) ? null : val;
   }
   render() {
     return(

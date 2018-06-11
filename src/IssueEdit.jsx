@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router';
 import PropTypes from 'prop-types';
+import NumInput from './NumInput.jsx';
 
 export default class IssueEdit extends React.Component {
   constructor() {
@@ -8,7 +9,7 @@ export default class IssueEdit extends React.Component {
     this.state = {
       issue: {
         //these are the properties of issue object and names for each inputs both
-        _id:'', title: '', status: '', owner: '', effort: '', 
+        _id:'', title: '', status: '', owner: '', effort: null, 
         completionDate: '', created: '',
       },
     };
@@ -23,12 +24,13 @@ export default class IssueEdit extends React.Component {
     }
   }
   //this works only without submit yet
-  onChange(event){
+  onChange(event, convertedValue){
     //clone state object to empty object 'issue' for the purpose of access to the 'name' properties of inputs
     const issue = Object.assign({}, this.state.issue);
+    const value = (convertedValue !== undefined ? convertedValue : event.target.value);
     //f.e.g: event.target.name = status, event.target.value = New; 
     //we use target's name as a key in the state object to set the value in the state object
-    issue[event.target.name] = event.target.value;
+   issue[event.target.name] = value;
     //change this.state object conserning to new status
     this.setState({ issue });
   }
@@ -41,9 +43,9 @@ export default class IssueEdit extends React.Component {
           issue.created = new Date(issue.created).toDateString();
           //if issue.comletionDate NOT equal null, convert given new Date object to string, else - leave it empty
           issue.completionDate = issue.completionDate != null ? new Date(issue.completionDate).toDateString() : '';
-          issue.effort = issue.effort != null ? issue.effort.toString() : '';
           //change this.state accordingly converted data
           this.setState({ issue });
+          console.log(issue);
         });
       } else {
         response.json().then(error => {
@@ -77,7 +79,7 @@ export default class IssueEdit extends React.Component {
         {/*'this' helps us identify a target of event in onChange() function*/}
           Owner: <input name="owner" value={issue.owner} onChange={this.onChange}/>
           <br/>
-          Effort: <input name="effort" value={issue.effort} onChange={this.onChange}/>
+          Effort: <NumInput size={5} name="effort" value={issue.effort} onChange={this.onChange}/>
           <br/>
           Completion Date: <input name="completionDate" value={issue.completionDate} onChange={this.onChange}/>
           <br/>
