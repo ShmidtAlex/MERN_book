@@ -11,14 +11,14 @@ export default class IssueEdit extends React.Component {
       issue: {
         //these are the properties of issue object and names for each inputs both
         _id:'', title: '', status: '', owner: '', effort: null, 
-        completionDate: null, created: '',
+        completionDate: null, created: null,
       },
       invalildFields: {},
     };
     this.onChange = this.onChange.bind(this);
     this.onValidityChange = this.onValidityChange.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
   }
-  
   componentDidMount() {
     this.loadData();
   }
@@ -27,13 +27,13 @@ export default class IssueEdit extends React.Component {
       this.loadData();
     }
   }
+ 
   //we got 'valid' argument from child component
   onValidityChange(event, valid) {
     const invalildFields = Object.assign({}, this.state.invalildFields);
     //in case, where user typed any wrong value,
     if (!valid) {
       invalildFields[event.target.name] = true;
-      console.log(event.target);
     } else {
       delete invalildFields[event.target.name];
     }
@@ -51,13 +51,41 @@ export default class IssueEdit extends React.Component {
     this.setState({ issue });
 
   }
+  onSubmit(event) {
+    event.preventDefault();
+    if (Object.keys(this.state.invalildFields).length !== 0) {
+      return;
+    }
+      fetch(`/api/issues/${this.props.params.id}`, {
+      method: 'PUT',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(this.state.issue),
+    }).then(response => {
+      if (response.ok) {
+        response.json().then(updatedIssue => {
+          updatedIssue.created = new Date(updatedIssue.created);
+          if (updatedIssue.completionDate) {
+            updatedIssue.completionDate = new Date(updatedIssue.completionDate);
+          }
+          this.setState({ issue: updatedIssue });
+          alert('Updated issue successfully.');
+        })
+      } else {
+        response.json().then(error => {
+          alert(`Failed to update issue: ${error.message}`);
+        });
+      }
+    }).catch(err => {
+      alert(`Error in sending data to server: $ {err.message}`);
+    });
+  }
   loadData() {
     //this.props.params.id means the issue id
     fetch(`/api/issues/${this.props.params.id}`).then(response => {
       if(response.ok) {
         response.json().then(issue => {
           //convert date to string
-          issue.created = new Date(issue.created).toDateString();
+          issue.created = new Date(issue.created);
           //if issue.comletionDate NOT equal null, convert given new Date object to string, else - leave it empty
           issue.completionDate = issue.completionDate != null ? new Date(issue.completionDate) : null;
           //change this.state accordingly converted data
@@ -78,10 +106,10 @@ export default class IssueEdit extends React.Component {
     >Please correct invalid fields before submitting.</div>);
     return (
       <div>
-        <form>
+        <form onSubmit={this.onSubmit}>
           ID: {issue._id}
           <br/>
-          Created: {issue.created}
+          Created: {issue.created ? issue.created.toDateString() : ''}
           <br/>
         {/*every input, including 'select', has 'name' property for differetiate one from one for onChange
           function, which is common method for all of the inputs*/}
