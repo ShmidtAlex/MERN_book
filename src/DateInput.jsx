@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 export default class DateInput extends React.Component {
   constructor(props) {
     super(props);
-    console.log(props)
     //state for date field initially not focused, and valid, because of shows valid data
     this.state = { value: this.editFormat(props.value), focused: false, valid: true };
     this.onFocus = this.onFocus.bind(this);
@@ -33,7 +32,7 @@ export default class DateInput extends React.Component {
     //then we miss focuse, and confirm that valid is true
     this.setState({ focused: false, valid });
     if (valid) {
-      console.log(value);
+      //setting parent's onChange with the edited by user and correct date
       this.props.onChange(e, value);
     }
   }

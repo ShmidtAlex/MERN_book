@@ -44,8 +44,18 @@ function validateIssue(issue) {
   }
   return errors.length ? errors.join('; ') : null;
 }
+function convertIssue(issue) {
+  if (issue.created) {
+    issue.created = new Date(issue.created);
+  }
+  if (issue.completionDate) {
+    issue.completionDate = new Date(issue.completionDate);
+  }
+  return cleanupIssue(issue);
+}
 exports.default = {
   validateIssue,
-  cleanupIssue
+  cleanupIssue,
+  convertIssue
 };
 //# sourceMappingURL=issue.js.map

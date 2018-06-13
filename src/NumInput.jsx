@@ -6,7 +6,6 @@ export default class NumInput extends React.Component {
     super(props);
     //local state with transient state
     this.state = { value: this.format(props.value) };
-    console.log(this.state);
     this.onBlur = this.onBlur.bind(this);
     this.onChange = this.onChange.bind(this);
   }
