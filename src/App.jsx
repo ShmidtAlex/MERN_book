@@ -36,9 +36,11 @@ const App = (props) => (
     <Header />
     <div className="container-fluid">
       {props.children}
-    </div>
-    <div className="footer">
-      <a href="https://github.com/ShmidtAlex/MERN_book"> GitHub repository of Author </a>
+      <h5>
+        <small>
+          <a href="https://github.com/ShmidtAlex/MERN_book"> GitHub repository of Author </a>
+        </small>
+      </h5>
     </div>
   </div>
 );
