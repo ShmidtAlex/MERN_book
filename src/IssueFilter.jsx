@@ -53,13 +53,15 @@ export default class IssueFilter extends React.Component {
   //next two functions check if values in effort fields are digital, and if they are, change state variable
   onChangeEffortGte(e) {
     const effortString = e.target.value;
-    if (effortString.match(/^\d*$/)) {
+    console.log(typeof fortString);
+    if (effortString.match(/^\d+/)) {
       this.setState({ effort_gte: e.target.value, changed:true });
     }
   }
   onChangeEffortLte(e) {
     const effortString = e.target.value;
-    if (effortString.match(/^\d*$/)) {
+    console.log(typeof fortString);
+    if (effortString.match(/^\d+/)) {
       this.setState({ effort_lte: e.target.value, changed:true });
     }
   }

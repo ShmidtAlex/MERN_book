@@ -14,10 +14,10 @@ export default class IssueAdd extends React.Component {
     this.props.createIssue({//it's a callback now
       owner: form.owner.value,
       title: form.title.value,
-      effort: form.effort.value,
+      effort: Number(form.effort.value),
       status: 'New',
       created: new Date(),
-      completionDate: form.completionDate.value
+      completionDate: new Date(form.completionDate.value),
     });
     // clear the form for the next input
     form.owner.value = ''; form.title.value = ''; form.completionDate.value = ''; form.effort.value = '';
