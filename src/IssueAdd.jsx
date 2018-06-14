@@ -17,9 +17,10 @@ export default class IssueAdd extends React.Component {
       effort: form.effort.value,
       status: 'New',
       created: new Date(),
+      completionDate: form.completionDate.value
     });
     // clear the form for the next input
-    form.owner.value = ''; form.title.value = '';
+    form.owner.value = ''; form.title.value = ''; form.completionDate.value = ''; form.effort.value = '';
   }
 
   render() {
@@ -29,7 +30,7 @@ export default class IssueAdd extends React.Component {
           <input type="text" name="owner" placeholder="Owner" />
           <input type="text" name="title" placeholder="Title" />
           <input type="text" name="effort" placeholder="Effort" />
-          <input type="text" name="completionDate" placeholder="CompletionDate" />
+          <input type="text" name="completionDate" placeholder="Completion Date" />
           <button>Add</button>
         </form>
       </div>

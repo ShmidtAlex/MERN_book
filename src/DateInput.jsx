@@ -21,7 +21,9 @@ export default class DateInput extends React.Component {
     this.setState({ focused: true });
   }
   onBlur(e) {
+    //if user typed wrong date, value will be null/ if correct, it will be new date, which he typed
     const value = this.unformat(this.state.value);
+    //if user type wrong date, valid will be false/ if correct, it will be true
     const valid = this.state.value === '' || value != null;
     //if this.state.value != '' && this.unformat(this.state.value) != null
     //and also if there is any value in onValidityChange prop from parent component

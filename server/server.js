@@ -133,6 +133,27 @@ app.put('/api/issues/:id', (req, res) => {
       res.status(500).json({ message: `Internal Server Error: ${error}` });
     });
 });
+//delete API:
+app.delete('/api/issues/:id', (req, res) => {
+  let issueId;
+  try {
+    issueId = new ObjectId(req.params.id);
+  } catch (error) {
+    res.status(422).json({ message: `Invalid issue ID format: ${error}` });
+    return;
+  }
+  db.collection('issues').deleteOne({ _id: issueId }).then((deleteResult) => {
+    if(deleteResult.result.n === 1){
+      res.json({ status: "OK" });
+    } else {
+      res.json({ status: "Warning: object not found"});
+    }
+  })
+  .catch(error => {
+    console.log(error);
+    res.status(500).json({ message: `Internal server error: ${error}`});
+  });
+});
 app.get('*', (req, res) => {
   res.sendFile(path.resolve('static/index.html'));//sendFile(path) respons that exacly file corresponds to exaxtly path
 });

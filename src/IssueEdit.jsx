@@ -13,7 +13,7 @@ export default class IssueEdit extends React.Component {
         _id:'', title: '', status: '', owner: '', effort: null, 
         completionDate: null, created: null,
       },
-      invalildFields: {},
+      invalidFields: {},
     };
     this.onChange = this.onChange.bind(this);
     this.onValidityChange = this.onValidityChange.bind(this);
@@ -27,17 +27,18 @@ export default class IssueEdit extends React.Component {
       this.loadData();
     }
   }
- 
   //we got 'valid' argument from child component
   onValidityChange(event, valid) {
-    const invalildFields = Object.assign({}, this.state.invalildFields);
+    const invalidFields = Object.assign({}, this.state.invalidFields);
     //in case, where user typed any wrong value,
     if (!valid) {
-      invalildFields[event.target.name] = true;
+      invalidFields[event.target.name] = true;
     } else {
-      delete invalildFields[event.target.name];
+      //if it is correct initially or was corrected by user before submit
+      delete invalidFields[event.target.name];
     }
-    this.setState({ invalildFields });
+    //this manage only that state, which exists before submit
+    this.setState({ invalidFields });
   }
   //this works only without submit yet
   onChange(event, convertedValue){
@@ -51,9 +52,13 @@ export default class IssueEdit extends React.Component {
     this.setState({ issue });
 
   }
+  //the normal practice in react is creating our own submit function, and don't use default one
   onSubmit(event) {
+    //because of 'submission' imply validation, which we have already done.
+    //(and if we don't use preventDefault, we get 'Error in sending data to server' message in this case)
     event.preventDefault();
-    if (Object.keys(this.state.invalildFields).length !== 0) {
+    //this one enumerate all properties of this.state.invalidFields (including properties of prototype)
+    if (Object.keys(this.state.invalidFields).length !== 0) {
       return;
     }
       fetch(`/api/issues/${this.props.params.id}`, {
@@ -102,7 +107,7 @@ export default class IssueEdit extends React.Component {
   }
   render() {
     const issue = this.state.issue;
-    const validationMessage = Object.keys(this.state.invalildFields).length === 0 ? null : (<div className="error"
+    const validationMessage = Object.keys(this.state.invalidFields).length === 0 ? null : (<div className="error"
     >Please correct invalid fields before submitting.</div>);
     return (
       <div>
