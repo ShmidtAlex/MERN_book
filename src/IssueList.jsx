@@ -3,7 +3,7 @@ import React from 'react';
 import 'whatwg-fetch';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
-import { Button, Glyphicon } from 'react-bootstrap';
+import { Button, Glyphicon, Table, Panel } from 'react-bootstrap';
 import IssueAdd from './IssueAdd.jsx';
 import IssueFilter from './IssueFilter.jsx';
 
@@ -40,7 +40,7 @@ IssueRow.propTypes = {
 function IssueTable(props) {
   const issueRows = props.issues.map(issue => <IssueRow key={issue._id} issue={issue} deleteIssue={props.deleteIssue} />);
   return (
-    <table className="bordered-table">
+    <Table bordered condensed responsive hover>
       <thead>
         <tr>
           <th>Id</th>
@@ -54,7 +54,7 @@ function IssueTable(props) {
         </tr>
       </thead>
       <tbody>{issueRows}</tbody>
-    </table>
+    </Table>
   );
 }
 IssueTable.propTypes = {
@@ -153,7 +153,9 @@ export default class IssueList extends React.Component {
   render() {
     return (
       <div>
-        <IssueFilter setFilter={this.setFilter} initFilter={this.props.location.query} />
+        <Panel collapsible header="Filter">
+          <IssueFilter setFilter={this.setFilter} initFilter={this.props.location.query} />
+        </Panel>
         <hr />
         <IssueTable issues={this.state.issues} deleteIssue={this.deleteIssue} />
         <hr />
