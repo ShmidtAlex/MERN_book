@@ -113,6 +113,7 @@ export default class IssueEdit extends React.Component {
     return (
       <Panel header="Edit Issue">
         <Form horizontal onSubmit={this.onSubmit}>
+          {/*horizontal helps us to set up view of lines in this table*/}
         <FormGroup>
           <Col></Col>
           <FormGroup> </FormGroup>
@@ -122,8 +123,11 @@ export default class IssueEdit extends React.Component {
           </Col>
         </FormGroup>
         <FormGroup>
+          {/*we use ControlLabel as a componentClass of Col tag, because of we whish to combine Col and ControlLabel in one tag
+          and if it will be just simply put together (which is normally for others tags) we'll lose indentation*/}
           <Col componentClass={ ControlLabel } sm={3}> Created: </Col>
           <Col sm={9}>
+            {/*we  use .Static for the sake of clarity, that the element is unchangeable*/}
             <FormControl.Static> {issue.created ? issue.created.toDateString() : ''}</FormControl.Static>
           </Col>
         </FormGroup>
@@ -169,10 +173,10 @@ export default class IssueEdit extends React.Component {
         <FormGroup>
           <Col smOffset={3} sm={6}> 
             <ButtonToolbar>
-               <Button bsStyle="primary" type="submit">Submit</Button>
-               <LinkContainer to="/issues"> 
+              <Button bsStyle="primary" type="submit">Submit</Button>
+              <LinkContainer to="/issues"> 
                 <Button bsStyle="link" type="submit">Back</Button>
-               </LinkContainer>
+              </LinkContainer>
             </ButtonToolbar>
           </Col>
           <Col sm={9}>
@@ -186,6 +190,7 @@ export default class IssueEdit extends React.Component {
         {/*every input, including 'select', has 'name' property for differetiate one from one for onChange
           function, which is common method for all of the inputs*/}
         {/*'this' helps us identify a target of event in onChange() function*/}
+      {/*LinkContainer allows styling button as a link and send user to issues page*/}
       </Panel>
        
     );
