@@ -1,6 +1,6 @@
 import React from 'react';
 import { LinkContainer } from 'react-router-bootstrap';
-import {Form, Col, FormGroup, FormControl, ControlLabel, ButtonToolbar, Button, Panel } from 'react-bootstrap';
+import {Form, Col, FormGroup, FormControl, ControlLabel, ButtonToolbar, Button, Panel, Alert } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import NumInput from './NumInput.jsx';
 import DateInput from './DateInput.jsx';
@@ -14,11 +14,13 @@ export default class IssueEdit extends React.Component {
         _id:'', title: '', status: '', owner: '', effort: null, 
         completionDate: null, created: null,
       },
-      invalidFields: {},
+      invalidFields: {}, showingValidation: false,
     };
     this.onChange = this.onChange.bind(this);
     this.onValidityChange = this.onValidityChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
+    this.dismissValidation = this.dismissValidation.bind(this);
+    this.showValidation = this.showValidation.bind(this);
   }
   componentDidMount() {
     this.loadData();
@@ -58,6 +60,7 @@ export default class IssueEdit extends React.Component {
     //because of 'submission' imply validation, which we have already done.
     //(and if we don't use preventDefault, we get 'Error in sending data to server' message in this case)
     event.preventDefault();
+    this.showValidation(); //shows validation message if some error
     //this one enumerate all properties of this.state.invalidFields (including properties of prototype)
     if (Object.keys(this.state.invalidFields).length !== 0) {
       return;
@@ -85,6 +88,12 @@ export default class IssueEdit extends React.Component {
       alert(`Error in sending data to server: $ {err.message}`);
     });
   }
+  showValidation() {
+    this.setState({ showingValidation: true });
+  }
+  dismissValidation() {
+    this.setState({ showingValidation: true });
+  }
   loadData() {
     //this.props.params.id means the issue id
     fetch(`/api/issues/${this.props.params.id}`).then(response => {
@@ -108,18 +117,24 @@ export default class IssueEdit extends React.Component {
   }
   render() {
     const issue = this.state.issue;
-    const validationMessage = Object.keys(this.state.invalidFields).length === 0 ? null : (<div className="error"
-    >Please correct invalid fields before submitting.</div>);
+    let validationMessage  = null; 
+    if(Object.keys(this.state.invalidFields).length !== 0 && this.state.showingValidation) {
+      validationMessage = (
+        <Alert bsStyle="danger" onDismiss={this.dismissValidation}>
+          Please, correct invalid fields before submitting.
+        </Alert>
+      );
+    }
     return (
       <Panel header="Edit Issue">
         <Form horizontal onSubmit={this.onSubmit}>
-          {/*horizontal helps us to set up view of lines in this table*/}
+          {/*horizontal helps us to set up pretty view of lines in this table*/}
         <FormGroup>
           <Col></Col>
           <FormGroup> </FormGroup>
           <Col componentClass={ ControlLabel } sm={3}> ID: </Col>
           <Col sm={9}>
-            <FormControl.Static> {issue._id}></FormControl.Static>
+            <FormControl.Static> {issue._id}</FormControl.Static>
           </Col>
         </FormGroup>
         <FormGroup>
@@ -179,13 +194,10 @@ export default class IssueEdit extends React.Component {
               </LinkContainer>
             </ButtonToolbar>
           </Col>
-          <Col sm={9}>
-            <FormControl name="title" value={issue.title} onChange={this.onChange}/>
-          </Col>
         </FormGroup>
-          {validationMessage}
-          
-         
+        <FormGroup>
+          <Col smOffset={3} sm={6}>{validationMessage}</Col>
+        </FormGroup>
         </Form>
         {/*every input, including 'select', has 'name' property for differetiate one from one for onChange
           function, which is common method for all of the inputs*/}

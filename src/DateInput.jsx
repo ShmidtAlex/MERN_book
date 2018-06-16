@@ -58,10 +58,10 @@ export default class DateInput extends React.Component {
   }
   render() {
   {/*define the conditions for clasName='invalid' (for next styling it and showing to user, that it is)*/}
-    const className = (!this.state.valid && !this.state.focused) ? 'invalid' : null;
+   
     const value = (this.state.focused || !this.state.valid) ? this.state.value : this.displayFormat(this.props.value);
-    const childProps = Object.assign({}, this.props);
-    delete childProps.onValidityChange;
+    const childProps = Object.assign({}, this.props); {/*clone parent props to const childProps*/}
+    delete childProps.onValidityChange; {/*remove unnecessary property onValidityChange*/}
     return (
       <input type="text" {...childProps} value={value} 
       placeholder={this.state.focused ? 'yyyy-mm-dd' : null} 
