@@ -47,7 +47,7 @@ export default class IssueEdit extends React.Component {
   onChange(event, convertedValue){
     //clone state object to empty object 'issue' for the purpose of access to the 'name' properties of inputs
     const issue = Object.assign({}, this.state.issue);
-    const value = (convertedValue !== undefined ? convertedValue : event.target.value);
+    const value = (convertedValue !== undefined) ? convertedValue : event.target.value;
     //f.e.g: event.target.name = status, event.target.value = New or date:'some date in string format'; 
     //we use target's name as a key in the state object to set the value in the state object
    issue[event.target.name] = value;
@@ -78,22 +78,17 @@ export default class IssueEdit extends React.Component {
           }
           this.setState({ issue: updatedIssue });
           alert('Updated issue successfully.');
-        })
+        });
       } else {
         response.json().then(error => {
           alert(`Failed to update issue: ${error.message}`);
         });
       }
     }).catch(err => {
-      alert(`Error in sending data to server: $ {err.message}`);
+      alert(`Error in sending data to server: ${err.message}`);
     });
   }
-  showValidation() {
-    this.setState({ showingValidation: true });
-  }
-  dismissValidation() {
-    this.setState({ showingValidation: true });
-  }
+ 
   loadData() {
     //this.props.params.id means the issue id
     fetch(`/api/issues/${this.props.params.id}`).then(response => {
@@ -115,10 +110,16 @@ export default class IssueEdit extends React.Component {
       alert(`Error in fetching data from server: ${err.message}`);
     });
   }
+   showValidation() {
+    this.setState({ showingValidation: true });
+  }
+  dismissValidation() {
+    this.setState({ showingValidation: false });
+  }
   render() {
     const issue = this.state.issue;
     let validationMessage  = null; 
-    if(Object.keys(this.state.invalidFields).length !== 0 && this.state.showingValidation) {
+    if (Object.keys(this.state.invalidFields).length !== 0 && this.state.showingValidation) {
       validationMessage = (
         <Alert bsStyle="danger" onDismiss={this.dismissValidation}>
           Please, correct invalid fields before submitting.
@@ -130,9 +131,7 @@ export default class IssueEdit extends React.Component {
         <Form horizontal onSubmit={this.onSubmit}>
           {/*horizontal helps us to set up pretty view of lines in this table*/}
         <FormGroup>
-          <Col></Col>
-          <FormGroup> </FormGroup>
-          <Col componentClass={ ControlLabel } sm={3}> ID: </Col>
+          <Col componentClass={ControlLabel} sm={3}> ID: </Col>
           <Col sm={9}>
             <FormControl.Static> {issue._id}</FormControl.Static>
           </Col>
@@ -171,7 +170,7 @@ export default class IssueEdit extends React.Component {
             <FormControl componentClass={NumInput} name="effort" value={issue.effort} onChange={this.onChange}/>
           </Col>
         </FormGroup>
-        <FormGroup>
+        <FormGroup validationState={this.state.invalidFields.completionDate ? 'error' : null}>
           <Col componentClass={ ControlLabel } sm={3}> Completion Date:</Col>
           <Col sm={9}>
             <FormControl componentClass={DateInput} name="completionDate" value={issue.completionDate} 
