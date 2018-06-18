@@ -170,11 +170,14 @@ export default class IssueEdit extends React.Component {
             <FormControl componentClass={NumInput} name="effort" value={issue.effort} onChange={this.onChange}/>
           </Col>
         </FormGroup>
+      {/*validationState is an instrument of react-bootstrap. variants of values of validateState are these:
+      error, succes, warning. in our case it'll be 'error' or 'null'*/}
         <FormGroup validationState={this.state.invalidFields.completionDate ? 'error' : null}>
           <Col componentClass={ ControlLabel } sm={3}> Completion Date:</Col>
           <Col sm={9}>
             <FormControl componentClass={DateInput} name="completionDate" value={issue.completionDate} 
             onChange={this.onChange} onValidityChange={this.onValidityChange} />
+          {/*Feetback means the icon in the line if validation isn't passed*/}
             <FormControl.Feedback />
           </Col>
         </FormGroup>
