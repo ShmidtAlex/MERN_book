@@ -15,7 +15,7 @@ export default class Toast extends React.Component {
   render() {
     return (
       <Collapse in={this.props.showing}>
-        <div style={{position: 'fixed', top: 30, left: 0, right: 0, texAlign: 'center' }}
+        <div style={{position: 'fixed', top: 30, left: 30, right: 0, texAlign: 'center' }}>
           <Alert style={{ display: 'inline-block', width: 500 }} bsStyle={this.props.bsStyle} onDismiss={this.props.onDismiss}>
             {this.props.message}
           </Alert>
@@ -25,5 +25,11 @@ export default class Toast extends React.Component {
   }
 }
 Toast.propTypes = {
-  
-}
+  showing: PropTypes.bool.isRequired,
+  onDismiss: PropTypes.func.isRequired,
+  bsStyle: PropTypes.string,
+  message: PropTypes.any.isRequired,
+};
+Toast.defaultProps ={
+  bsStyle: 'success',
+};

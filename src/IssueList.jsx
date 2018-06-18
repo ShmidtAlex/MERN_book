@@ -6,6 +6,7 @@ import { Link } from 'react-router';
 import { Button, Glyphicon, Table, Panel } from 'react-bootstrap';
 import IssueAdd from './IssueAdd.jsx';
 import IssueFilter from './IssueFilter.jsx';
+import Toast from './Toast.jsx';
 
 
 const IssueRow = (props) => {
@@ -65,10 +66,15 @@ IssueTable.propTypes = {
 export default class IssueList extends React.Component {
   constructor() {
     super();
-    this.state = { issues: [] };
+    this.state = { 
+      issues: [],
+      toastVisible: false, toastMessage: '', toastType: 'success',
+    };
     this.createIssue = this.createIssue.bind(this);
     this.setFilter = this.setFilter.bind(this);
     this.deleteIssue = this.deleteIssue.bind(this);
+    this.showError = this.showError.bind(this);
+    this.dismissToast = this.dismissToast.bind(this);
   }
   componentDidMount() {
     this.loadData();
@@ -84,6 +90,12 @@ export default class IssueList extends React.Component {
       return;
     }
     this.loadData();
+  }
+  showError(message) {
+    this.setState({ toastVisible: true, toastMessage: message, toastType: 'danger' });
+  }
+  dismissToast() {
+    this.setState({ toastVisible: false });
   }
   loadData() {
     //this.props.location.search = ?effort_gte=some_number&status(filter value in unparsed URL)
@@ -102,11 +114,11 @@ export default class IssueList extends React.Component {
         });
       } else {
         response.json().then((error) => {
-          alert(`Failed to fetch issues:${error.message}`);
+          this.showError(`Failed to fetch issues:${error.message}`);
         });
       }
     }).catch((err) => {
-      alert('Error in fetching data from server:', err);
+      this.showError('Error in fetching data from server:', err);
     });
   }
   //this method calls from the IssueFilter component
@@ -134,17 +146,17 @@ export default class IssueList extends React.Component {
         });
       } else {
         response.json().then((error) => {
-          alert(`Failed to add issue: ${error.message}`);
+          this.showError(`Failed to add issue: ${error.message}`);
         });
       }
     }).catch((err) => {
-      alert(`Error in sending data to server: ${err.message}`);
+      this.showError(`Error in sending data to server: ${err.message}`);
     });
   }
   deleteIssue(id) {
     fetch(`/api/issues/${id}`, {method: 'DELETE'}).then(response => {
       if (!response.ok) {
-        alert('Failed to delete issue');
+        this.showError('Failed to delete issue');
       } else {
         this.loadData();
       }
@@ -160,6 +172,8 @@ export default class IssueList extends React.Component {
         <IssueTable issues={this.state.issues} deleteIssue={this.deleteIssue} />
         <hr />
         <IssueAdd createIssue={this.createIssue} />
+        <Toast showing={this.state.toastVisible} message={this.state.toastMessage} onDismiss={this.dismissToast} 
+        bsStyle={this.state.toastType}/>
       </div>
     );
   }

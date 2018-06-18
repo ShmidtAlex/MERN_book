@@ -34,7 +34,7 @@ export default class IssueAdd extends React.Component {
             <FormControl name="effort" placeholder="Effort" />{' '}
             <FormControl name="completionDate" placeholder="Completion Date" />{' '}
           </FormGroup>{' '}
-          <Button bsSize="small">Add</Button>
+          <Button type="submit" bsSize="small">Add</Button>
         </Form>
       </div>
     );

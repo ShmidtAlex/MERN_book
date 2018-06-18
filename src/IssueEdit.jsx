@@ -4,6 +4,7 @@ import {Form, Col, FormGroup, FormControl, ControlLabel, ButtonToolbar, Button, 
 import PropTypes from 'prop-types';
 import NumInput from './NumInput.jsx';
 import DateInput from './DateInput.jsx';
+import Toast from './Toast.jsx';
 
 export default class IssueEdit extends React.Component {
   constructor() {
@@ -15,12 +16,16 @@ export default class IssueEdit extends React.Component {
         completionDate: null, created: null,
       },
       invalidFields: {}, showingValidation: false,
+      toastVisible: false, toastMessage: '', toastType: 'success',
     };
     this.onChange = this.onChange.bind(this);
     this.onValidityChange = this.onValidityChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.dismissValidation = this.dismissValidation.bind(this);
     this.showValidation = this.showValidation.bind(this);
+    this.showSuccess = this.showSuccess.bind(this);
+    this.showError = this.showError.bind(this);
+    this.dismissToast = this.dismissToast.bind(this);
   }
   componentDidMount() {
     this.loadData();
@@ -77,15 +82,15 @@ export default class IssueEdit extends React.Component {
             updatedIssue.completionDate = new Date(updatedIssue.completionDate);
           }
           this.setState({ issue: updatedIssue });
-          alert('Updated issue successfully.');
+          this.showSuccess('Updated issue successfully.');
         });
       } else {
         response.json().then(error => {
-          alert(`Failed to update issue: ${error.message}`);
+          this.showError(`Failed to update issue: ${error.message}`);
         });
       }
     }).catch(err => {
-      alert(`Error in sending data to server: ${err.message}`);
+      this.showError(`Error in sending data to server: ${err.message}`);
     });
   }
  
@@ -103,11 +108,11 @@ export default class IssueEdit extends React.Component {
         });
       } else {
         response.json().then(error => {
-          alert(`Failed to fetch issue: ${error.message}`);
+          this.showError(`Failed to fetch issue: ${error.message}`);
         });
       }
     }).catch(err => {
-      alert(`Error in fetching data from server: ${err.message}`);
+      this.showError(`Error in fetching data from server: ${err.message}`);
     });
   }
    showValidation() {
@@ -115,6 +120,15 @@ export default class IssueEdit extends React.Component {
   }
   dismissValidation() {
     this.setState({ showingValidation: false });
+  }
+  showSuccess(message) {
+    this.setState({ toastVisible: true, toastMessage: message, toastType: 'success' });
+  }
+  showError(message) {
+    this.setState({ toastVisible: true, toastMessage: message, toastType: 'danger'});
+  }
+  dismissToast() {
+    this.setState({ toastVisible: false });
   }
   render() {
     const issue = this.state.issue;
@@ -201,6 +215,8 @@ export default class IssueEdit extends React.Component {
           <Col smOffset={3} sm={6}>{validationMessage}</Col>
         </FormGroup>
         </Form>
+        <Toast showing={this.state.toastVisible} message={this.state.toastMessage} onDismiss={this.dismissToast}
+        bsStyle={this.state.toastType}/>
         {/*every input, including 'select', has 'name' property for differetiate one from one for onChange
           function, which is common method for all of the inputs*/}
         {/*'this' helps us identify a target of event in onChange() function*/}
