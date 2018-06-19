@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import { withRouter } from 'react-router';
 import { NavItem, Glyphicon, Modal, Form, FormGroup, FormControl, ControlLabel, Button, ButtonToolbar } from 'react-bootstrap';
 import Toast from './Toast.jsx';
-//we don't use ''
+//we don't use 'export default class' because of we use whthRouter function instead. It means, that we wrap this whole
+//component before exporting, not after as it is in App.jsx with IssueList. thus we encapsulate usage of router within this component
 class IssueAddNavItem extends React.Component {
   constructor(props) {
     super(props);
@@ -32,18 +33,18 @@ class IssueAddNavItem extends React.Component {
   submit(e) {
     e.preventDefault();
     this.hideModal();
-    const from = document.forms.issueAdd;
+    const form = document.forms.issueAdd;
     const newIssue = {
       owner: form.owner.value, title: form.title.value, status: 'New', created: new Date(),
     };
     fetch('api/issues', {
-      method: POST,
+      method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(newIssue),
     }).then(response => {
       if (response.ok) {
         response.json().then(updatedIssue => {
-          this.props.router.push(`/issues/$(updatedIssue._id)`);
+          this.props.router.push(`/issues/${updatedIssue._id}`);
         });
       }
     }).catch(err => {
@@ -58,7 +59,7 @@ class IssueAddNavItem extends React.Component {
             <Modal.Title>Create Issue</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <Form name="IssueAdd">
+            <Form name="issueAdd">
               <FormGroup>
                 <ControlLabel>Title</ControlLabel>
                 <FormControl name="title" autoFocus />

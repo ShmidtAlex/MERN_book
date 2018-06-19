@@ -7,6 +7,7 @@ import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import IssueList from './IssueList.jsx';
 import IssueEdit from './IssueEdit.jsx';
+import IssueAddNavItem from './IssueAddNavItem.jsx';
 
 const contentNode = document.getElementById('contents');
 const NoMatch = () => <p>Page Not found</p>;
@@ -24,7 +25,7 @@ const Header = () => (
       </LinkContainer>
     </Nav>
     <Nav pullRight>
-      <NavItem><Glyphicon glyph="plus" />Create Issue</NavItem>
+      <IssueAddNavItem />
       <NavDropdown id="user-dropdown" title={<Glyphicon glyph="option-horizontal"/>} noCaret>
         <MenuItem>Logout</MenuItem>
       </NavDropdown>

@@ -4,10 +4,9 @@ import 'whatwg-fetch';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import { Button, Glyphicon, Table, Panel } from 'react-bootstrap';
-import IssueAdd from './IssueAdd.jsx';
 import IssueFilter from './IssueFilter.jsx';
 import Toast from './Toast.jsx';
-
+import IssueAddNavItem from './IssueAddNavItem.jsx';
 
 const IssueRow = (props) => {
   function onDeleteClick() {
@@ -70,7 +69,6 @@ export default class IssueList extends React.Component {
       issues: [],
       toastVisible: false, toastMessage: '', toastType: 'success',
     };
-    this.createIssue = this.createIssue.bind(this);
     this.setFilter = this.setFilter.bind(this);
     this.deleteIssue = this.deleteIssue.bind(this);
     this.showError = this.showError.bind(this);
@@ -127,32 +125,7 @@ export default class IssueList extends React.Component {
     this.props.router.push({ pathname: this.props.location.pathname, query });
   }
   //this method calls from the IssueAdd component
-  createIssue(newIssue) {
-    //send new issue data to server instead of posting it directly on the client
-    fetch('/api/issues', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(newIssue),//data of newIssue itself in json format
-    }).then((response) => {//getting only newIssue, rather than all list of issues from server
-      if (response.ok) {
-        // response.text().then(r => console.log(r));
-        response.json().then((updatedIssue) => {
-          updatedIssue.created = new Date(updatedIssue.created);//because of it had no date of creation before this moment
-          if (updatedIssue.completionDate) {
-            updatedIssue.completionDate = new Date(updatedIssue.completionDate);
-          }
-          const newIssues = this.state.issues.concat(updatedIssue);//add new issue, gotted from the server to list
-          this.setState({ issues: newIssues });//change the old state to new state
-        });
-      } else {
-        response.json().then((error) => {
-          this.showError(`Failed to add issue: ${error.message}`);
-        });
-      }
-    }).catch((err) => {
-      this.showError(`Error in sending data to server: ${err.message}`);
-    });
-  }
+  
   deleteIssue(id) {
     fetch(`/api/issues/${id}`, {method: 'DELETE'}).then(response => {
       if (!response.ok) {
@@ -171,7 +144,6 @@ export default class IssueList extends React.Component {
         <hr />
         <IssueTable issues={this.state.issues} deleteIssue={this.deleteIssue} />
         <hr />
-        <IssueAdd createIssue={this.createIssue} />
         <Toast showing={this.state.toastVisible} message={this.state.toastMessage} onDismiss={this.dismissToast} 
         bsStyle={this.state.toastType}/>
       </div>
