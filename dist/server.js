@@ -20,7 +20,7 @@ var _issue = require('./issue.js');
 
 var _issue2 = _interopRequireDefault(_issue);
 
-var _renderedPageRouter = require('./renderedPageRouter.jsx');
+var _renderedPageRouter = require('./renderedPageRouter.js');
 
 var _renderedPageRouter2 = _interopRequireDefault(_renderedPageRouter);
 
