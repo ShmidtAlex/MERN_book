@@ -14,15 +14,15 @@ var _bodyParser = require('body-parser');
 
 var _bodyParser2 = _interopRequireDefault(_bodyParser);
 
-var _path = require('path');
-
-var _path2 = _interopRequireDefault(_path);
-
 var _mongodb = require('mongodb');
 
 var _issue = require('./issue.js');
 
 var _issue2 = _interopRequireDefault(_issue);
+
+var _renderedPageRouter = require('./renderedPageRouter.jsx');
+
+var _renderedPageRouter2 = _interopRequireDefault(_renderedPageRouter);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -160,9 +160,7 @@ app.delete('/api/issues/:id', (req, res) => {
     res.status(500).json({ message: `Internal server error: ${error}` });
   });
 });
-app.get('*', (req, res) => {
-  res.sendFile(_path2.default.resolve('static/index.html')); //sendFile(path) respons that exacly file corresponds to exaxtly path
-});
+app.use('/', _renderedPageRouter2.default);
 //MongoClient is an object provided by mongodb module, allows us act as a client
 //'connect' method connecting the database from Node.js
 _mongodb.MongoClient.connect('mongodb://localhost/IssueTracker').then(connection => {

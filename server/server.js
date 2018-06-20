@@ -4,10 +4,10 @@ import 'babel-polyfill';
 
 import express from "express";
 import bodyParser from 'body-parser';
-import path from 'path';
 //import mongodb driver features
 import { MongoClient, ObjectId } from 'mongodb';
 import Issue from './issue.js'
+import renderedPageRouter from './renderedPageRouter.jsx';
 //create express instance
 const app = express();
 //using middleware static, show that static files placed in 'static' folder
@@ -154,9 +154,7 @@ app.delete('/api/issues/:id', (req, res) => {
     res.status(500).json({ message: `Internal server error: ${error}`});
   });
 });
-app.get('*', (req, res) => {
-  res.sendFile(path.resolve('static/index.html'));//sendFile(path) respons that exacly file corresponds to exaxtly path
-});
+app.use('/', renderedPageRouter);
 //MongoClient is an object provided by mongodb module, allows us act as a client
 //'connect' method connecting the database from Node.js
 MongoClient.connect('mongodb://localhost/IssueTracker').then(connection => {

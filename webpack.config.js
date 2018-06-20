@@ -6,8 +6,8 @@ const path = require('path');
 module.exports = {
   mode: 'development',
   entry: {
-    app: './src/App.jsx',
-    vendor: ['react', 'react-dom', 'whatwg-fetch', 'react-router', 'react-bootstrap', 'react-router-bootstrap'],
+    app: './client/Client.jsx',
+    vendor: ['react', 'react-dom', 'whatwg-fetch', 'react-router', 'react-bootstrap', 'react-router-bootstrap','babel-polyfill'],
   },
   output: {
     path: path.resolve(__dirname, './static'),
@@ -28,7 +28,7 @@ module.exports = {
     port: 8000,
     contentBase: 'static',
     proxy: {
-      '/api/*': {
+      '**': {
         target: 'http://localhost:3000',
       },
     },
