@@ -10,3 +10,4 @@ renderedPageRouter.get('*', (req, res) => {
   const html = renderToString(<HelloWorld/>);
   res.send(template(html));
 })
+export default renderedPageRouter;

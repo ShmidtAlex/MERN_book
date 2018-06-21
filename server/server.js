@@ -1,4 +1,3 @@
-//# sourceMappingURL=server.js.map
 import SourceMapSupport from 'source-map-support';
 SourceMapSupport.install();
 import 'babel-polyfill';

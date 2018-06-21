@@ -59,3 +59,4 @@ exports.default = {
   convertIssue: convertIssue
 };
 //# sourceMappingURL=issue.js.map
+//# sourceMappingURL=issue.js.map

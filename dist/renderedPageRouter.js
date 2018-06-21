@@ -1,5 +1,9 @@
 'use strict';
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
 var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
@@ -26,4 +30,5 @@ renderedPageRouter.get('*', function (req, res) {
   var html = (0, _server.renderToString)(_react2.default.createElement(_HelloWorld2.default, null));
   res.send((0, _template2.default)(html));
 });
+exports.default = renderedPageRouter;
 //# sourceMappingURL=renderedPageRouter.js.map

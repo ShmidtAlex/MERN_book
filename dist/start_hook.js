@@ -6,3 +6,4 @@ require('babel-register')({
 require('./server.js');
 //# sourceMappingURL=start_hook.js.map
 //# sourceMappingURL=start_hook.js.map
+//# sourceMappingURL=start_hook.js.map
