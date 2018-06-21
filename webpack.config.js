@@ -1,20 +1,22 @@
-/* devtool: 'source-map'; */
-// const webpack = require('webpack');
-
-const path = require('path');
+const webpack = require('webpack');
 
 module.exports = {
-  mode: 'development',
   entry: {
     app: './client/Client.jsx',
-    vendor: ['react', 'react-dom', 'whatwg-fetch', 'react-router', 'react-bootstrap', 'react-router-bootstrap'],
+    vendor: [
+      'react', 'react-dom', 'react-router', 'react-bootstrap', 'react-router-bootstrap',
+      'whatwg-fetch', 'babel-polyfill',
+    ],
   },
   output: {
-    path: path.resolve(__dirname, './static'),
-    filename: '[name].bundle.js',
+    path: './static',
+    filename: 'app.bundle.js',
   },
+  plugins: [
+    new webpack.optimize.CommonsChunkPlugin('vendor', 'vendor.bundle.js'),
+  ],
   module: {
-    rules: [
+    loaders: [
       {
         test: /\.jsx$/,
         loader: 'babel-loader',
@@ -23,6 +25,9 @@ module.exports = {
         },
       },
     ],
+  },
+  resolve: {
+    extensions: ['', '.js', '.jsx']
   },
   devServer: {
     port: 8000,
