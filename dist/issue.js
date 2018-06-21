@@ -4,7 +4,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-const validIssueStatus = {
+var validIssueStatus = {
   New: true,
   Open: true,
   Assigned: true,
@@ -12,7 +12,7 @@ const validIssueStatus = {
   Verified: true,
   Closed: true
 };
-const issueFieldType = {
+var issueFieldType = {
   status: "required",
   owner: "required",
   effort: "optional",
@@ -23,8 +23,8 @@ const issueFieldType = {
 //validateIssue has to be decoupled to two functions for eslint validation
 //'fucntion parameter reassignment is disallowed'
 function cleanupIssue(issue) {
-  const cleanedUpIssue = {};
-  Object.keys(issue).forEach(field => {
+  var cleanedUpIssue = {};
+  Object.keys(issue).forEach(function (field) {
     if (issueFieldType[field]) {
       cleanedUpIssue[field] = issue[field];
     }
@@ -33,14 +33,14 @@ function cleanupIssue(issue) {
 }
 
 function validateIssue(issue) {
-  const errors = [];
-  Object.keys(issueFieldType).forEach(field => {
+  var errors = [];
+  Object.keys(issueFieldType).forEach(function (field) {
     if (issueFieldType[field] === 'required' && !issue[field]) {
-      errors.push(`Missing mandatory field: ${field}`);
+      errors.push("Missing mandatory field: " + field);
     }
   });
   if (!validIssueStatus[issue.status]) {
-    errors.push(`${issue.status} is not a valid status.`);
+    errors.push(issue.status + " is not a valid status.");
   }
   return errors.length ? errors.join('; ') : null;
 }
@@ -54,8 +54,8 @@ function convertIssue(issue) {
   return cleanupIssue(issue);
 }
 exports.default = {
-  validateIssue,
-  cleanupIssue,
-  convertIssue
+  validateIssue: validateIssue,
+  cleanupIssue: cleanupIssue,
+  convertIssue: convertIssue
 };
 //# sourceMappingURL=issue.js.map
