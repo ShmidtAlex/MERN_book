@@ -26,7 +26,8 @@ var _renderedPageRouter2 = _interopRequireDefault(_renderedPageRouter);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-_sourceMapSupport2.default.install();
+_sourceMapSupport2.default.install(); //# sourceMappingURL=server.js.map
+
 //import mongodb driver features
 
 

@@ -1,3 +1,4 @@
+//# sourceMappingURL=server.js.map
 import SourceMapSupport from 'source-map-support';
 SourceMapSupport.install();
 import 'babel-polyfill';
@@ -6,7 +7,7 @@ import express from "express";
 import bodyParser from 'body-parser';
 //import mongodb driver features
 import { MongoClient, ObjectId } from 'mongodb';
-import Issue from './issue.js'
+import Issue from './issue.js';
 import renderedPageRouter from './renderedPageRouter.jsx';
 
 //create express instance
@@ -160,12 +161,12 @@ app.use('/', renderedPageRouter);
 //'connect' method connecting the database from Node.js
 MongoClient.connect('mongodb://localhost/IssueTracker').then(connection => {
   //assign our connection with mongo database (called IssueTracker) to global varibale db
-	db = connection.db('IssueTracker');
-	app.listen(3000, () => {//start express server after getting connection
-		console.log("App started on port 3000");
-	});	
+  db = connection.db('IssueTracker');
+  app.listen(3000, () => {//start express server after getting connection
+    console.log("App started on port 3000");
+  }); 
 }).catch(error => {
-	console.log('ERROR:', error);
+  console.log('ERROR:', error);
 });
 //returning one and only one real page in our SPA for avoid situation, when router
 //can't find correct path /api/issues,(instead it find /issues) 
