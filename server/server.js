@@ -7,7 +7,7 @@ import bodyParser from 'body-parser';
 //import mongodb driver features
 import { MongoClient, ObjectId } from 'mongodb';
 import Issue from './issue.js'
-import renderedPageRouter from './renderedPageRouter.js';
+import renderedPageRouter from './renderedPageRouter.jsx';
 //create express instance
 const app = express();
 //using middleware static, show that static files placed in 'static' folder
