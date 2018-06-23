@@ -46,11 +46,10 @@
 
 	'use strict';
 	
-	var _sourceMapSupport = __webpack_require__(1);
-	
-	var _sourceMapSupport2 = _interopRequireDefault(_sourceMapSupport);
-	
-	__webpack_require__(2);
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.setDb = exports.app = undefined;
 	
 	var _express = __webpack_require__(3);
 	
@@ -72,13 +71,11 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	_sourceMapSupport2.default.install();
-	//import mongodb driver features
-	
-	
 	//create express instance
 	var app = (0, _express2.default)();
 	//using middleware static, show that static files placed in 'static' folder
+	
+	//import mongodb driver features
 	app.use(_express2.default.static('static'));
 	//create and mount bodyParser middleware, which helps to parse .json file 
 	//to simple object, at the application level
@@ -215,33 +212,15 @@
 	app.use('/', _renderedPageRouter2.default);
 	//MongoClient is an object provided by mongodb module, allows us act as a client
 	//'connect' method connecting the database from Node.js
-	_mongodb.MongoClient.connect('mongodb://localhost/IssueTracker').then(function (connection) {
-	  //assign our connection with mongo database (called IssueTracker) to global varibale db
-	  db = connection.db('IssueTracker');
-	  app.listen(3000, function () {
-	    //start express server after getting connection
-	    console.log("App started on port 3000");
-	  });
-	}).catch(function (error) {
-	  console.log('ERROR:', error);
-	});
-	//returning one and only one real page in our SPA for avoid situation, when router
-	//can't find correct path /api/issues,(instead it find /issues) 
-	//after hitting 'reload' button in browser/ it also affects webpack.config 'historyApiFallback'
+	function setDb(newDb) {
+	  db = newDb;
+	}
+	exports.app = app;
+	exports.setDb = setDb;
 
 /***/ }),
-/* 1 */
-/***/ (function(module, exports) {
-
-	module.exports = require("source-map-support");
-
-/***/ }),
-/* 2 */
-/***/ (function(module, exports) {
-
-	module.exports = require("babel-polyfill");
-
-/***/ }),
+/* 1 */,
+/* 2 */,
 /* 3 */
 /***/ (function(module, exports) {
 

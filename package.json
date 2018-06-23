@@ -42,7 +42,7 @@
     "whatwg-fetch": "^2.0.4"
   },
   "scripts": {
-    "start": "nodemon -w dist dist/serve.bundle.js",
+    "start": "nodemon -w dist dist/server.bundle.js",
     "compile-server": "webpack --config webpack.server-config.js",
     "watch-server": "webpack --config webpack.server-config.js --watch",
     "start-hook": "nodemon -e js,jsx -w server,src server/start_hook.js",
