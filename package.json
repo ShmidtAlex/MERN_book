@@ -42,12 +42,13 @@
     "whatwg-fetch": "^2.0.4"
   },
   "scripts": {
-    "start": "nodemon -w dist dist/server.bundle.js",
+    "start": "node dist/server.bundle.js",
     "compile-server": "webpack --config webpack.server-config.js",
     "watch-server": "webpack --config webpack.server-config.js --watch",
     "start-hook": "nodemon -e js,jsx -w server,src server/start_hook.js",
     "compile": "webpack",
     "watch": "webpack-dev-server --hot --inline",
+    "dev-all": "npm run watch & npm run watch-server & npm start",
     "dev-all-hook": "npm run watch & npm run start-hook",
     "lint": "eslint --ext js,jsx src server webpack.config.js",
     "test": "echo \"Error: no test specified\" && exit 1"

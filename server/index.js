@@ -10,7 +10,7 @@ let db;
 let server;
 
 MongoClient.connect('mongodb://localhost/IssueTracker').then(connection => {
-  db.connection;
+  db = connection;
   server = http.createServer();
   appModule.setDb(db);
   server.on('request', appModule.app);
