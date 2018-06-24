@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 export default class ContextWrapper extends React.Component {
-  getChildContext = {
+  getChildContext() {
     return { initialState: this.props.initialState };
   }
   render() {

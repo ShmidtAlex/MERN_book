@@ -5,7 +5,7 @@ import App from './App.jsx';
 import IssueList from './IssueList.jsx';
 import IssueEdit from './IssueEdit.jsx';
 
-const NoMatch = () => <p>Page Not Found<p/>;
+const NoMatch = () => <p>Page Not Found</p>;
 
 export default (
   <Route path="/" component={App} >
@@ -14,4 +14,4 @@ export default (
     <Route path="issues/:id" component={IssueEdit} />
     <Route path="*" component={NoMatch} />
   </Route>
-)
+);
