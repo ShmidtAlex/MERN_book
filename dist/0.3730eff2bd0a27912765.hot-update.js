@@ -177,13 +177,22 @@ exports.modules = {
 	var IssueList = function (_React$Component) {
 	  _inherits(IssueList, _React$Component);
 	
-	  function IssueList() {
+	  function IssueList(props, context) {
 	    _classCallCheck(this, IssueList);
 	
-	    var _this = _possibleConstructorReturn(this, (IssueList.__proto__ || Object.getPrototypeOf(IssueList)).call(this));
+	    var _this = _possibleConstructorReturn(this, (IssueList.__proto__ || Object.getPrototypeOf(IssueList)).call(this, props, context));
 	
+	    console.log(props, context);
+	    var issues = context.initialState.data.records;
+	    console.log(props, context);
+	    issues.forEach(function (issue) {
+	      issue.created = new Date(issue.created);
+	      if (issue.completionDate) {
+	        issue.completionDate = new Date(issue.completionDate);
+	      }
+	    });
 	    _this.state = {
-	      issues: [],
+	      issues: issues,
 	      toastVisible: false, toastMessage: '', toastType: 'success'
 	    };
 	    _this.setFilter = _this.setFilter.bind(_this);
@@ -306,15 +315,11 @@ exports.modules = {
 	  location: _propTypes2.default.object.isRequired,
 	  router: _propTypes2.default.object
 	};
-
-/***/ }),
-
-/***/ 31:
-/***/ (function(module, exports) {
-
-	module.exports = require("isomorphic-fetch");
+	IssueList.contextTypes = {
+	  initialState: _propTypes2.default.object
+	};
 
 /***/ })
 
 };
-//# sourceMappingURL=0.0941a23e52c0205ef000.hot-update.js.map
+//# sourceMappingURL=0.3730eff2bd0a27912765.hot-update.js.map

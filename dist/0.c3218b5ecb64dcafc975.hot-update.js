@@ -16,7 +16,7 @@ exports.modules = {
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	__webpack_require__(31);
+	__webpack_require__(23);
 	
 	var _propTypes = __webpack_require__(20);
 	
@@ -34,10 +34,6 @@ exports.modules = {
 	
 	var _Toast2 = _interopRequireDefault(_Toast);
 	
-	var _IssueAddNavItem = __webpack_require__(19);
-	
-	var _IssueAddNavItem2 = _interopRequireDefault(_IssueAddNavItem);
-	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -45,6 +41,8 @@ exports.modules = {
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	//import IssueAddNavItem from './IssueAddNavItem.jsx';
 	
 	var IssueRow = function IssueRow(props) {
 	  function onDeleteClick() {
@@ -177,13 +175,20 @@ exports.modules = {
 	var IssueList = function (_React$Component) {
 	  _inherits(IssueList, _React$Component);
 	
-	  function IssueList() {
+	  function IssueList(props, context) {
 	    _classCallCheck(this, IssueList);
 	
-	    var _this = _possibleConstructorReturn(this, (IssueList.__proto__ || Object.getPrototypeOf(IssueList)).call(this));
+	    var _this = _possibleConstructorReturn(this, (IssueList.__proto__ || Object.getPrototypeOf(IssueList)).call(this, props, context));
 	
+	    var issues = context.initialState.data.records;
+	    issues.forEach(function (issue) {
+	      issue.created = new Date(issue.created);
+	      if (issue.completionDate) {
+	        issue.completionDate = new Date(issue.completionDate);
+	      }
+	    });
 	    _this.state = {
-	      issues: [],
+	      issues: issues,
 	      toastVisible: false, toastMessage: '', toastType: 'success'
 	    };
 	    _this.setFilter = _this.setFilter.bind(_this);
@@ -306,15 +311,11 @@ exports.modules = {
 	  location: _propTypes2.default.object.isRequired,
 	  router: _propTypes2.default.object
 	};
-
-/***/ }),
-
-/***/ 31:
-/***/ (function(module, exports) {
-
-	module.exports = require("isomorphic-fetch");
+	IssueList.contextTypes = {
+	  initialState: _propTypes2.default.object
+	};
 
 /***/ })
 
 };
-//# sourceMappingURL=0.0941a23e52c0205ef000.hot-update.js.map
+//# sourceMappingURL=0.c3218b5ecb64dcafc975.hot-update.js.map

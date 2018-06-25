@@ -1,12 +1,13 @@
 
 import React from 'react';
-import 'whatwg-fetch';
+import 'isomorphic-fetch';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import { Button, Glyphicon, Table, Panel } from 'react-bootstrap';
+
 import IssueFilter from './IssueFilter.jsx';
 import Toast from './Toast.jsx';
-import IssueAddNavItem from './IssueAddNavItem.jsx';
+//import IssueAddNavItem from './IssueAddNavItem.jsx';
 
 const IssueRow = (props) => {
   function onDeleteClick() {
@@ -63,10 +64,17 @@ IssueTable.propTypes = {
 };
 
 export default class IssueList extends React.Component {
-  constructor() {
-    super();
+  constructor(props, context) {
+    super(props, context);
+    const issues = context.initialState.data.records;
+    issues.forEach(issue => {
+      issue.created = new Date(issue.created);
+      if (issue.completionDate) {
+        issue.completionDate = new Date(issue.completionDate);
+      }
+    });
     this.state = { 
-      issues: [],
+      issues,
       toastVisible: false, toastMessage: '', toastType: 'success',
     };
     this.setFilter = this.setFilter.bind(this);
@@ -153,4 +161,7 @@ export default class IssueList extends React.Component {
 IssueList.propTypes = {
   location: PropTypes.object.isRequired,
   router: PropTypes.object,
+}
+IssueList.contextTypes = {
+  initialState: PropTypes.object,
 }

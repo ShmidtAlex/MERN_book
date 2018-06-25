@@ -7,14 +7,13 @@ import DateInput from './DateInput.jsx';
 import Toast from './Toast.jsx';
 
 export default class IssueEdit extends React.Component {
-  constructor() {
-    super();
+  constructor(props, context) {
+    super(props, context);
+    const issue = context.initialState.data;
+    issue.created = new Date(issue.created);
+    issue.completionDate = issue.completionDate != null ? new Date(issue.completionDate) : null;
     this.state = {
-      issue: {
-        //these are the properties of issue object and names for each inputs both
-        _id:'', title: '', status: '', owner: '', effort: null, 
-        completionDate: null, created: null,
-      },
+      issue,
       invalidFields: {}, showingValidation: false,
       toastVisible: false, toastMessage: '', toastType: 'success',
     };
@@ -229,4 +228,6 @@ export default class IssueEdit extends React.Component {
 IssueEdit.propTypes = {
   params: PropTypes.object.isRequired,
 };
-
+IssueEdit.contextTypes = {
+  initialState: PropTypes.object,
+}
