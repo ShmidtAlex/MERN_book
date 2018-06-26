@@ -2,4 +2,5 @@ node_modules
 
 *.hot-update.json
 *.hot-update.js
+*.hot-update.js.map
 
