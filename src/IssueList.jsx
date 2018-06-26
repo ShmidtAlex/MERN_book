@@ -66,9 +66,7 @@ IssueTable.propTypes = {
 export default class IssueList extends React.Component {
   static dataFetcher({ urlBase, location }) {
     return fetch(`${urlBase || ''}/api/issues${location.search}`).then(response => {
-      if(!response.ok) {
-        return response.json().then(error => Promise.reject(error));
-      }
+      if(!response.ok) return response.json().then(error => Promise.reject(error));
       return  response.json().then(data => ({ IssueList: data}));
     });
   }

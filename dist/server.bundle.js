@@ -27,7 +27,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "a8c2cef4ad5802dd0058"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "4163c76192a0c5a26a24"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -975,7 +975,7 @@
 	});
 	exports.default = template;
 	function template(body, initalState) {
-	  return "<!DOCTYPE HTML>\n<html>\n<head>\n  <meta charset=\"UTF-8\" />\n  <title>Pro MERN Stack</title>\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <link rel=\"stylesheet\" href=\"/bootstrap/css/bootstrap.min.css\" >\n  <style>\n    .panel-title a {display: block; width: 100%; cursor: pointer; }\n  </style>\n</head>\n<body>\n  <div id=\"contents\">" + body + "</div>    <!-- this is where our component will appear -->\n  <script> window.__INITIAL_STATE__ = " + JSON.stringify(initalState) + "</script>\n  <script src=\"/vendor.bundle.js\"></script>\n  <script src=\"/app.bundle.js\"></script>\n</body>\n</html>\n";
+	  return "<!DOCTYPE HTML>\n<html>\n<head>\n  <meta charset=\"UTF-8\" />\n  <title>Pro MERN Stack</title>\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <link rel=\"stylesheet\" href=\"/bootstrap/css/bootstrap.min.css\" >\n  <style>\n    .panel-title a {display: block; width: 100%; cursor: pointer; }\n  </style>\n</head>\n<body>\n  <div id=\"contents\">" + body + "</div>    <!-- this is where our component will appear -->\n  <script> window.__INITIAL_STATE__ = " + JSON.stringify(initalState) + ";</script>\n  <script src=\"/vendor.bundle.js\"></script>\n  <script src=\"/app.bundle.js\"></script>\n</body>\n</html>\n";
 	}
 
 /***/ }),
@@ -1606,11 +1606,9 @@
 	          location = _ref.location;
 	
 	      return fetch((urlBase || '') + '/api/issues' + location.search).then(function (response) {
-	        if (!response.ok) {
-	          return response.json().then(function (error) {
-	            return Promise.reject(error);
-	          });
-	        }
+	        if (!response.ok) return response.json().then(function (error) {
+	          return Promise.reject(error);
+	        });
 	        return response.json().then(function (data) {
 	          return { IssueList: data };
 	        });
@@ -2071,16 +2069,14 @@
 	      var params = _ref.params,
 	          urlBase = _ref.urlBase;
 	
-	      return fetch(((urlBase || '') + '/api/issues/' + params.id).then(function (response) {
-	        if (!response.ok) {
-	          return response.json().then(function (error) {
-	            return Propmise.reject(error);
-	          });
-	        }
+	      return fetch((urlBase || '') + '/api/issues/' + params.id).then(function (response) {
+	        if (!response.ok) return response.json().then(function (error) {
+	          return Promise.reject(error);
+	        });
 	        return response.json().then(function (data) {
 	          return { IssueEdit: data };
 	        });
-	      }));
+	      });
 	    }
 	  }]);
 	
@@ -2202,7 +2198,7 @@
 	      var _this3 = this;
 	
 	      //this.props.params.id means the issue id
-	      IssueEdit.dataFetcher({ paraps: this.props.params }).then(function (data) {
+	      IssueEdit.dataFetcher({ params: this.props.params }).then(function (data) {
 	        var issue = data.IssueEdit;
 	        issue.created = new Date(issue.created);
 	        issue.completionDate = issue.completionDate != null ? new Date(issue.completionDate) : null;

@@ -8,12 +8,10 @@ import Toast from './Toast.jsx';
 
 export default class IssueEdit extends React.Component {
   static dataFetcher({ params, urlBase }) {
-    return fetch(`${urlBase || ''}/api/issues/${params.id}`.then(response => {
-      if(!response.ok){
-        return response.json().then(error => Propmise.reject(error));
-      }
+    return fetch(`${urlBase || ''}/api/issues/${params.id}`).then(response => {
+      if(!response.ok) return response.json().then(error => Promise.reject(error));
       return response.json().then(data => ({ IssueEdit: data}));
-    }));
+    });
   }
   constructor(props, context) {
     super(props, context);
@@ -111,7 +109,7 @@ export default class IssueEdit extends React.Component {
  
   loadData() {
     //this.props.params.id means the issue id
-    IssueEdit.dataFetcher({ paraps: this.props.params })
+    IssueEdit.dataFetcher({ params: this.props.params })
     .then(data => {
       const issue = data.IssueEdit;
       issue.created = new Date(issue.created);
