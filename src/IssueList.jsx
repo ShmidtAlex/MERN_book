@@ -64,9 +64,17 @@ IssueTable.propTypes = {
 };
 
 export default class IssueList extends React.Component {
+  static dataFetcher({ urlBase, location }) {
+    return fetch(`${urlBase || ''}/api/issues${location.search}`).then(response => {
+      if(!response.ok) {
+        return response.json().then(error => Promise.reject(error));
+      }
+      return  response.json().then(data => ({ IssueList: data}));
+    });
+  }
   constructor(props, context) {
     super(props, context);
-    const issues = context.initialState.data.records;
+    const issues = context.initialState.IssueList ? context.initialState.IssueList.records : [];
     issues.forEach(issue => {
       issue.created = new Date(issue.created);
       if (issue.completionDate) {
@@ -105,25 +113,17 @@ export default class IssueList extends React.Component {
   }
   loadData() {
     //this.props.location.search = ?effort_gte=some_number&status(filter value in unparsed URL)
-    fetch(`/api/issues${this.props.location.search}`).then(response => {
-      if (response.ok) {// ok = true and means, that response was successful
-        response.json().then((data) => {
-          //data is a variable, which get data from server, _metadata is an object of that data
-          console.log('Total count of records:', data._metadata.total_count);//total count is a property of metadata
-          data.records.forEach((issue) => {//records is a property which keeps issues = [{...}] inside it
-            issue.created = new Date(issue.created);//assign date of creation issue
-            if (issue.completionDate) { // if user appointed date to complete issue
-              issue.completionDate = new Date(issue.completionDate);//take this and put in object Date()
-            }
-          });
-          this.setState({ issues: data.records });//then change the state issues:[] to real issues data
-        });
-      } else {
-        response.json().then((error) => {
-          this.showError(`Failed to fetch issues:${error.message}`);
-        });
-      }
-    }).catch((err) => {
+    IssueList.dataFetcher({ location: this.props.location })
+    .then(data => {
+      const issues = data.IssueList.records;
+      issues.forEach(issue => {
+        issue.created = new Date(issue.created);
+        if (issue.completionDate) {
+          issue.completionDate = new Date(issue.completionDate);
+        }
+      });
+      this.setState({ issues });
+    }).catch(err => {
       this.showError('Error in fetching data from server:', err);
     });
   }
