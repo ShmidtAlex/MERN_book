@@ -19,7 +19,7 @@ const Header = () => (
       </LinkContainer>
     </Nav>
     <Nav pullRight>
-      <IssueAddNavItem />
+      <IssueAddNavItem /> 
       <NavDropdown id="user-dropdown" title={<Glyphicon glyph="option-horizontal" />} noCaret>
         <MenuItem>Logout</MenuItem>
       </NavDropdown>
@@ -32,6 +32,7 @@ const App = (props) => (
     <Header />
     <div className="container-fluid">
       {props.children}
+    {/*props.children consists history, location, params, route's path, routes*/}
       <hr />
       <h5><small>
         Full source code available at this <a href="https://github.com/vasansr/pro-mern-stack">

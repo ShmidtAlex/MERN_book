@@ -27,7 +27,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "d2def3fa539a6f985f09"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "91872f9c34f7e378f3bd"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -1194,6 +1194,7 @@
 	  function IssueAddNavItem(props) {
 	    _classCallCheck(this, IssueAddNavItem);
 	
+	    //evoking functions belongs to parent (App.jsx)
 	    var _this = _possibleConstructorReturn(this, (IssueAddNavItem.__proto__ || Object.getPrototypeOf(IssueAddNavItem)).call(this, props));
 	
 	    _this.state = {
@@ -1469,6 +1470,7 @@
 	//import IssueAddNavItem from './IssueAddNavItem.jsx';
 	
 	var IssueRow = function IssueRow(props) {
+	  //console.log(props);
 	  function onDeleteClick() {
 	    props.deleteIssue(props.issue._id);
 	  }
@@ -1530,6 +1532,7 @@
 	  deleteIssue: _propTypes2.default.func.isRequired
 	};
 	function IssueTable(props) {
+	  //here props mean the array of issues
 	  var issueRows = props.issues.map(function (issue) {
 	    return _react2.default.createElement(IssueRow, { key: issue._id, issue: issue, deleteIssue: props.deleteIssue });
 	  });
@@ -1620,6 +1623,8 @@
 	    _classCallCheck(this, IssueList);
 	
 	    var _this = _possibleConstructorReturn(this, (IssueList.__proto__ || Object.getPrototypeOf(IssueList)).call(this, props, context));
+	    //context = initialState of IssueList, props = location, history etc
+	
 	
 	    var issues = context.initialState.IssueList ? context.initialState.IssueList.records : [];
 	    issues.forEach(function (issue) {
@@ -2083,6 +2088,8 @@
 	  function IssueEdit(props, context) {
 	    _classCallCheck(this, IssueEdit);
 	
+	    //props = history, location, params, route, routeParams
+	    //context = initialState of IssueEdit
 	    var _this = _possibleConstructorReturn(this, (IssueEdit.__proto__ || Object.getPrototypeOf(IssueEdit)).call(this, props, context));
 	
 	    var issue = void 0;
@@ -2719,6 +2726,7 @@
 	  _createClass(ContextWrapper, [{
 	    key: 'getChildContext',
 	    value: function getChildContext() {
+	      {/*this.props.initialState consist the array of all issues (Mongo documents)*/}
 	      return { initialState: this.props.initialState };
 	    }
 	  }, {

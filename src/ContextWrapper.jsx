@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 export default class ContextWrapper extends React.Component {
   getChildContext() {
+    {/*this.props.initialState consist the array of all issues (Mongo documents)*/}
     return { initialState: this.props.initialState };
   }
   render() {

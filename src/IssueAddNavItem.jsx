@@ -7,7 +7,7 @@ import Toast from './Toast.jsx';
 //component before exporting, not after as it is in App.jsx with IssueList. thus we encapsulate usage of router within this component
 class IssueAddNavItem extends React.Component {
   constructor(props) {
-    super(props);
+    super(props);//evoking functions belongs to parent (App.jsx)
     this.state = {
       showing: false,
       toastVisible: false, toastMessage: '', toastType:  'success',

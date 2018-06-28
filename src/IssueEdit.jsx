@@ -15,6 +15,8 @@ export default class IssueEdit extends React.Component {
   }
   constructor(props, context) {
     super(props, context);
+    //props = history, location, params, route, routeParams
+    //context = initialState of IssueEdit
     let issue;
     if (context.initialState.IssueEdit) {
       issue = context.initialState.IssueEdit;

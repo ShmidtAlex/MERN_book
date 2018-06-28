@@ -10,6 +10,7 @@ import Toast from './Toast.jsx';
 //import IssueAddNavItem from './IssueAddNavItem.jsx';
 
 const IssueRow = (props) => {
+  //console.log(props);
   function onDeleteClick() {
     props.deleteIssue(props.issue._id);
   }
@@ -39,6 +40,7 @@ IssueRow.propTypes = {
   deleteIssue: PropTypes.func.isRequired,
 };
 function IssueTable(props) {
+  //here props mean the array of issues
   const issueRows = props.issues.map(issue => <IssueRow key={issue._id} issue={issue} deleteIssue={props.deleteIssue} />);
   return (
     <Table bordered condensed responsive hover>
@@ -71,6 +73,7 @@ export default class IssueList extends React.Component {
     });
   }
   constructor(props, context) {
+    //context = initialState of IssueList, props = location, history etc
     super(props, context);
     const issues = context.initialState.IssueList ? context.initialState.IssueList.records : [];
     issues.forEach(issue => {
