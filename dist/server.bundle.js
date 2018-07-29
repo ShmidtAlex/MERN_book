@@ -27,7 +27,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "4ee807e45f2df1186b10"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "9909fc06307539b2c322"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -695,7 +695,7 @@
 	      res.status(500).json({ message: 'Internal Server error ' + error });
 	    });
 	  } else {
-	    db.collection('issues').aggregate([{ match: filter }, { group: { _id: { owner: '$owner', status: '$status' }, count: { $sum: 1 } } }]).toArray().then(function (results) {
+	    db.collection('issues').aggregate([{ $match: filter }, { $group: { _id: { owner: '$owner', status: '$status' }, count: { $sum: 1 } } }]).toArray().then(function (results) {
 	      var stats = {};
 	      results.forEach(function (result) {
 	        if (!stats[result._id.owner]) {

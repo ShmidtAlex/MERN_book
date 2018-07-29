@@ -51,8 +51,8 @@ app.get('/api/issues', (req, res) => {
     });
   } else {
     db.collection('issues').aggregate([
-      {match: filter},
-      {group: {_id: {owner: '$owner', status: '$status'}, count: {$sum: 1}}},
+      {$match: filter},
+      {$group: {_id: {owner: '$owner', status: '$status'}, count: {$sum: 1}}},
     ]).toArray()
     .then(results => {
       const stats = {};
