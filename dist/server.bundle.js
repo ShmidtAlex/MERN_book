@@ -27,7 +27,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "91872f9c34f7e378f3bd"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "4ee807e45f2df1186b10"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -681,16 +681,36 @@
 	  if (req.query.effort_gte) {
 	    filter.effort.$gte = parseInt(req.query.effort_gte, 10);
 	  }
+	  if (req.query._summary === undefined) {
+	    var limit = req.query.limit ? parseInt(req.query._limit, 10) : 20;
+	    if (limit > 50) {
+	      limit = 50;
+	    }
+	    db.collection('issues').find(filter).limit(limit).toArray().then(function (issues) {
+	      //returning document given by find(filter) method 
+	      var metadata = { total_count: issues.length };
+	      res.json({ _metadata: metadata, records: issues });
+	    }).catch(function (error) {
+	      console.log(error);
+	      res.status(500).json({ message: 'Internal Server error ' + error });
+	    });
+	  } else {
+	    db.collection('issues').aggregate([{ match: filter }, { group: { _id: { owner: '$owner', status: '$status' }, count: { $sum: 1 } } }]).toArray().then(function (results) {
+	      var stats = {};
+	      results.forEach(function (result) {
+	        if (!stats[result._id.owner]) {
+	          stats[result._id.owner] = {};
+	        }
+	        stats[result._id.owner][result._id.status] = result.count;
+	      });
+	      res.json(stats);
+	    }).catch(function (error) {
+	      console.log(error);
+	      res.status(500).json({ message: 'Internal server error:' + error });
+	    });
+	  }
 	  //any collection in mongo DB has method 'collection', which allows us supply the name
 	  //of collection (issues in this case), to indicate exactly which collection from data base
-	  db.collection('issues').find(filter).toArray().then(function (issues) {
-	    //returning document given by find(filter) method 
-	    var metadata = { total_count: issues.length };
-	    res.json({ _metadata: metadata, records: issues });
-	  }).catch(function (error) {
-	    console.log(error);
-	    res.status(500).json({ message: 'Internal Server error ' + error });
-	  });
 	});
 	
 	//this API is designed for creating new 'issues'
