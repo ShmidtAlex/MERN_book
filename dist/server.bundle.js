@@ -27,7 +27,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "9909fc06307539b2c322"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "820bacd8d17220228e08"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -546,7 +546,7 @@
 /***/ (function(module, exports, __webpack_require__) {
 
 	__webpack_require__(1);
-	module.exports = __webpack_require__(29);
+	module.exports = __webpack_require__(30);
 
 
 /***/ }),
@@ -922,7 +922,7 @@
 	
 	var _Routes2 = _interopRequireDefault(_Routes);
 	
-	var _ContextWrapper = __webpack_require__(28);
+	var _ContextWrapper = __webpack_require__(29);
 	
 	var _ContextWrapper2 = _interopRequireDefault(_ContextWrapper);
 	
@@ -1026,6 +1026,10 @@
 	
 	var _IssueEdit2 = _interopRequireDefault(_IssueEdit);
 	
+	var _IssueReport = __webpack_require__(28);
+	
+	var _IssueReport2 = _interopRequireDefault(_IssueReport);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	var NoMatch = function NoMatch() {
@@ -1042,6 +1046,7 @@
 	  _react2.default.createElement(_reactRouter.IndexRedirect, { to: '/issues' }),
 	  _react2.default.createElement(_reactRouter.Route, { path: 'issues', component: (0, _reactRouter.withRouter)(_IssueList2.default) }),
 	  _react2.default.createElement(_reactRouter.Route, { path: 'issues/:id', component: _IssueEdit2.default }),
+	  _react2.default.createElement(_reactRouter.Route, { path: 'reports', component: (0, _reactRouter.withRouter)(_IssueReport2.default) }),
 	  _react2.default.createElement(_reactRouter.Route, { path: '*', component: NoMatch })
 	);
 
@@ -2722,6 +2727,210 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
+	var _reactBootstrap = __webpack_require__(17);
+	
+	var _propTypes = __webpack_require__(20);
+	
+	var _propTypes2 = _interopRequireDefault(_propTypes);
+	
+	var _IssueFilter = __webpack_require__(24);
+	
+	var _IssueFilter2 = _interopRequireDefault(_IssueFilter);
+	
+	var _Toast = __webpack_require__(21);
+	
+	var _Toast2 = _interopRequireDefault(_Toast);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var statuses = ['New', 'Open', 'Assigned', 'Fixed', 'Verified', 'Closed'];
+	
+	var StatRow = function StatRow(props) {
+	  return _react2.default.createElement(
+	    'tr',
+	    null,
+	    _react2.default.createElement(
+	      'td',
+	      null,
+	      props.owner
+	    ),
+	    statuses.map(function (status, index) {
+	      return _react2.default.createElement(
+	        'td',
+	        { key: index },
+	        props.counts[status]
+	      );
+	    })
+	  );
+	};
+	
+	StatRow.propTypes = {
+	  owner: _propTypes2.default.string.isRequired,
+	  counts: _propTypes2.default.object.isRequired
+	};
+	
+	var IssueReport = function (_React$Component) {
+	  _inherits(IssueReport, _React$Component);
+	
+	  _createClass(IssueReport, null, [{
+	    key: 'dataFetcher',
+	    value: function dataFetcher(_ref) {
+	      var urlBase = _ref.urlBase,
+	          location = _ref.location;
+	
+	      var search = location.search ? location.search + '&_summary' : '?_summary';
+	      return fetch((urlBase || '') + '/api/issues/' + search).then(function (response) {
+	        if (!response.ok) {
+	          return response.json().then(function (error) {
+	            return Promise.reject(error);
+	          });
+	        }
+	        return response.json().then(function (data) {
+	          return { IssueReport: data };
+	        });
+	      });
+	    }
+	  }]);
+	
+	  function IssueReport(props, context) {
+	    _classCallCheck(this, IssueReport);
+	
+	    var _this = _possibleConstructorReturn(this, (IssueReport.__proto__ || Object.getPrototypeOf(IssueReport)).call(this, props, context));
+	
+	    var stats = context.initialState.IssueReport ? context.initialState.IssueReport : {};
+	    _this.state = {
+	      stats: stats,
+	      toastVisible: false, toastMessage: '', toastType: 'success'
+	    };
+	    _this.setFilter = _this.setFilter.bind(_this);
+	    _this.showError = _this.showError.bind(_this);
+	    _this.dismissToast = _this.dismissToast.bind(_this);
+	    return _this;
+	  }
+	
+	  _createClass(IssueReport, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      this.loadData();
+	    }
+	  }, {
+	    key: 'componentDidUpdate',
+	    value: function componentDidUpdate(prevProps) {
+	      var oldQuery = prevProps.location.query;
+	      var newQuery = this.props.location.query;
+	      if (oldQuery.status === newQuery.status && oldQuery.effort_gte === newQuery.effort_gte && oldQuery.effort_lte === newQuery.effort_lte) {
+	        return;
+	      }
+	      this.loadData();
+	    }
+	  }, {
+	    key: 'setFilter',
+	    value: function setFilter(query) {
+	      this.props.router.push({ pathname: this.props.location.pathname, query: query });
+	    }
+	  }, {
+	    key: 'showError',
+	    value: function showError(message) {
+	      this.setState({ toastVisible: true, toastMessage: message, toastType: 'danger' });
+	    }
+	  }, {
+	    key: 'dismissToast',
+	    value: function dismissToast() {
+	      this.setState({ toastVisible: false });
+	    }
+	  }, {
+	    key: 'loadData',
+	    value: function loadData() {
+	      var _this2 = this;
+	
+	      IssueReport.dataFetcher({ location: this.props.location }).then(function (data) {
+	        _this2.setState({ stats: data.IssueReport });
+	      }).catch(function (err) {
+	        _this2.showError('Error in fetching data from the server: ' + err);
+	      });
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _this3 = this;
+	
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(
+	          _reactBootstrap.Panel,
+	          { collapsible: true, header: 'Filter' },
+	          _react2.default.createElement(_IssueFilter2.default, { setFilter: this.setFilter, initFilter: this.props.location.query })
+	        ),
+	        _react2.default.createElement(
+	          _reactBootstrap.Table,
+	          { bordered: true, condensed: true, hover: true, responsive: true },
+	          _react2.default.createElement(
+	            'thead',
+	            null,
+	            _react2.default.createElement(
+	              'tr',
+	              null,
+	              _react2.default.createElement('th', null),
+	              statuses.map(function (status, index) {
+	                return _react2.default.createElement(
+	                  'td',
+	                  { key: index },
+	                  status
+	                );
+	              })
+	            )
+	          ),
+	          _react2.default.createElement(
+	            'tbody',
+	            null,
+	            Object.keys(this.state.stats).map(function (owner, index) {
+	              return _react2.default.createElement(StatRow, { key: index, owner: owner, counts: _this3.state.stats[owner] });
+	            })
+	          )
+	        ),
+	        _react2.default.createElement(_Toast2.default, { showing: this.state.toastVisible, message: this.state.toastMessage,
+	          onDismiss: this.dismissToast, bsStyle: this.state.toastType })
+	      );
+	    }
+	  }]);
+	
+	  return IssueReport;
+	}(_react2.default.Component);
+	
+	exports.default = IssueReport;
+	
+	
+	IssueReport.propTypes = {
+	  location: _propTypes2.default.object.isRequired,
+	  router: _propTypes2.default.object
+	};
+	IssueReport.contextTypes = {
+	  initialState: _propTypes2.default.object
+	};
+
+/***/ }),
+/* 29 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(11);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
 	var _propTypes = __webpack_require__(20);
 	
 	var _propTypes2 = _interopRequireDefault(_propTypes);
@@ -2770,7 +2979,7 @@
 	};
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(__resourceQuery) {/*
@@ -2801,7 +3010,7 @@
 						if(fromUpdate) console.log("[HMR] Update applied.");
 						return;
 					}
-					__webpack_require__(30)(updatedModules, updatedModules);
+					__webpack_require__(31)(updatedModules, updatedModules);
 					checkForUpdate(true);
 				});
 			}
@@ -2814,7 +3023,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, "?1000"))
 
 /***/ }),
-/* 30 */
+/* 31 */
 /***/ (function(module, exports) {
 
 	/*

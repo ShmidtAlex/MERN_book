@@ -1,5 +1,5 @@
 import React from 'react';
-import { Pannel, Table } from 'react-bootstrap';
+import { Panel, Table } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
 import IssueFilter from './IssueFilter.jsx';
@@ -10,7 +10,7 @@ const statuses = ['New', 'Open', 'Assigned', 'Fixed', 'Verified', 'Closed'];
 const StatRow = (props) => (
   <tr>
     <td>{props.owner}</td>
-    {statuses.map((status, index)=> (<td key={index}>{props.counts[status]}</td>))}
+    {statuses.map((status, index) => (<td key={index}>{props.counts[status]}</td>))}
   </tr>
 );
 
@@ -19,22 +19,22 @@ StatRow.propTypes = {
   counts: PropTypes.object.isRequired,
 }
 
-export default class IssueReport extends React.component {
-  static dataFetcher({urlBase, location}) {
+export default class IssueReport extends React.Component {
+  static dataFetcher({ urlBase, location }) {
     const search = location.search ? `${location.search}&_summary`: '?_summary';
-    return fetch(`{urlBase || ''}/api/issues/${search}`).then(response => {
+    return fetch(`${urlBase || ''}/api/issues/${search}`).then(response => {
       if (!response.ok) {
         return response.json().then(error => Promise.reject(error));
       } 
-      return response.json().then(data => ({ IssueReport: data}));
+      return response.json().then(data => ({ IssueReport: data }));
     });
   }
   constructor(props, context) {
     super(props, context);
-    const stats = context.initalState.IssueReport ? context.initalState.IssueReport : {};
+    const stats = context.initialState.IssueReport ? context.initialState.IssueReport : {};
     this.state = {
       stats,
-      toastVisible: false, toastMessage: '', toastType: 'success';
+      toastVisible: false, toastMessage: '', toastType: 'success',
     };
     this.setFilter = this.setFilter.bind(this);
     this.showError = this.showError.bind(this);
@@ -71,9 +71,9 @@ export default class IssueReport extends React.component {
   render() {
     return (
       <div>
-        <Pannel collapsible header="Filter">
+        <Panel collapsible header="Filter">
           <IssueFilter setFilter={this.setFilter} initFilter={this.props.location.query} />
-        </Pannel>
+        </Panel>
         <Table bordered condensed hover responsive>
           <thead>
             <tr>
@@ -94,7 +94,10 @@ export default class IssueReport extends React.component {
   }
 }
 
-IssueReport.propTypes {
+IssueReport.propTypes = {
   location: PropTypes.object.isRequired,
   router: PropTypes.object,
+}
+IssueReport.contextTypes = {
+  initialState:PropTypes.object,
 }
