@@ -27,7 +27,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "820bacd8d17220228e08"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "49b619a8688c8f0ff15b"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -682,14 +682,19 @@
 	    filter.effort.$gte = parseInt(req.query.effort_gte, 10);
 	  }
 	  if (req.query._summary === undefined) {
+	    var offset = req.query._offset ? parseInt(req.query._offset, 10) : 0;
 	    var limit = req.query.limit ? parseInt(req.query._limit, 10) : 20;
 	    if (limit > 50) {
 	      limit = 50;
 	    }
-	    db.collection('issues').find(filter).limit(limit).toArray().then(function (issues) {
-	      //returning document given by find(filter) method 
-	      var metadata = { total_count: issues.length };
-	      res.json({ _metadata: metadata, records: issues });
+	    var cursor = db.collection('issues').find(filter).sort({ _id: 1 }).skip(offset).limit(limit);
+	    var totalCount = void 0;
+	    cursor.count(false).then(function (result) {
+	      totalCount = result;
+	      return cursor.toArray();
+	    }).then(function (issues) {
+	      //returning document given by find(filter) method
+	      res.json({ _metadata: { totalCount: totalCount }, records: issues });
 	    }).catch(function (error) {
 	      console.log(error);
 	      res.status(500).json({ message: 'Internal Server error ' + error });
