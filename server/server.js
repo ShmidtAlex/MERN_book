@@ -40,6 +40,7 @@ app.get('/api/issues', (req, res) => {
       limit = 50;
     }
     const cursor = db.collection('issues').find(filter).sort({ _id:1 })
+
     .skip(offset)
     .limit(limit);
     let totalCount;
