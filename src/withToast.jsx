@@ -2,7 +2,7 @@ import React from 'react';
 import Toast from './Toast.jsx';
 
 export default function withToast(OriginalComponent) {
-  return class withToast extends React.Component {
+  return class WithToast extends React.Component {
     constructor(props) {
       super(props);
       //console.log(super);
@@ -30,7 +30,7 @@ export default function withToast(OriginalComponent) {
           <Toast showing={this.state.toastVisible} message={this.state.toastMessage} onDismiss={this.dismissToast}
            bsStyle={this.state.toastType}/>
         </div>
-      )
+      );
     }
-  }
+  };
 }

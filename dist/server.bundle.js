@@ -27,7 +27,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "607853331033ddc4d965"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "c6329bd30925c6a03452"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -1050,6 +1050,7 @@
 	  { path: '/', component: _App2.default },
 	  _react2.default.createElement(_reactRouter.IndexRedirect, { to: '/issues' }),
 	  _react2.default.createElement(_reactRouter.Route, { path: 'issues', component: (0, _reactRouter.withRouter)(_IssueList2.default) }),
+	  '/*example of Higher Order Components (HOC)*/',
 	  _react2.default.createElement(_reactRouter.Route, { path: 'issues/:id', component: _IssueEdit2.default }),
 	  _react2.default.createElement(_reactRouter.Route, { path: 'reports', component: (0, _reactRouter.withRouter)(_IssueReport2.default) }),
 	  _react2.default.createElement(_reactRouter.Route, { path: '*', component: NoMatch })
@@ -1671,14 +1672,12 @@
 	
 	    var data = context.initialState.IssueList ? context.initialState.IssueList : { metadata: { totalCount: 0 }, records: [] };
 	    var issues = data.records;
-	    console.log(data.metadata);
 	    issues.forEach(function (issue) {
 	      issue.created = new Date(issue.created);
 	      if (issue.completionDate) {
 	        issue.completionDate = new Date(issue.completionDate);
 	      }
 	    });
-	    console.log(data.metadata);
 	    _this.state = {
 	      issues: issues,
 	      toastVisible: false, toastMessage: '', toastType: 'success',
@@ -2108,9 +2107,9 @@
 	
 	var _DateInput2 = _interopRequireDefault(_DateInput);
 	
-	var _Toast = __webpack_require__(21);
+	var _withToast = __webpack_require__(32);
 	
-	var _Toast2 = _interopRequireDefault(_Toast);
+	var _withToast2 = _interopRequireDefault(_withToast);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -2160,17 +2159,13 @@
 	    }
 	    _this.state = {
 	      issue: issue,
-	      invalidFields: {}, showingValidation: false,
-	      toastVisible: false, toastMessage: '', toastType: 'success'
+	      invalidFields: {}, showingValidation: false
 	    };
 	    _this.onChange = _this.onChange.bind(_this);
 	    _this.onValidityChange = _this.onValidityChange.bind(_this);
 	    _this.onSubmit = _this.onSubmit.bind(_this);
 	    _this.dismissValidation = _this.dismissValidation.bind(_this);
 	    _this.showValidation = _this.showValidation.bind(_this);
-	    _this.showSuccess = _this.showSuccess.bind(_this);
-	    _this.showError = _this.showError.bind(_this);
-	    _this.dismissToast = _this.dismissToast.bind(_this);
 	    return _this;
 	  }
 	
@@ -2243,15 +2238,15 @@
 	              updatedIssue.completionDate = new Date(updatedIssue.completionDate);
 	            }
 	            _this2.setState({ issue: updatedIssue });
-	            _this2.showSuccess('Updated issue successfully.');
+	            _this2.props.showSuccess('Updated issue successfully.');
 	          });
 	        } else {
 	          response.json().then(function (error) {
-	            _this2.showError('Failed to update issue: ' + error.message);
+	            _this2.props.showError('Failed to update issue: ' + error.message);
 	          });
 	        }
 	      }).catch(function (err) {
-	        _this2.showError('Error in sending data to server: ' + err.message);
+	        _this2.props.showError('Error in sending data to server: ' + err.message);
 	      });
 	    }
 	  }, {
@@ -2278,21 +2273,6 @@
 	    key: 'dismissValidation',
 	    value: function dismissValidation() {
 	      this.setState({ showingValidation: false });
-	    }
-	  }, {
-	    key: 'showSuccess',
-	    value: function showSuccess(message) {
-	      this.setState({ toastVisible: true, toastMessage: message, toastType: 'success' });
-	    }
-	  }, {
-	    key: 'showError',
-	    value: function showError(message) {
-	      this.setState({ toastVisible: true, toastMessage: message, toastType: 'danger' });
-	    }
-	  }, {
-	    key: 'dismissToast',
-	    value: function dismissToast() {
-	      this.setState({ toastVisible: false });
 	    }
 	  }, {
 	    key: 'render',
@@ -2490,9 +2470,7 @@
 	              validationMessage
 	            )
 	          )
-	        ),
-	        _react2.default.createElement(_Toast2.default, { showing: this.state.toastVisible, message: this.state.toastMessage, onDismiss: this.dismissToast,
-	          bsStyle: this.state.toastType })
+	        )
 	      );
 	    }
 	  }]);
@@ -2500,14 +2478,18 @@
 	  return IssueEdit;
 	}(_react2.default.Component);
 	
-	exports.default = IssueEdit;
-	
 	IssueEdit.propTypes = {
-	  params: _propTypes2.default.object.isRequired
+	  params: _propTypes2.default.object.isRequired,
+	  showSuccess: _propTypes2.default.func.isRequired,
+	  showError: _propTypes2.default.func.isRequired
 	};
+	
 	IssueEdit.contextTypes = {
 	  initialState: _propTypes2.default.object
 	};
+	var IssueEditWithToast = (0, _withToast2.default)(IssueEdit);
+	IssueEditWithToast.dataFetcher = IssueEdit.dataFetcher;
+	exports.default = IssueEditWithToast;
 
 /***/ }),
 /* 26 */
@@ -3082,6 +3064,90 @@
 		}
 	};
 
+
+/***/ }),
+/* 32 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	exports.default = withToast;
+	
+	var _react = __webpack_require__(11);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _Toast = __webpack_require__(21);
+	
+	var _Toast2 = _interopRequireDefault(_Toast);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	function withToast(OriginalComponent) {
+	  return function (_React$Component) {
+	    _inherits(WithToast, _React$Component);
+	
+	    function WithToast(props) {
+	      _classCallCheck(this, WithToast);
+	
+	      //console.log(super);
+	      //console.log(props);
+	      var _this = _possibleConstructorReturn(this, (WithToast.__proto__ || Object.getPrototypeOf(WithToast)).call(this, props));
+	
+	      _this.state = {
+	        toastVisible: false, toastMessage: '', toastType: 'success'
+	      };
+	      _this.showSuccess = _this.showSuccess.bind(_this);
+	      _this.showError = _this.showError.bind(_this);
+	      _this.dismissToast = _this.dismissToast.bind(_this);
+	      return _this;
+	    }
+	
+	    _createClass(WithToast, [{
+	      key: 'showSuccess',
+	      value: function showSuccess(message) {
+	        this.setState({ toastVisible: true, toastMessage: message, toastType: 'success' });
+	      }
+	    }, {
+	      key: 'showError',
+	      value: function showError(message) {
+	        this.setState({ toastVisible: true, toastMessage: message, toastType: 'danger' });
+	      }
+	    }, {
+	      key: 'dismissToast',
+	      value: function dismissToast() {
+	        this.setState({ toastVisible: false });
+	      }
+	    }, {
+	      key: 'render',
+	      value: function render() {
+	        return _react2.default.createElement(
+	          'div',
+	          null,
+	          _react2.default.createElement(OriginalComponent, _extends({ showError: this.showError, showSuccess: this.showSuccess }, this.props)),
+	          _react2.default.createElement(_Toast2.default, { showing: this.state.toastVisible, message: this.state.toastMessage, onDismiss: this.dismissToast,
+	            bsStyle: this.state.toastType })
+	        );
+	      }
+	    }]);
+	
+	    return WithToast;
+	  }(_react2.default.Component);
+	}
 
 /***/ })
 /******/ ])));

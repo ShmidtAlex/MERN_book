@@ -87,14 +87,12 @@ export default class IssueList extends React.Component {
     super(props, context);
     const data = context.initialState.IssueList ? context.initialState.IssueList : { metadata: {totalCount:0}, records: [] };
     const issues = data.records;
-    console.log(data.metadata);
     issues.forEach(issue => {
       issue.created = new Date(issue.created);
       if (issue.completionDate) {
         issue.completionDate = new Date(issue.completionDate);
       }
     });
-    console.log(data.metadata);
     this.state = { 
       issues,
       toastVisible: false, toastMessage: '', toastType: 'success',
