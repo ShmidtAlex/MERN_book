@@ -10,7 +10,7 @@ import Toast from './Toast.jsx';
 //import IssueAddNavItem from './IssueAddNavItem.jsx';
 /*temporary constant for constrains number of issues on one page
 in future it'll be a variable, setted by user */
-const PAGE_SIZE = 10;
+
 const IssueRow = (props) => {
   //console.log(props);
   function onDeleteClick() {
@@ -66,14 +66,14 @@ IssueTable.propTypes = {
   issues: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
   deleteIssue: PropTypes.func.isRequired,
 };
-
+const PAGE_SIZE = 10;
 export default class IssueList extends React.Component {
   static dataFetcher({ urlBase, location }) {
-    const query = Object.assing({}, location.query);
+    const query = Object.assign({}, location.query);
     const pageStr = query._page;
     if (pageStr) {
       delete query._page;
-      query._offset = (parseInt(pageStr, 10) - 1) * PAGE_SIZE;
+      query._offset = (parseInt(pageStr, 10) -1) * PAGE_SIZE;
     }
     query._limit = PAGE_SIZE;
     const search = Object.keys(query).map(k => `${k}=${query[k]}`).join('&');
@@ -85,14 +85,16 @@ export default class IssueList extends React.Component {
   constructor(props, context) {
     //context = initialState of IssueList, props = location, history etc
     super(props, context);
-   const data = context.initialState.IssueList ? context.initialState.IssueList : { metadata: {totalCount:0}, records: [] };
-   const issues = data.records;
+    const data = context.initialState.IssueList ? context.initialState.IssueList : { metadata: {totalCount:0}, records: [] };
+    const issues = data.records;
+    console.log(data.metadata);
     issues.forEach(issue => {
       issue.created = new Date(issue.created);
       if (issue.completionDate) {
         issue.completionDate = new Date(issue.completionDate);
       }
     });
+    console.log(data.metadata);
     this.state = { 
       issues,
       toastVisible: false, toastMessage: '', toastType: 'success',
@@ -142,6 +144,7 @@ export default class IssueList extends React.Component {
         }
       });
       this.setState({ issues, totalCount: data.IssueList.metadata.totalCount });
+
     }).catch(err => {
       this.showError('Error in fetching data from server:', err);
     });
@@ -168,8 +171,7 @@ export default class IssueList extends React.Component {
         <Panel collapsible header="Filter">
           <IssueFilter setFilter={this.setFilter} initFilter={this.props.location.query} />
         </Panel>
-        <Pagination items={Math.ceil(this.state.totalCount / PAGE_SIZE)} activePage={parseInt(this.props.location.query._page ||
-          '1', 10)} onSelect={this.selectPage} maxButtons={7} next prev boundaryLinks />
+        <Pagination items={Math.ceil(this.state.totalCount / PAGE_SIZE) } activePage={parseInt(this.props.location.query._page || '1', 10)} onSelect={this.selectPage} maxButtons={7} next prev boundaryLinks />
         <hr />
         <IssueTable issues={this.state.issues} deleteIssue={this.deleteIssue} />
         <hr />

@@ -40,7 +40,6 @@ app.get('/api/issues', (req, res) => {
       limit = 50;
     }
     const cursor = db.collection('issues').find(filter).sort({ _id:1 })
-
     .skip(offset)
     .limit(limit);
     let totalCount;
@@ -50,7 +49,7 @@ app.get('/api/issues', (req, res) => {
     })
     .then(issues => {
       //returning document given by find(filter) method
-      res.json({ _metadata: { totalCount }, records: issues });
+      res.json({ metadata: { totalCount }, records: issues });
     })
     .catch(error => {
       console.log(error);

@@ -27,7 +27,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "c00fcc76ace574b69bf8"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "607853331033ddc4d965"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -694,7 +694,7 @@
 	      return cursor.toArray();
 	    }).then(function (issues) {
 	      //returning document given by find(filter) method
-	      res.json({ _metadata: { totalCount: totalCount }, records: issues });
+	      res.json({ metadata: { totalCount: totalCount }, records: issues });
 	    }).catch(function (error) {
 	      console.log(error);
 	      res.status(500).json({ message: 'Internal Server error ' + error });
@@ -1500,7 +1500,7 @@
 	//import IssueAddNavItem from './IssueAddNavItem.jsx';
 	/*temporary constant for constrains number of issues on one page
 	in future it'll be a variable, setted by user */
-	var PAGE_SIZE = 10;
+	
 	var IssueRow = function IssueRow(props) {
 	  //console.log(props);
 	  function onDeleteClick() {
@@ -1630,6 +1630,7 @@
 	  issues: _propTypes2.default.array.isRequired, // eslint-disable-line react/forbid-prop-types
 	  deleteIssue: _propTypes2.default.func.isRequired
 	};
+	var PAGE_SIZE = 10;
 	
 	var IssueList = function (_React$Component) {
 	  _inherits(IssueList, _React$Component);
@@ -1640,7 +1641,7 @@
 	      var urlBase = _ref.urlBase,
 	          location = _ref.location;
 	
-	      var query = Object.assing({}, location.query);
+	      var query = Object.assign({}, location.query);
 	      var pageStr = query._page;
 	      if (pageStr) {
 	        delete query._page;
@@ -1670,12 +1671,14 @@
 	
 	    var data = context.initialState.IssueList ? context.initialState.IssueList : { metadata: { totalCount: 0 }, records: [] };
 	    var issues = data.records;
+	    console.log(data.metadata);
 	    issues.forEach(function (issue) {
 	      issue.created = new Date(issue.created);
 	      if (issue.completionDate) {
 	        issue.completionDate = new Date(issue.completionDate);
 	      }
 	    });
+	    console.log(data.metadata);
 	    _this.state = {
 	      issues: issues,
 	      toastVisible: false, toastMessage: '', toastType: 'success',
