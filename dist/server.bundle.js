@@ -27,7 +27,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "c6329bd30925c6a03452"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "e84969465a19822d15cc"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -1486,9 +1486,9 @@
 	
 	var _IssueFilter2 = _interopRequireDefault(_IssueFilter);
 	
-	var _Toast = __webpack_require__(21);
+	var _withToast = __webpack_require__(32);
 	
-	var _Toast2 = _interopRequireDefault(_Toast);
+	var _withToast2 = _interopRequireDefault(_withToast);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -1680,13 +1680,10 @@
 	    });
 	    _this.state = {
 	      issues: issues,
-	      toastVisible: false, toastMessage: '', toastType: 'success',
 	      totalCount: data.metadata.totalCount
 	    };
 	    _this.setFilter = _this.setFilter.bind(_this);
 	    _this.deleteIssue = _this.deleteIssue.bind(_this);
-	    _this.showError = _this.showError.bind(_this);
-	    _this.dismissToast = _this.dismissToast.bind(_this);
 	    _this.selectPage = _this.selectPage.bind(_this);
 	    return _this;
 	  }
@@ -1717,16 +1714,6 @@
 	      this.props.router.push({ pathname: this.props.location.pathname, query: query });
 	    }
 	  }, {
-	    key: 'showError',
-	    value: function showError(message) {
-	      this.setState({ toastVisible: true, toastMessage: message, toastType: 'danger' });
-	    }
-	  }, {
-	    key: 'dismissToast',
-	    value: function dismissToast() {
-	      this.setState({ toastVisible: false });
-	    }
-	  }, {
 	    key: 'loadData',
 	    value: function loadData() {
 	      var _this2 = this;
@@ -1742,7 +1729,7 @@
 	        });
 	        _this2.setState({ issues: issues, totalCount: data.IssueList.metadata.totalCount });
 	      }).catch(function (err) {
-	        _this2.showError('Error in fetching data from server:', err);
+	        _this2.props.showError('Error in fetching data from server:', err);
 	      });
 	    }
 	    //this method calls from the IssueFilter component
@@ -1763,7 +1750,7 @@
 	
 	      fetch('/api/issues/' + id, { method: 'DELETE' }).then(function (response) {
 	        if (!response.ok) {
-	          _this3.showError('Failed to delete issue');
+	          _this3.props.showError('Failed to delete issue');
 	        } else {
 	          _this3.loadData();
 	        }
@@ -1783,9 +1770,7 @@
 	        _react2.default.createElement(_reactBootstrap.Pagination, { items: Math.ceil(this.state.totalCount / PAGE_SIZE), activePage: parseInt(this.props.location.query._page || '1', 10), onSelect: this.selectPage, maxButtons: 7, next: true, prev: true, boundaryLinks: true }),
 	        _react2.default.createElement('hr', null),
 	        _react2.default.createElement(IssueTable, { issues: this.state.issues, deleteIssue: this.deleteIssue }),
-	        _react2.default.createElement('hr', null),
-	        _react2.default.createElement(_Toast2.default, { showing: this.state.toastVisible, message: this.state.toastMessage, onDismiss: this.dismissToast,
-	          bsStyle: this.state.toastType })
+	        _react2.default.createElement('hr', null)
 	      );
 	    }
 	  }]);
@@ -1793,15 +1778,19 @@
 	  return IssueList;
 	}(_react2.default.Component);
 	
-	exports.default = IssueList;
-	
 	IssueList.propTypes = {
 	  location: _propTypes2.default.object.isRequired,
-	  router: _propTypes2.default.object
+	  router: _propTypes2.default.object,
+	  showError: ProptTypes.func.isRequired
 	};
 	IssueList.contextTypes = {
 	  initialState: _propTypes2.default.object
 	};
+	
+	var IssueListWithToast = (0, _withToast2.default)(IssueList);
+	IssueListWithToast.dataFetcher = IssueList.dataFetcher;
+	
+	exports.default = IssueListWithToast;
 
 /***/ }),
 /* 23 */
@@ -2749,9 +2738,9 @@
 	
 	var _IssueFilter2 = _interopRequireDefault(_IssueFilter);
 	
-	var _Toast = __webpack_require__(21);
+	var _withToast = __webpack_require__(32);
 	
-	var _Toast2 = _interopRequireDefault(_Toast);
+	var _withToast2 = _interopRequireDefault(_withToast);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -2817,12 +2806,9 @@
 	
 	    var stats = context.initialState.IssueReport ? context.initialState.IssueReport : {};
 	    _this.state = {
-	      stats: stats,
-	      toastVisible: false, toastMessage: '', toastType: 'success'
+	      stats: stats
 	    };
 	    _this.setFilter = _this.setFilter.bind(_this);
-	    _this.showError = _this.showError.bind(_this);
-	    _this.dismissToast = _this.dismissToast.bind(_this);
 	    return _this;
 	  }
 	
@@ -2847,16 +2833,6 @@
 	      this.props.router.push({ pathname: this.props.location.pathname, query: query });
 	    }
 	  }, {
-	    key: 'showError',
-	    value: function showError(message) {
-	      this.setState({ toastVisible: true, toastMessage: message, toastType: 'danger' });
-	    }
-	  }, {
-	    key: 'dismissToast',
-	    value: function dismissToast() {
-	      this.setState({ toastVisible: false });
-	    }
-	  }, {
 	    key: 'loadData',
 	    value: function loadData() {
 	      var _this2 = this;
@@ -2864,7 +2840,7 @@
 	      IssueReport.dataFetcher({ location: this.props.location }).then(function (data) {
 	        _this2.setState({ stats: data.IssueReport });
 	      }).catch(function (err) {
-	        _this2.showError('Error in fetching data from the server: ' + err);
+	        _this2.props.showError('Error in fetching data from the server: ' + err);
 	      });
 	    }
 	  }, {
@@ -2906,9 +2882,7 @@
 	              return _react2.default.createElement(StatRow, { key: index, owner: owner, counts: _this3.state.stats[owner] });
 	            })
 	          )
-	        ),
-	        _react2.default.createElement(_Toast2.default, { showing: this.state.toastVisible, message: this.state.toastMessage,
-	          onDismiss: this.dismissToast, bsStyle: this.state.toastType })
+	        )
 	      );
 	    }
 	  }]);
@@ -2916,16 +2890,18 @@
 	  return IssueReport;
 	}(_react2.default.Component);
 	
-	exports.default = IssueReport;
-	
-	
 	IssueReport.propTypes = {
 	  location: _propTypes2.default.object.isRequired,
-	  router: _propTypes2.default.object
+	  router: _propTypes2.default.object,
+	  showError: _propTypes2.default.func.isRequired
 	};
 	IssueReport.contextTypes = {
 	  initialState: _propTypes2.default.object
 	};
+	var IssueReportWithToast = (0, _withToast2.default)(IssueReport);
+	IssueReportWithToast.dataFetcher = IssueReport.dataFetcher;
+	
+	exports.default = IssueReportWithToast;
 
 /***/ }),
 /* 29 */
