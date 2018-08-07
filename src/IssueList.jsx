@@ -3,12 +3,14 @@ import React from 'react';
 import 'isomorphic-fetch';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
-import { Button, Glyphicon, Table, Panel } from 'react-bootstrap';
+import { Button, Glyphicon, Table, Panel, Pagination } from 'react-bootstrap';
 
 import IssueFilter from './IssueFilter.jsx';
 import Toast from './Toast.jsx';
 //import IssueAddNavItem from './IssueAddNavItem.jsx';
-
+/*temporary constant for constrains number of issues on one page
+in future it'll be a variable, setted by user */
+const PAGE_SIZE = 10;
 const IssueRow = (props) => {
   //console.log(props);
   function onDeleteClick() {
@@ -67,7 +69,15 @@ IssueTable.propTypes = {
 
 export default class IssueList extends React.Component {
   static dataFetcher({ urlBase, location }) {
-    return fetch(`${urlBase || ''}/api/issues${location.search}`).then(response => {
+    const query = Object.assing({}, location.query);
+    const pageStr = query._page;
+    if (pageStr) {
+      delete query._page;
+      query._offset = (parseInt(pageStr, 10) - 1) * PAGE_SIZE;
+    }
+    query._limit = PAGE_SIZE;
+    const search = Object.keys(query).map(k => `${k}=${query[k]}`).join('&');
+    return fetch(`${urlBase || ''}/api/issues?${search}`).then(response => {
       if(!response.ok) return response.json().then(error => Promise.reject(error));
       return  response.json().then(data => ({ IssueList: data}));
     });
@@ -75,7 +85,8 @@ export default class IssueList extends React.Component {
   constructor(props, context) {
     //context = initialState of IssueList, props = location, history etc
     super(props, context);
-    const issues = context.initialState.IssueList ? context.initialState.IssueList.records : [];
+   const data = context.initialState.IssueList ? context.initialState.IssueList : { metadata: {totalCount:0}, records: [] };
+   const issues = data.records;
     issues.forEach(issue => {
       issue.created = new Date(issue.created);
       if (issue.completionDate) {
@@ -85,11 +96,13 @@ export default class IssueList extends React.Component {
     this.state = { 
       issues,
       toastVisible: false, toastMessage: '', toastType: 'success',
+      totalCount: data.metadata.totalCount,
     };
     this.setFilter = this.setFilter.bind(this);
     this.deleteIssue = this.deleteIssue.bind(this);
     this.showError = this.showError.bind(this);
     this.dismissToast = this.dismissToast.bind(this);
+    this.selectPage = this.selectPage.bind(this);
   }
   componentDidMount() {
     this.loadData();
@@ -101,10 +114,15 @@ export default class IssueList extends React.Component {
     //if comparing show no changes, return prevProps as it was
     if (oldQuery.status === newQuery.status &&
         oldQuery.effort_gte === newQuery.effort_gte &&
-        oldQuery.effort_lte === newQuery.effort_lte) {
+        oldQuery.effort_lte === newQuery.effort_lte &&
+        oldQuery._page === newQuery._page) {
       return;
     }
     this.loadData();
+  }
+  selectPage(eventKey) {
+    const query = Object.assign(this.props.location.query, {_page: eventKey });
+    this.props.router.push({ pathname: this.props.location.pathname, query });
   }
   showError(message) {
     this.setState({ toastVisible: true, toastMessage: message, toastType: 'danger' });
@@ -123,7 +141,7 @@ export default class IssueList extends React.Component {
           issue.completionDate = new Date(issue.completionDate);
         }
       });
-      this.setState({ issues });
+      this.setState({ issues, totalCount: data.IssueList.metadata.totalCount });
     }).catch(err => {
       this.showError('Error in fetching data from server:', err);
     });
@@ -150,6 +168,8 @@ export default class IssueList extends React.Component {
         <Panel collapsible header="Filter">
           <IssueFilter setFilter={this.setFilter} initFilter={this.props.location.query} />
         </Panel>
+        <Pagination items={Math.ceil(this.state.totalCount / PAGE_SIZE)} activePage={parseInt(this.props.location.query._page ||
+          '1', 10)} onSelect={this.selectPage} maxButtons={7} next prev boundaryLinks />
         <hr />
         <IssueTable issues={this.state.issues} deleteIssue={this.deleteIssue} />
         <hr />

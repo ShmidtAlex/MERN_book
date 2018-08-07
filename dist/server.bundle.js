@@ -27,7 +27,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "a24d3c6e1381de51c1ca"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "c00fcc76ace574b69bf8"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -1498,7 +1498,9 @@
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
 	//import IssueAddNavItem from './IssueAddNavItem.jsx';
-	
+	/*temporary constant for constrains number of issues on one page
+	in future it'll be a variable, setted by user */
+	var PAGE_SIZE = 10;
 	var IssueRow = function IssueRow(props) {
 	  //console.log(props);
 	  function onDeleteClick() {
@@ -1638,7 +1640,17 @@
 	      var urlBase = _ref.urlBase,
 	          location = _ref.location;
 	
-	      return fetch((urlBase || '') + '/api/issues' + location.search).then(function (response) {
+	      var query = Object.assing({}, location.query);
+	      var pageStr = query._page;
+	      if (pageStr) {
+	        delete query._page;
+	        query._offset = (parseInt(pageStr, 10) - 1) * PAGE_SIZE;
+	      }
+	      query._limit = PAGE_SIZE;
+	      var search = Object.keys(query).map(function (k) {
+	        return k + '=' + query[k];
+	      }).join('&');
+	      return fetch((urlBase || '') + '/api/issues?' + search).then(function (response) {
 	        if (!response.ok) return response.json().then(function (error) {
 	          return Promise.reject(error);
 	        });
@@ -1656,7 +1668,8 @@
 	    //context = initialState of IssueList, props = location, history etc
 	
 	
-	    var issues = context.initialState.IssueList ? context.initialState.IssueList.records : [];
+	    var data = context.initialState.IssueList ? context.initialState.IssueList : { metadata: { totalCount: 0 }, records: [] };
+	    var issues = data.records;
 	    issues.forEach(function (issue) {
 	      issue.created = new Date(issue.created);
 	      if (issue.completionDate) {
@@ -1665,12 +1678,14 @@
 	    });
 	    _this.state = {
 	      issues: issues,
-	      toastVisible: false, toastMessage: '', toastType: 'success'
+	      toastVisible: false, toastMessage: '', toastType: 'success',
+	      totalCount: data.metadata.totalCount
 	    };
 	    _this.setFilter = _this.setFilter.bind(_this);
 	    _this.deleteIssue = _this.deleteIssue.bind(_this);
 	    _this.showError = _this.showError.bind(_this);
 	    _this.dismissToast = _this.dismissToast.bind(_this);
+	    _this.selectPage = _this.selectPage.bind(_this);
 	    return _this;
 	  }
 	
@@ -1688,10 +1703,16 @@
 	      var oldQuery = prevProps.location.query; //location - URL address of prevProps
 	      var newQuery = this.props.location.query;
 	      //if comparing show no changes, return prevProps as it was
-	      if (oldQuery.status === newQuery.status && oldQuery.effort_gte === newQuery.effort_gte && oldQuery.effort_lte === newQuery.effort_lte) {
+	      if (oldQuery.status === newQuery.status && oldQuery.effort_gte === newQuery.effort_gte && oldQuery.effort_lte === newQuery.effort_lte && oldQuery._page === newQuery._page) {
 	        return;
 	      }
 	      this.loadData();
+	    }
+	  }, {
+	    key: 'selectPage',
+	    value: function selectPage(eventKey) {
+	      var query = Object.assign(this.props.location.query, { _page: eventKey });
+	      this.props.router.push({ pathname: this.props.location.pathname, query: query });
 	    }
 	  }, {
 	    key: 'showError',
@@ -1717,7 +1738,7 @@
 	            issue.completionDate = new Date(issue.completionDate);
 	          }
 	        });
-	        _this2.setState({ issues: issues });
+	        _this2.setState({ issues: issues, totalCount: data.IssueList.metadata.totalCount });
 	      }).catch(function (err) {
 	        _this2.showError('Error in fetching data from server:', err);
 	      });
@@ -1757,6 +1778,7 @@
 	          { collapsible: true, header: 'Filter' },
 	          _react2.default.createElement(_IssueFilter2.default, { setFilter: this.setFilter, initFilter: this.props.location.query })
 	        ),
+	        _react2.default.createElement(_reactBootstrap.Pagination, { items: Math.ceil(this.state.totalCount / PAGE_SIZE), activePage: parseInt(this.props.location.query._page || '1', 10), onSelect: this.selectPage, maxButtons: 7, next: true, prev: true, boundaryLinks: true }),
 	        _react2.default.createElement('hr', null),
 	        _react2.default.createElement(IssueTable, { issues: this.state.issues, deleteIssue: this.deleteIssue }),
 	        _react2.default.createElement('hr', null),
