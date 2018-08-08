@@ -79,5 +79,6 @@ class IssueAddNavItem extends React.Component {
 }
 IssueAddNavItem.propTypes = {
   router: PropTypes.object,
+  showError: PropTypes.func.isRequired,
 }
 export default withRouter(IssueAddNavItem);

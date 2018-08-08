@@ -27,7 +27,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "1d2febdbc2a77826810e"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "c10645f5c08dd0814e65"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -1365,7 +1365,8 @@
 	}(_react2.default.Component);
 	
 	IssueAddNavItem.propTypes = {
-	  router: _propTypes2.default.object
+	  router: _propTypes2.default.object,
+	  showError: _propTypes2.default.func.isRequired
 	};
 	exports.default = (0, _reactRouter.withRouter)(IssueAddNavItem);
 
