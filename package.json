@@ -14,7 +14,7 @@
     "mongodb": "^2.2.6",
     "mongoose": "^5.1.2",
     "object-assign": "^4.1.0",
-    "prop-types": "^15.5.7",
+    "prop-types": "^15.6.2",
     "react": "^15.3.1",
     "react-bootstrap": "^0.30.6",
     "react-dom": "^15.6.2",

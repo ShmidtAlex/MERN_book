@@ -171,7 +171,7 @@ class IssueList extends React.Component {
 IssueList.propTypes = {
   location: PropTypes.object.isRequired,
   router: PropTypes.object,
-  showError: ProptTypes.func.isRequired,
+  showError: PropTypes.func.isRequired,
 }
 IssueList.contextTypes = {
   initialState: PropTypes.object,

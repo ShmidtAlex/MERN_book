@@ -2,10 +2,12 @@ import 'babel-polyfill';
 import React from 'react';
 import { Navbar, Nav, NavItem, NavDropdown, MenuItem, Glyphicon } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
+import PropTypes from 'prop-types';
 
 import IssueAddNavItem from './IssueAddNavItem.jsx';
+import WithToast from './withToast.jsx';
 
-const Header = () => (
+const Header = (props) => (
   <Navbar fluid>
     <Navbar.Header>
       <Navbar.Brand>Issue Tracker</Navbar.Brand>
@@ -19,7 +21,7 @@ const Header = () => (
       </LinkContainer>
     </Nav>
     <Nav pullRight>
-      <IssueAddNavItem /> 
+      <IssueAddNavItem showError={props.showError}/> 
       <NavDropdown id="user-dropdown" title={<Glyphicon glyph="option-horizontal" />} noCaret>
         <MenuItem>Logout</MenuItem>
       </NavDropdown>
@@ -29,7 +31,7 @@ const Header = () => (
 
 const App = (props) => (
   <div>
-    <Header />
+    <HeaderWithToast />
     <div className="container-fluid">
       {props.children}
     {/*props.children consists history, location, params, route's path, routes*/}
@@ -43,7 +45,11 @@ const App = (props) => (
 );
 
 App.propTypes = {
-  children: React.PropTypes.object.isRequired,
+  children: PropTypes.object.isRequired,
 };
+Header.propTypes = {
+  showError: React.PropTypes.func.isRequired,
+};
+const HeaderWithToast = WithToast(Header);
 
 export default App;

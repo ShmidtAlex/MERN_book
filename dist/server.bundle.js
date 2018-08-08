@@ -27,7 +27,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "e84969465a19822d15cc"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "1d2febdbc2a77826810e"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -546,7 +546,7 @@
 /***/ (function(module, exports, __webpack_require__) {
 
 	__webpack_require__(1);
-	module.exports = __webpack_require__(30);
+	module.exports = __webpack_require__(31);
 
 
 /***/ }),
@@ -927,7 +927,7 @@
 	
 	var _Routes2 = _interopRequireDefault(_Routes);
 	
-	var _ContextWrapper = __webpack_require__(29);
+	var _ContextWrapper = __webpack_require__(30);
 	
 	var _ContextWrapper2 = _interopRequireDefault(_ContextWrapper);
 	
@@ -1023,15 +1023,15 @@
 	
 	var _App2 = _interopRequireDefault(_App);
 	
-	var _IssueList = __webpack_require__(22);
+	var _IssueList = __webpack_require__(23);
 	
 	var _IssueList2 = _interopRequireDefault(_IssueList);
 	
-	var _IssueEdit = __webpack_require__(25);
+	var _IssueEdit = __webpack_require__(26);
 	
 	var _IssueEdit2 = _interopRequireDefault(_IssueEdit);
 	
-	var _IssueReport = __webpack_require__(28);
+	var _IssueReport = __webpack_require__(29);
 	
 	var _IssueReport2 = _interopRequireDefault(_IssueReport);
 	
@@ -1076,13 +1076,21 @@
 	
 	var _reactRouterBootstrap = __webpack_require__(18);
 	
-	var _IssueAddNavItem = __webpack_require__(19);
+	var _propTypes = __webpack_require__(19);
+	
+	var _propTypes2 = _interopRequireDefault(_propTypes);
+	
+	var _IssueAddNavItem = __webpack_require__(20);
 	
 	var _IssueAddNavItem2 = _interopRequireDefault(_IssueAddNavItem);
 	
+	var _withToast = __webpack_require__(22);
+	
+	var _withToast2 = _interopRequireDefault(_withToast);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	var Header = function Header() {
+	var Header = function Header(props) {
 	  return _react2.default.createElement(
 	    _reactBootstrap.Navbar,
 	    { fluid: true },
@@ -1120,7 +1128,7 @@
 	    _react2.default.createElement(
 	      _reactBootstrap.Nav,
 	      { pullRight: true },
-	      _react2.default.createElement(_IssueAddNavItem2.default, null),
+	      _react2.default.createElement(_IssueAddNavItem2.default, { showError: props.showError }),
 	      _react2.default.createElement(
 	        _reactBootstrap.NavDropdown,
 	        { id: 'user-dropdown', title: _react2.default.createElement(_reactBootstrap.Glyphicon, { glyph: 'option-horizontal' }), noCaret: true },
@@ -1138,7 +1146,7 @@
 	  return _react2.default.createElement(
 	    'div',
 	    null,
-	    _react2.default.createElement(Header, null),
+	    _react2.default.createElement(HeaderWithToast, null),
 	    _react2.default.createElement(
 	      'div',
 	      { className: 'container-fluid' },
@@ -1164,8 +1172,12 @@
 	};
 	
 	App.propTypes = {
-	  children: _react2.default.PropTypes.object.isRequired
+	  children: _propTypes2.default.object.isRequired
 	};
+	Header.propTypes = {
+	  showError: _react2.default.PropTypes.func.isRequired
+	};
+	var HeaderWithToast = (0, _withToast2.default)(Header);
 	
 	exports.default = App;
 
@@ -1183,6 +1195,12 @@
 
 /***/ }),
 /* 19 */
+/***/ (function(module, exports) {
+
+	module.exports = require("prop-types");
+
+/***/ }),
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1197,17 +1215,13 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _propTypes = __webpack_require__(20);
+	var _propTypes = __webpack_require__(19);
 	
 	var _propTypes2 = _interopRequireDefault(_propTypes);
 	
 	var _reactRouter = __webpack_require__(13);
 	
 	var _reactBootstrap = __webpack_require__(17);
-	
-	var _Toast = __webpack_require__(21);
-	
-	var _Toast2 = _interopRequireDefault(_Toast);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -1229,14 +1243,11 @@
 	    var _this = _possibleConstructorReturn(this, (IssueAddNavItem.__proto__ || Object.getPrototypeOf(IssueAddNavItem)).call(this, props));
 	
 	    _this.state = {
-	      showing: false,
-	      toastVisible: false, toastMessage: '', toastType: 'success'
+	      showing: false
 	    };
 	    _this.showModal = _this.showModal.bind(_this);
 	    _this.hideModal = _this.hideModal.bind(_this);
 	    _this.submit = _this.submit.bind(_this);
-	    _this.showError = _this.showError.bind(_this);
-	    _this.dismissToast = _this.dismissToast.bind(_this);
 	    return _this;
 	  }
 	
@@ -1249,16 +1260,6 @@
 	    key: 'hideModal',
 	    value: function hideModal() {
 	      this.setState({ showing: false });
-	    }
-	  }, {
-	    key: 'showError',
-	    value: function showError() {
-	      this.setState({ toastVisible: true, toastMessage: message, toastType: 'danger' });
-	    }
-	  }, {
-	    key: 'dismissToast',
-	    value: function dismissToast() {
-	      this.setState({ toastVisible: false });
 	    }
 	  }, {
 	    key: 'submit',
@@ -1280,9 +1281,13 @@
 	          response.json().then(function (updatedIssue) {
 	            _this2.props.router.push('/issues/' + updatedIssue._id);
 	          });
+	        } else {
+	          response.json().then(function (error) {
+	            _this2.props.showError('Failed to add issue: ' + error.message + ' ');
+	          });
 	        }
 	      }).catch(function (err) {
-	        _this2.showError('Error in sending data to server: ' + err.message);
+	        _this2.props.showError('Error in sending data to server: ' + err.message);
 	      });
 	    }
 	  }, {
@@ -1365,12 +1370,6 @@
 	exports.default = (0, _reactRouter.withRouter)(IssueAddNavItem);
 
 /***/ }),
-/* 20 */
-/***/ (function(module, exports) {
-
-	module.exports = require("prop-types");
-
-/***/ }),
 /* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1388,7 +1387,7 @@
 	
 	var _reactBootstrap = __webpack_require__(17);
 	
-	var _propTypes = __webpack_require__(20);
+	var _propTypes = __webpack_require__(19);
 	
 	var _propTypes2 = _interopRequireDefault(_propTypes);
 	
@@ -1466,15 +1465,99 @@
 	  value: true
 	});
 	
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	exports.default = withToast;
+	
+	var _react = __webpack_require__(11);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _Toast = __webpack_require__(21);
+	
+	var _Toast2 = _interopRequireDefault(_Toast);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	function withToast(OriginalComponent) {
+	  return function (_React$Component) {
+	    _inherits(WithToast, _React$Component);
+	
+	    function WithToast(props) {
+	      _classCallCheck(this, WithToast);
+	
+	      //console.log(super);
+	      //console.log(props);
+	      var _this = _possibleConstructorReturn(this, (WithToast.__proto__ || Object.getPrototypeOf(WithToast)).call(this, props));
+	
+	      _this.state = {
+	        toastVisible: false, toastMessage: '', toastType: 'success'
+	      };
+	      _this.showSuccess = _this.showSuccess.bind(_this);
+	      _this.showError = _this.showError.bind(_this);
+	      _this.dismissToast = _this.dismissToast.bind(_this);
+	      return _this;
+	    }
+	
+	    _createClass(WithToast, [{
+	      key: 'showSuccess',
+	      value: function showSuccess(message) {
+	        this.setState({ toastVisible: true, toastMessage: message, toastType: 'success' });
+	      }
+	    }, {
+	      key: 'showError',
+	      value: function showError(message) {
+	        this.setState({ toastVisible: true, toastMessage: message, toastType: 'danger' });
+	      }
+	    }, {
+	      key: 'dismissToast',
+	      value: function dismissToast() {
+	        this.setState({ toastVisible: false });
+	      }
+	    }, {
+	      key: 'render',
+	      value: function render() {
+	        return _react2.default.createElement(
+	          'div',
+	          null,
+	          _react2.default.createElement(OriginalComponent, _extends({ showError: this.showError, showSuccess: this.showSuccess }, this.props)),
+	          _react2.default.createElement(_Toast2.default, { showing: this.state.toastVisible, message: this.state.toastMessage, onDismiss: this.dismissToast,
+	            bsStyle: this.state.toastType })
+	        );
+	      }
+	    }]);
+	
+	    return WithToast;
+	  }(_react2.default.Component);
+	}
+
+/***/ }),
+/* 23 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
 	var _react = __webpack_require__(11);
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	__webpack_require__(23);
+	__webpack_require__(24);
 	
-	var _propTypes = __webpack_require__(20);
+	var _propTypes = __webpack_require__(19);
 	
 	var _propTypes2 = _interopRequireDefault(_propTypes);
 	
@@ -1482,11 +1565,11 @@
 	
 	var _reactBootstrap = __webpack_require__(17);
 	
-	var _IssueFilter = __webpack_require__(24);
+	var _IssueFilter = __webpack_require__(25);
 	
 	var _IssueFilter2 = _interopRequireDefault(_IssueFilter);
 	
-	var _withToast = __webpack_require__(32);
+	var _withToast = __webpack_require__(22);
 	
 	var _withToast2 = _interopRequireDefault(_withToast);
 	
@@ -1781,7 +1864,7 @@
 	IssueList.propTypes = {
 	  location: _propTypes2.default.object.isRequired,
 	  router: _propTypes2.default.object,
-	  showError: ProptTypes.func.isRequired
+	  showError: _propTypes2.default.func.isRequired
 	};
 	IssueList.contextTypes = {
 	  initialState: _propTypes2.default.object
@@ -1793,13 +1876,13 @@
 	exports.default = IssueListWithToast;
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, exports) {
 
 	module.exports = require("isomorphic-fetch");
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1816,7 +1899,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _propTypes = __webpack_require__(20);
+	var _propTypes = __webpack_require__(19);
 	
 	var _propTypes2 = _interopRequireDefault(_propTypes);
 	
@@ -2065,7 +2148,7 @@
 	};
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2084,19 +2167,19 @@
 	
 	var _reactBootstrap = __webpack_require__(17);
 	
-	var _propTypes = __webpack_require__(20);
+	var _propTypes = __webpack_require__(19);
 	
 	var _propTypes2 = _interopRequireDefault(_propTypes);
 	
-	var _NumInput = __webpack_require__(26);
+	var _NumInput = __webpack_require__(27);
 	
 	var _NumInput2 = _interopRequireDefault(_NumInput);
 	
-	var _DateInput = __webpack_require__(27);
+	var _DateInput = __webpack_require__(28);
 	
 	var _DateInput2 = _interopRequireDefault(_DateInput);
 	
-	var _withToast = __webpack_require__(32);
+	var _withToast = __webpack_require__(22);
 	
 	var _withToast2 = _interopRequireDefault(_withToast);
 	
@@ -2481,7 +2564,7 @@
 	exports.default = IssueEditWithToast;
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2498,7 +2581,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _propTypes = __webpack_require__(20);
+	var _propTypes = __webpack_require__(19);
 	
 	var _propTypes2 = _interopRequireDefault(_propTypes);
 	
@@ -2581,7 +2664,7 @@
 	};
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2598,7 +2681,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _propTypes = __webpack_require__(20);
+	var _propTypes = __webpack_require__(19);
 	
 	var _propTypes2 = _interopRequireDefault(_propTypes);
 	
@@ -2713,7 +2796,7 @@
 	};
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2730,15 +2813,15 @@
 	
 	var _reactBootstrap = __webpack_require__(17);
 	
-	var _propTypes = __webpack_require__(20);
+	var _propTypes = __webpack_require__(19);
 	
 	var _propTypes2 = _interopRequireDefault(_propTypes);
 	
-	var _IssueFilter = __webpack_require__(24);
+	var _IssueFilter = __webpack_require__(25);
 	
 	var _IssueFilter2 = _interopRequireDefault(_IssueFilter);
 	
-	var _withToast = __webpack_require__(32);
+	var _withToast = __webpack_require__(22);
 	
 	var _withToast2 = _interopRequireDefault(_withToast);
 	
@@ -2904,7 +2987,7 @@
 	exports.default = IssueReportWithToast;
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2919,7 +3002,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _propTypes = __webpack_require__(20);
+	var _propTypes = __webpack_require__(19);
 	
 	var _propTypes2 = _interopRequireDefault(_propTypes);
 	
@@ -2967,7 +3050,7 @@
 	};
 
 /***/ }),
-/* 30 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(__resourceQuery) {/*
@@ -2998,7 +3081,7 @@
 						if(fromUpdate) console.log("[HMR] Update applied.");
 						return;
 					}
-					__webpack_require__(31)(updatedModules, updatedModules);
+					__webpack_require__(32)(updatedModules, updatedModules);
 					checkForUpdate(true);
 				});
 			}
@@ -3011,7 +3094,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, "?1000"))
 
 /***/ }),
-/* 31 */
+/* 32 */
 /***/ (function(module, exports) {
 
 	/*
@@ -3040,90 +3123,6 @@
 		}
 	};
 
-
-/***/ }),
-/* 32 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
-	exports.default = withToast;
-	
-	var _react = __webpack_require__(11);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	var _Toast = __webpack_require__(21);
-	
-	var _Toast2 = _interopRequireDefault(_Toast);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-	
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-	
-	function withToast(OriginalComponent) {
-	  return function (_React$Component) {
-	    _inherits(WithToast, _React$Component);
-	
-	    function WithToast(props) {
-	      _classCallCheck(this, WithToast);
-	
-	      //console.log(super);
-	      //console.log(props);
-	      var _this = _possibleConstructorReturn(this, (WithToast.__proto__ || Object.getPrototypeOf(WithToast)).call(this, props));
-	
-	      _this.state = {
-	        toastVisible: false, toastMessage: '', toastType: 'success'
-	      };
-	      _this.showSuccess = _this.showSuccess.bind(_this);
-	      _this.showError = _this.showError.bind(_this);
-	      _this.dismissToast = _this.dismissToast.bind(_this);
-	      return _this;
-	    }
-	
-	    _createClass(WithToast, [{
-	      key: 'showSuccess',
-	      value: function showSuccess(message) {
-	        this.setState({ toastVisible: true, toastMessage: message, toastType: 'success' });
-	      }
-	    }, {
-	      key: 'showError',
-	      value: function showError(message) {
-	        this.setState({ toastVisible: true, toastMessage: message, toastType: 'danger' });
-	      }
-	    }, {
-	      key: 'dismissToast',
-	      value: function dismissToast() {
-	        this.setState({ toastVisible: false });
-	      }
-	    }, {
-	      key: 'render',
-	      value: function render() {
-	        return _react2.default.createElement(
-	          'div',
-	          null,
-	          _react2.default.createElement(OriginalComponent, _extends({ showError: this.showError, showSuccess: this.showSuccess }, this.props)),
-	          _react2.default.createElement(_Toast2.default, { showing: this.state.toastVisible, message: this.state.toastMessage, onDismiss: this.dismissToast,
-	            bsStyle: this.state.toastType })
-	        );
-	      }
-	    }]);
-	
-	    return WithToast;
-	  }(_react2.default.Component);
-	}
 
 /***/ })
 /******/ ])));

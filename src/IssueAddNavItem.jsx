@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router';
 import { NavItem, Glyphicon, Modal, Form, FormGroup, FormControl, ControlLabel, Button, ButtonToolbar } from 'react-bootstrap';
-import Toast from './Toast.jsx';
+
 //we don't use 'export default class' because of we use whthRouter function instead. It means, that we wrap this whole
 //component before exporting, not after as it is in App.jsx with IssueList. thus we encapsulate usage of router within this component
 class IssueAddNavItem extends React.Component {
@@ -10,13 +10,10 @@ class IssueAddNavItem extends React.Component {
     super(props);//evoking functions belongs to parent (App.jsx)
     this.state = {
       showing: false,
-      toastVisible: false, toastMessage: '', toastType:  'success',
     };
     this.showModal = this.showModal.bind(this);
     this.hideModal = this.hideModal.bind(this);
     this.submit = this.submit.bind(this);
-    this.showError = this.showError.bind(this);
-    this.dismissToast = this.dismissToast.bind(this);
   }
   showModal() {
     this.setState({ showing: true });
@@ -24,12 +21,7 @@ class IssueAddNavItem extends React.Component {
   hideModal() {
     this.setState({ showing: false });
   }
-  showError() {
-    this.setState({ toastVisible: true, toastMessage: message, toastType: 'danger'});
-  }
-  dismissToast() {
-    this.setState({ toastVisible: false });
-  }
+  
   submit(e) {
     e.preventDefault();
     this.hideModal();
@@ -46,9 +38,13 @@ class IssueAddNavItem extends React.Component {
         response.json().then(updatedIssue => {
           this.props.router.push(`/issues/${updatedIssue._id}`);
         });
+      } else {
+        response.json().then(error => {
+          this.props.showError(`Failed to add issue: ${error.message} `);
+        })
       }
     }).catch(err => {
-      this.showError(`Error in sending data to server: ${err.message}`);
+      this.props.showError(`Error in sending data to server: ${err.message}`);
     });
   }
   render() {
