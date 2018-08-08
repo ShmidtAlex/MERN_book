@@ -27,7 +27,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "c10645f5c08dd0814e65"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "2ce9373437d26aa8354d"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -680,6 +680,9 @@
 	  }
 	  if (req.query.effort_gte) {
 	    filter.effort.$gte = parseInt(req.query.effort_gte, 10);
+	  }
+	  if (req.query.search) {
+	    filter.$text = { $search: req.query.search };
 	  }
 	  if (req.query._summary === undefined) {
 	    var offset = req.query._offset ? parseInt(req.query._offset, 10) : 0;
