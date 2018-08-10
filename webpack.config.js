@@ -18,12 +18,17 @@ module.exports = {
   module: {
     loaders: [
       {
+        test:/\.css$/,
+        loaders: ['style-loader', 'css-loader'],
+      },
+      {
         test: /\.jsx$/,
         loader: 'babel-loader',
         query: {
           presets: ['react', 'es2015'],
         },
       },
+
     ],
   },
   resolve: {

@@ -4,6 +4,7 @@ import { LinkContainer } from 'react-router-bootstrap';
 import { withRouter } from 'react-router';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
+//import './Header.css';
 
 import IssueAddNavItem from './IssueAddNavItem.jsx';
 import WithToast from './withToast.jsx';
@@ -37,6 +38,7 @@ const Header = (props) => {
       props.router.push(`/issues/${item.value}`);
     }
   }
+
   return (
   <Navbar fluid>
     <Col sm={5}>
@@ -53,14 +55,17 @@ const Header = (props) => {
       </Nav>
     </Col>
     <Col sm={4}>
-      <div style= {{ paddingTop: 8 }}>
-        <Select.Async instanceId="search" placeholder="Search ..." autoload={false} cache={false} loadOptions={searchIssues} filterOptions={filterOptions} onChange={selectIssue}/>
+      <div style={{ paddingTop: 8 }} >
+       <Select.Async
+            instanceId="search" className="someName" placeholder="Search ..." autoload={false} cache={false}
+            loadOptions={searchIssues} filterOptions={filterOptions} onChange={selectIssue}
+          />
       </div>
     </Col>
     <Col sm={3}>
       <Nav pullRight>
         <IssueAddNavItem showError={props.showError}/> 
-        <NavDropdown id="user-dropdown" title={<Glyphicon glyph="option-horizontal" />} noCaret>
+        <NavDropdown id="user-dropdown" title={<Glyphicon glyph="option-horizontal" />} noCaret >
           <MenuItem>Logout</MenuItem>
         </NavDropdown>
       </Nav>

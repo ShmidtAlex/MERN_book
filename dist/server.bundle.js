@@ -27,7 +27,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "e94b1d8ff824279662e9"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "a4f74c3299898e4f3580"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -1170,6 +1170,9 @@
 	
 	//console.log(IssueAddNavItem);
 	//console.log(WithToast);
+	
+	//import './Header.css';
+	
 	var Header = function Header(props) {
 	  function searchIssues(input) {
 	    var _this = this;
@@ -1204,6 +1207,7 @@
 	      props.router.push('/issues/' + item.value);
 	    }
 	  }
+	
 	  return _react2.default.createElement(
 	    _reactBootstrap.Navbar,
 	    { fluid: true },
@@ -1248,7 +1252,10 @@
 	      _react2.default.createElement(
 	        'div',
 	        { style: { paddingTop: 8 } },
-	        _react2.default.createElement(_reactSelect2.default.Async, { instanceId: 'search', placeholder: 'Search ...', autoload: false, cache: false, loadOptions: searchIssues, filterOptions: filterOptions, onChange: selectIssue })
+	        _react2.default.createElement(_reactSelect2.default.Async, {
+	          instanceId: 'search', className: 'someName', placeholder: 'Search ...', autoload: false, cache: false,
+	          loadOptions: searchIssues, filterOptions: filterOptions, onChange: selectIssue
+	        })
 	      )
 	    ),
 	    _react2.default.createElement(
