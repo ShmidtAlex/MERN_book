@@ -27,7 +27,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "73bcc9e0ea67310b8795"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "a2027bfa45903caae748"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -1158,6 +1158,10 @@
 	
 	var _reactSelect2 = _interopRequireDefault(_reactSelect);
 	
+	var _SignInNavItem = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"./SignInNavItem.jsx\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+	
+	var _SignInNavItem2 = _interopRequireDefault(_SignInNavItem);
+	
 	var _IssueAddNavItem = __webpack_require__(22);
 	
 	var _IssueAddNavItem2 = _interopRequireDefault(_IssueAddNavItem);
@@ -1167,10 +1171,6 @@
 	var _withToast2 = _interopRequireDefault(_withToast);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	//if we setting import of css files during the session, all is good, but when we reload the server
-	//this causes a very big trouble:
-	//import './Header.css';
 	
 	var Header = function Header(props) {
 	  function searchIssues(input) {
@@ -1264,23 +1264,24 @@
 	        _reactBootstrap.Nav,
 	        { pullRight: true },
 	        _react2.default.createElement(_IssueAddNavItem2.default, { showError: props.showError }),
-	        _react2.default.createElement(
-	          _reactBootstrap.NavDropdown,
-	          { id: 'user-dropdown', title: _react2.default.createElement(_reactBootstrap.Glyphicon, { glyph: 'option-horizontal' }), noCaret: true },
-	          _react2.default.createElement(
-	            _reactBootstrap.MenuItem,
-	            null,
-	            'Logout'
-	          )
-	        )
+	        _react2.default.createElement(_SignInNavItem2.default, {
+	          user: props.user, onSingin: props.onSingin, onSignout: props.onSignout,
+	          showError: props.showError, showSuccess: props.showSuccess })
 	      )
 	    )
 	  );
 	};
+	//if we setting import of css files during the session, all is good, but when we reload the server
+	//this causes a very big trouble:
+	//import './Header.css';
+	
 	Header.propTypes = {
 	  showError: _propTypes2.default.func.isRequired,
 	  showSuccess: _propTypes2.default.func.isRequired,
-	  router: _propTypes2.default.object
+	  router: _propTypes2.default.object,
+	  onSingin: _propTypes2.default.func.isRequired,
+	  onSignout: _propTypes2.default.func.isRequired,
+	  user: _propTypes2.default.object
 	};
 	
 	exports.default = (0, _reactRouter.withRouter)((0, _withToast2.default)(Header));
