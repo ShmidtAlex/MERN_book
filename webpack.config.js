@@ -17,10 +17,7 @@ module.exports = {
   ],
   module: {
     loaders: [
-      {
-        test:/\.css$/,
-        loaders: ['style-loader', 'css-loader'],
-      },
+      
       {
         test: /\.jsx$/,
         loader: 'babel-loader',
@@ -28,7 +25,10 @@ module.exports = {
           presets: ['react', 'es2015'],
         },
       },
-
+      {
+        test:/\.css$/,
+        loaders: ['style-loader', 'css-loader'],
+      }
     ],
   },
   resolve: {

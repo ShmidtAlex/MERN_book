@@ -27,7 +27,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "a4f74c3299898e4f3580"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "5dc66318e35bb310682b"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -1168,9 +1168,8 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	//console.log(IssueAddNavItem);
-	//console.log(WithToast);
-	
+	//if we setting import of css files during the session, all is good, but when we reload the server
+	//this causes a very big trouble:
 	//import './Header.css';
 	
 	var Header = function Header(props) {

@@ -4,12 +4,13 @@ import { LinkContainer } from 'react-router-bootstrap';
 import { withRouter } from 'react-router';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
+//if we setting import of css files during the session, all is good, but when we reload the server
+//this causes a very big trouble:
 //import './Header.css';
 
 import IssueAddNavItem from './IssueAddNavItem.jsx';
 import WithToast from './withToast.jsx';
-//console.log(IssueAddNavItem);
-//console.log(WithToast);
+
 const Header = (props) => {
   function searchIssues(input) {
     if (input.length < 2) {
