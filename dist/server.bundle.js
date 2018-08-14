@@ -27,7 +27,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "644aa476e4746ee47c52"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "f57201fc8740bcd1bbca"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -546,7 +546,7 @@
 /***/ (function(module, exports, __webpack_require__) {
 
 	__webpack_require__(1);
-	module.exports = __webpack_require__(33);
+	module.exports = __webpack_require__(34);
 
 
 /***/ }),
@@ -930,7 +930,7 @@
 	
 	var _Routes2 = _interopRequireDefault(_Routes);
 	
-	var _ContextWrapper = __webpack_require__(32);
+	var _ContextWrapper = __webpack_require__(33);
 	
 	var _ContextWrapper2 = _interopRequireDefault(_ContextWrapper);
 	
@@ -1022,19 +1022,19 @@
 	
 	var _reactRouter = __webpack_require__(13);
 	
-	var _App = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"./App.jsx\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+	var _App = __webpack_require__(16);
 	
 	var _App2 = _interopRequireDefault(_App);
 	
-	var _IssueList = __webpack_require__(25);
+	var _IssueList = __webpack_require__(26);
 	
 	var _IssueList2 = _interopRequireDefault(_IssueList);
 	
-	var _IssueEdit = __webpack_require__(28);
+	var _IssueEdit = __webpack_require__(29);
 	
 	var _IssueEdit2 = _interopRequireDefault(_IssueEdit);
 	
-	var _IssueReport = __webpack_require__(31);
+	var _IssueReport = __webpack_require__(32);
 	
 	var _IssueReport2 = _interopRequireDefault(_IssueReport);
 	
@@ -1060,14 +1060,275 @@
 	);
 
 /***/ }),
-/* 16 */,
+/* 16 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	__webpack_require__(3);
+	
+	var _react = __webpack_require__(11);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _propTypes = __webpack_require__(17);
+	
+	var _propTypes2 = _interopRequireDefault(_propTypes);
+	
+	var _Header = __webpack_require__(18);
+	
+	var _Header2 = _interopRequireDefault(_Header);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	//import IssueAddNavItem from './IssueAddNavItem.jsx';
+	//import WithToast from './withToast.jsx';
+	
+	
+	var App = function (_React$Component) {
+	  _inherits(App, _React$Component);
+	
+	  function App(props) {
+	    _classCallCheck(this, App);
+	
+	    var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
+	
+	    _this.state = {
+	      user: { signedIn: false, name: '' }
+	    };
+	    _this.onSignin = _this.onSignin.bind(_this);
+	    _this.onSignout = _this.onSignout.bind(_this);
+	    return _this;
+	  }
+	
+	  _createClass(App, [{
+	    key: 'onSignin',
+	    value: function onSignin(name) {
+	      this.setState({ user: { signedIn: true, name: name } });
+	    }
+	  }, {
+	    key: 'onSignout',
+	    value: function onSignout() {
+	      this.setState({ user: { signedIn: false, name: '' } });
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(_Header2.default, { user: this.state.user, onSignin: this.onSignin, onSignout: this.onSignout }),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'container-fluid' },
+	          this.props.children,
+	          _react2.default.createElement('hr', null),
+	          _react2.default.createElement(
+	            'h5',
+	            null,
+	            _react2.default.createElement(
+	              'small',
+	              null,
+	              'Full source code available at this ',
+	              _react2.default.createElement(
+	                'a',
+	                { href: 'https://github.com/vasansr/pro-mern-stack' },
+	                'GitHub repository'
+	              ),
+	              '.'
+	            )
+	          )
+	        )
+	      );
+	    }
+	  }]);
+	
+	  return App;
+	}(_react2.default.Component);
+	
+	exports.default = App;
+	
+	
+	App.propTypes = {
+	  children: _propTypes2.default.object.isRequired
+	};
+
+/***/ }),
 /* 17 */
 /***/ (function(module, exports) {
 
 	module.exports = require("prop-types");
 
 /***/ }),
-/* 18 */,
+/* 18 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _react = __webpack_require__(11);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactBootstrap = __webpack_require__(19);
+	
+	var _reactRouterBootstrap = __webpack_require__(20);
+	
+	var _reactRouter = __webpack_require__(13);
+	
+	var _propTypes = __webpack_require__(17);
+	
+	var _propTypes2 = _interopRequireDefault(_propTypes);
+	
+	var _reactSelect = __webpack_require__(21);
+	
+	var _reactSelect2 = _interopRequireDefault(_reactSelect);
+	
+	var _IssueAddNavItem = __webpack_require__(22);
+	
+	var _IssueAddNavItem2 = _interopRequireDefault(_IssueAddNavItem);
+	
+	var _SignInNavItem = __webpack_require__(23);
+	
+	var _SignInNavItem2 = _interopRequireDefault(_SignInNavItem);
+	
+	var _withToast = __webpack_require__(24);
+	
+	var _withToast2 = _interopRequireDefault(_withToast);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var Header = function Header(props) {
+	  function searchIssues(input) {
+	    var _this = this;
+	
+	    if (input.length < 2) {
+	      return Promise.resolve({ options: [] });
+	    }
+	    return fetch('/api/issues?search=' + input).then(function (response) {
+	      if (!response.ok) {
+	        return response.json().then(function (error) {
+	          return Promise.reject(error);
+	        });
+	      }
+	      return response.json().then(function (data) {
+	        var options = data.records.map(function (issue) {
+	          return {
+	            value: issue._id,
+	            label: issue._id.substr(-4) + ': ' + issue.title
+	          };
+	        });
+	        return { options: options };
+	      }).catch(function (error) {
+	        _this.props.showError('Error fetching data from server: ' + error);
+	      });
+	    });
+	  }
+	  function filterOptions(options) {
+	    return options;
+	  }
+	  function selectIssue(item) {
+	    if (item) {
+	      props.router.push('/issues/' + item.value);
+	    }
+	  }
+	
+	  return _react2.default.createElement(
+	    _reactBootstrap.Navbar,
+	    { fluid: true },
+	    _react2.default.createElement(
+	      _reactBootstrap.Col,
+	      { sm: 5 },
+	      _react2.default.createElement(
+	        _reactBootstrap.Navbar.Header,
+	        null,
+	        _react2.default.createElement(
+	          _reactBootstrap.Navbar.Brand,
+	          null,
+	          'Issue Tracker'
+	        )
+	      ),
+	      _react2.default.createElement(
+	        _reactBootstrap.Nav,
+	        null,
+	        _react2.default.createElement(
+	          _reactRouterBootstrap.LinkContainer,
+	          { to: '/issues' },
+	          _react2.default.createElement(
+	            _reactBootstrap.NavItem,
+	            null,
+	            'Issues'
+	          )
+	        ),
+	        _react2.default.createElement(
+	          _reactRouterBootstrap.LinkContainer,
+	          { to: '/reports' },
+	          _react2.default.createElement(
+	            _reactBootstrap.NavItem,
+	            null,
+	            'Reports'
+	          )
+	        )
+	      )
+	    ),
+	    _react2.default.createElement(
+	      _reactBootstrap.Col,
+	      { sm: 4 },
+	      _react2.default.createElement(
+	        'div',
+	        { style: { paddingTop: 8 } },
+	        _react2.default.createElement(_reactSelect2.default.Async, {
+	          instanceId: 'search', className: 'someName', placeholder: 'Search ...', autoload: false, cache: false,
+	          loadOptions: searchIssues, filterOptions: filterOptions, onChange: selectIssue
+	        })
+	      )
+	    ),
+	    _react2.default.createElement(
+	      _reactBootstrap.Col,
+	      { sm: 3 },
+	      _react2.default.createElement(
+	        _reactBootstrap.Nav,
+	        { pullRight: true },
+	        _react2.default.createElement(_IssueAddNavItem2.default, { showError: props.showError }),
+	        _react2.default.createElement(_SignInNavItem2.default, {
+	          user: props.user, onSignin: props.onSignin, onSignout: props.onSignout,
+	          showError: props.showError, showSuccess: props.showSuccess })
+	      )
+	    )
+	  );
+	};
+	//if we setting import of css files during the session, all is good, but when we reload the server
+	//this causes a very big trouble:
+	//import './Header.css';
+	
+	
+	Header.propTypes = {
+	  showError: _propTypes2.default.func.isRequired,
+	  showSuccess: _propTypes2.default.func.isRequired,
+	  router: _propTypes2.default.object,
+	  onSignin: _propTypes2.default.func.isRequired,
+	  onSignout: _propTypes2.default.func.isRequired,
+	  user: _propTypes2.default.object
+	};
+	
+	exports.default = (0, _reactRouter.withRouter)((0, _withToast2.default)(Header));
+
+/***/ }),
 /* 19 */
 /***/ (function(module, exports) {
 
@@ -1080,9 +1341,376 @@
 	module.exports = require("react-router-bootstrap");
 
 /***/ }),
-/* 21 */,
-/* 22 */,
+/* 21 */
+/***/ (function(module, exports) {
+
+	module.exports = require("react-select");
+
+/***/ }),
+/* 22 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(11);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _propTypes = __webpack_require__(17);
+	
+	var _propTypes2 = _interopRequireDefault(_propTypes);
+	
+	var _reactRouter = __webpack_require__(13);
+	
+	var _reactBootstrap = __webpack_require__(19);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	//we don't use 'export default class' because of we use whthRouter function instead. It means, that we wrap this whole
+	//component before exporting, not after as it is in App.jsx with IssueList. thus we encapsulate usage of router within this component
+	var IssueAddNavItem = function (_React$Component) {
+	  _inherits(IssueAddNavItem, _React$Component);
+	
+	  function IssueAddNavItem(props) {
+	    _classCallCheck(this, IssueAddNavItem);
+	
+	    //evoking functions belongs to parent (App.jsx)
+	    var _this = _possibleConstructorReturn(this, (IssueAddNavItem.__proto__ || Object.getPrototypeOf(IssueAddNavItem)).call(this, props));
+	
+	    _this.state = {
+	      showing: false
+	    };
+	    _this.showModal = _this.showModal.bind(_this);
+	    _this.hideModal = _this.hideModal.bind(_this);
+	    _this.submit = _this.submit.bind(_this);
+	    return _this;
+	  }
+	
+	  _createClass(IssueAddNavItem, [{
+	    key: 'showModal',
+	    value: function showModal() {
+	      this.setState({ showing: true });
+	    }
+	  }, {
+	    key: 'hideModal',
+	    value: function hideModal() {
+	      this.setState({ showing: false });
+	    }
+	  }, {
+	    key: 'submit',
+	    value: function submit(e) {
+	      var _this2 = this;
+	
+	      e.preventDefault();
+	      this.hideModal();
+	      var form = document.forms.issueAdd;
+	      var newIssue = {
+	        owner: form.owner.value, title: form.title.value, status: 'New', created: new Date()
+	      };
+	      fetch('api/issues', {
+	        method: 'POST',
+	        headers: { 'Content-Type': 'application/json' },
+	        body: JSON.stringify(newIssue)
+	      }).then(function (response) {
+	        if (response.ok) {
+	          response.json().then(function (updatedIssue) {
+	            _this2.props.router.push('/issues/' + updatedIssue._id);
+	          });
+	        } else {
+	          response.json().then(function (error) {
+	            _this2.props.showError('Failed to add issue: ' + error.message + ' ');
+	          });
+	        }
+	      }).catch(function (err) {
+	        _this2.props.showError('Error in sending data to server: ' + err.message);
+	      });
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        _reactBootstrap.NavItem,
+	        { onClick: this.showModal },
+	        _react2.default.createElement(_reactBootstrap.Glyphicon, { glyph: 'plus' }),
+	        'Create Issue',
+	        _react2.default.createElement(
+	          _reactBootstrap.Modal,
+	          { keyboard: true, show: this.state.showing, onHide: this.hideModal },
+	          _react2.default.createElement(
+	            _reactBootstrap.Modal.Header,
+	            { closeButton: true },
+	            _react2.default.createElement(
+	              _reactBootstrap.Modal.Title,
+	              null,
+	              'Create Issue'
+	            )
+	          ),
+	          _react2.default.createElement(
+	            _reactBootstrap.Modal.Body,
+	            null,
+	            _react2.default.createElement(
+	              _reactBootstrap.Form,
+	              { name: 'issueAdd' },
+	              _react2.default.createElement(
+	                _reactBootstrap.FormGroup,
+	                null,
+	                _react2.default.createElement(
+	                  _reactBootstrap.ControlLabel,
+	                  null,
+	                  'Title'
+	                ),
+	                _react2.default.createElement(_reactBootstrap.FormControl, { name: 'title', autoFocus: true })
+	              ),
+	              _react2.default.createElement(
+	                _reactBootstrap.FormGroup,
+	                null,
+	                _react2.default.createElement(
+	                  _reactBootstrap.ControlLabel,
+	                  null,
+	                  'Owner'
+	                ),
+	                _react2.default.createElement(_reactBootstrap.FormControl, { name: 'owner' })
+	              )
+	            )
+	          ),
+	          _react2.default.createElement(
+	            _reactBootstrap.Modal.Footer,
+	            null,
+	            _react2.default.createElement(
+	              _reactBootstrap.ButtonToolbar,
+	              null,
+	              _react2.default.createElement(
+	                _reactBootstrap.Button,
+	                { type: 'button', bsStyle: 'primary', onClick: this.submit },
+	                'Submit'
+	              ),
+	              _react2.default.createElement(
+	                _reactBootstrap.Button,
+	                { bsStyle: 'link', onClick: this.hideModal },
+	                'Cancel'
+	              )
+	            )
+	          )
+	        )
+	      );
+	    }
+	  }]);
+	
+	  return IssueAddNavItem;
+	}(_react2.default.Component);
+	
+	IssueAddNavItem.propTypes = {
+	  router: _propTypes2.default.object,
+	  showError: _propTypes2.default.func.isRequired
+	};
+	exports.default = (0, _reactRouter.withRouter)(IssueAddNavItem);
+
+/***/ }),
 /* 23 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(11);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactBootstrap = __webpack_require__(19);
+	
+	var _propTypes = __webpack_require__(17);
+	
+	var _propTypes2 = _interopRequireDefault(_propTypes);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var SingInNavItem = function (_React$Component) {
+	  _inherits(SingInNavItem, _React$Component);
+	
+	  function SingInNavItem(props) {
+	    _classCallCheck(this, SingInNavItem);
+	
+	    var _this = _possibleConstructorReturn(this, (SingInNavItem.__proto__ || Object.getPrototypeOf(SingInNavItem)).call(this, props));
+	
+	    _this.state = {
+	      showning: false, disable: true
+	    };
+	    _this.showModal = _this.showModal.bind(_this);
+	    _this.hideModal = _this.hideModal.bind(_this);
+	    _this.signout = _this.signout.bind(_this);
+	    _this.signin = _this.signin.bind(_this);
+	    return _this;
+	  }
+	
+	  _createClass(SingInNavItem, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      var _this2 = this;
+	
+	      window.gapi.load('auth2', function () {
+	        if (!window.gapi.auth2.getAuthInstance()) {
+	          if (!window.config || !window.config.googleClientId) {
+	            _this2.props.showError('Missing Google Client ID or config file /static/config.js');
+	          } else {
+	            window.gapi.auth2.init({ client_id: window.config.googleClientId }).then(function () {
+	              _this2.setState({ disabled: false });
+	            });
+	          }
+	        }
+	      });
+	    }
+	  }, {
+	    key: 'signin',
+	    value: function signin() {
+	      var _this3 = this;
+	
+	      this.hideModal();
+	      var auth2 = window.gapi.auth2.getAuthInstance();
+	      auth2.signIn().then(function (googelUser) {
+	        fetch('/signin', {
+	          method: 'POST',
+	          headers: { 'Content-Type': 'application/json' },
+	          body: JSON.stringify({ id_token: googelUser.getAuthResponse().id_token })
+	        }).then(function (response) {
+	          if (response.ok) {
+	            responce.json().then(function (user) {
+	              _this3.props.onSignin(user.name);
+	            });
+	          } else {
+	            response.json().then(function (error) {
+	              _this3.props.showError('App loging failed: ' + error);
+	            });
+	          }
+	        }).catch(function (err) {
+	          _this3.props.showError('Error posting loging to app: ' + err);
+	        });
+	      }, function (error) {
+	        _this3.props.showError('Error authenticating with Google: ' + error);
+	      });
+	    }
+	  }, {
+	    key: 'signout',
+	    value: function signout() {
+	      var _this4 = this;
+	
+	      var auth2 = window.gapi.auth2.getAuthInstance();
+	      fetch('/signout', {
+	        method: 'POST',
+	        headers: { 'Content-Type': 'application/json' }
+	      }).then(function (response) {
+	        if (response.ok) {
+	          auth2.singnOut().then(function () {
+	            _this4.props.showSuccess('Successfully signed out.');
+	            _this4.props.onSignout();
+	          });
+	        }
+	      });
+	    }
+	  }, {
+	    key: 'showModal',
+	    value: function showModal() {
+	      if (this.state.disabled) {
+	        this.props.showError('Missing Google Client ID or config file /static.config.js');
+	      } else {
+	        this.setState({ showing: true });
+	      }
+	    }
+	  }, {
+	    key: 'hideModal',
+	    value: function hideModal() {
+	      this.setState({ showing: false });
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      if (this.props.user.signedIn) {
+	        return _react2.default.createElement(
+	          _reactBootstrap.NavDropdown,
+	          { title: this.props.user.name, id: 'user-dropdown' },
+	          _react2.default.createElement(
+	            _reactBootstrap.MenuItem,
+	            { onClick: this.signout },
+	            'Sign out'
+	          )
+	        );
+	      }
+	      return _react2.default.createElement(
+	        _reactBootstrap.NavItem,
+	        { onClick: this.showModal },
+	        'Sign in',
+	        _react2.default.createElement(
+	          _reactBootstrap.Modal,
+	          { keyboard: true, show: this.state.showing, onHide: this.hideModal, bsSize: 'sm' },
+	          _react2.default.createElement(
+	            _reactBootstrap.Modal.Header,
+	            { closeButton: true },
+	            _react2.default.createElement(
+	              _reactBootstrap.Modal.Title,
+	              null,
+	              'Sign in'
+	            )
+	          ),
+	          _react2.default.createElement(
+	            _reactBootstrap.Modal.Body,
+	            null,
+	            _react2.default.createElement(
+	              _reactBootstrap.Button,
+	              { block: true, disabled: this.state.disabled, onClick: this.signin },
+	              _react2.default.createElement('img', { src: '/btn_google_signin_dark_normal_web.png', alt: 'Signin' })
+	            )
+	          ),
+	          _react2.default.createElement(
+	            _reactBootstrap.Modal.Footer,
+	            null,
+	            _react2.default.createElement(
+	              _reactBootstrap.Button,
+	              { bsStyle: 'link', onClick: this.hideModal },
+	              'Cansel'
+	            )
+	          )
+	        )
+	      );
+	    }
+	  }]);
+	
+	  return SingInNavItem;
+	}(_react2.default.Component);
+	
+	exports.default = SingInNavItem;
+	
+	SingInNavItem.propTypes = {
+	  user: _propTypes2.default.object,
+	  onSignin: _propTypes2.default.func.isRequired,
+	  onSignout: _propTypes2.default.func.isRequired,
+	  showError: _propTypes2.default.func.isRequired,
+	  showSuccess: _propTypes2.default.func.isRequired
+	};
+
+/***/ }),
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1101,7 +1729,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _Toast = __webpack_require__(24);
+	var _Toast = __webpack_require__(25);
 	
 	var _Toast2 = _interopRequireDefault(_Toast);
 	
@@ -1166,7 +1794,7 @@
 	}
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1252,7 +1880,7 @@
 	};
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1267,7 +1895,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	__webpack_require__(26);
+	__webpack_require__(27);
 	
 	var _propTypes = __webpack_require__(17);
 	
@@ -1277,11 +1905,11 @@
 	
 	var _reactBootstrap = __webpack_require__(19);
 	
-	var _IssueFilter = __webpack_require__(27);
+	var _IssueFilter = __webpack_require__(28);
 	
 	var _IssueFilter2 = _interopRequireDefault(_IssueFilter);
 	
-	var _withToast = __webpack_require__(23);
+	var _withToast = __webpack_require__(24);
 	
 	var _withToast2 = _interopRequireDefault(_withToast);
 	
@@ -1588,13 +2216,13 @@
 	exports.default = IssueListWithToast;
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ (function(module, exports) {
 
 	module.exports = require("isomorphic-fetch");
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1860,7 +2488,7 @@
 	};
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1883,15 +2511,15 @@
 	
 	var _propTypes2 = _interopRequireDefault(_propTypes);
 	
-	var _NumInput = __webpack_require__(29);
+	var _NumInput = __webpack_require__(30);
 	
 	var _NumInput2 = _interopRequireDefault(_NumInput);
 	
-	var _DateInput = __webpack_require__(30);
+	var _DateInput = __webpack_require__(31);
 	
 	var _DateInput2 = _interopRequireDefault(_DateInput);
 	
-	var _withToast = __webpack_require__(23);
+	var _withToast = __webpack_require__(24);
 	
 	var _withToast2 = _interopRequireDefault(_withToast);
 	
@@ -2276,7 +2904,7 @@
 	exports.default = IssueEditWithToast;
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2376,7 +3004,7 @@
 	};
 
 /***/ }),
-/* 30 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2508,7 +3136,7 @@
 	};
 
 /***/ }),
-/* 31 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2529,11 +3157,11 @@
 	
 	var _propTypes2 = _interopRequireDefault(_propTypes);
 	
-	var _IssueFilter = __webpack_require__(27);
+	var _IssueFilter = __webpack_require__(28);
 	
 	var _IssueFilter2 = _interopRequireDefault(_IssueFilter);
 	
-	var _withToast = __webpack_require__(23);
+	var _withToast = __webpack_require__(24);
 	
 	var _withToast2 = _interopRequireDefault(_withToast);
 	
@@ -2699,7 +3327,7 @@
 	exports.default = IssueReportWithToast;
 
 /***/ }),
-/* 32 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2762,7 +3390,7 @@
 	};
 
 /***/ }),
-/* 33 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(__resourceQuery) {/*
@@ -2793,7 +3421,7 @@
 						if(fromUpdate) console.log("[HMR] Update applied.");
 						return;
 					}
-					__webpack_require__(34)(updatedModules, updatedModules);
+					__webpack_require__(35)(updatedModules, updatedModules);
 					checkForUpdate(true);
 				});
 			}
@@ -2806,7 +3434,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, "?1000"))
 
 /***/ }),
-/* 34 */
+/* 35 */
 /***/ (function(module, exports) {
 
 	/*

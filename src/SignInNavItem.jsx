@@ -2,7 +2,7 @@ import React from 'react';
 import { NavItem, Modal, Button, NavDropdown, MenuItem } from 'react-bootstrap';
 import PropTypes from 'prop-types'
 
-export default class SignignNavItem extends React.Component {
+export default class SingInNavItem extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -103,7 +103,7 @@ export default class SignignNavItem extends React.Component {
     );
   }
 }
-SigninNavItem.propTypes = {
+SingInNavItem.propTypes = {
   user: PropTypes.object,
   onSignin: PropTypes.func.isRequired,
   onSignout: PropTypes.func.isRequired,

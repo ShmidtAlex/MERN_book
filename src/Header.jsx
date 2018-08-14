@@ -8,8 +8,9 @@ import Select from 'react-select';
 //this causes a very big trouble:
 //import './Header.css';
 
-import SignInNavItem from './SignInNavItem.jsx';
+
 import IssueAddNavItem from './IssueAddNavItem.jsx';
+import SignInNavItem from './SignInNavItem.jsx';
 import WithToast from './withToast.jsx';
 
 const Header = (props) => {
@@ -68,7 +69,7 @@ const Header = (props) => {
       <Nav pullRight>
         <IssueAddNavItem showError={props.showError}/> 
         <SignInNavItem 
-          user={props.user} onSingin={props.onSingin} onSignout={props.onSignout}
+          user={props.user} onSignin={props.onSignin} onSignout={props.onSignout}
           showError={props.showError} showSuccess={props.showSuccess}/>
       </Nav>
     </Col>
@@ -79,7 +80,7 @@ Header.propTypes = {
   showError: PropTypes.func.isRequired,
   showSuccess: PropTypes.func.isRequired,
   router: PropTypes.object,
-  onSingin: PropTypes.func.isRequired,
+  onSignin: PropTypes.func.isRequired,
   onSignout: PropTypes.func.isRequired,
   user: PropTypes.object,
 };

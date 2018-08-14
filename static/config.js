@@ -1,3 +1,3 @@
 window.config = {
-  googleClientId: 'YOUR_CLIENT_ID.apps.googleusercontent.com',
+  googleClientId: '409772726402-7vb10febhmdojueft5odb8qtpkqe9d26.apps.googleusercontent.com',
 }
