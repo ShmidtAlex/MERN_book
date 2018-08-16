@@ -29,11 +29,11 @@ export default class SingInNavItem extends React.Component {
   signin() {
     this.hideModal();
     const auth2 = window.gapi.auth2.getAuthInstance();
-    auth2.signIn().then(googelUser => {
+    auth2.signIn().then(googleUser => {
       fetch('/signin', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id_token: googelUser.getAuthResponse().id_token }),
+        body: JSON.stringify({ id_token: googleUser.getAuthResponse().id_token }),
       }).then(response => {
         if (response.ok) {
           responce.json().then(user => {
@@ -92,7 +92,7 @@ export default class SingInNavItem extends React.Component {
           </Modal.Header>
           <Modal.Body>
             <Button block disabled={this.state.disabled} onClick={this.signin}>
-              <img src="/btn_google_signin_dark_normal_web.png" alt="Signin"/>
+              <img src="/btn_google_signin_dark_normal_web.png" alt="Sign in" />
             </Button>
           </Modal.Body>
           <Modal.Footer>

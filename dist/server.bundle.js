@@ -27,7 +27,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "f57201fc8740bcd1bbca"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "d7728ea872f93e3e47c6"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -546,7 +546,7 @@
 /***/ (function(module, exports, __webpack_require__) {
 
 	__webpack_require__(1);
-	module.exports = __webpack_require__(34);
+	module.exports = __webpack_require__(35);
 
 
 /***/ }),
@@ -930,7 +930,7 @@
 	
 	var _Routes2 = _interopRequireDefault(_Routes);
 	
-	var _ContextWrapper = __webpack_require__(33);
+	var _ContextWrapper = __webpack_require__(34);
 	
 	var _ContextWrapper2 = _interopRequireDefault(_ContextWrapper);
 	
@@ -1026,15 +1026,15 @@
 	
 	var _App2 = _interopRequireDefault(_App);
 	
-	var _IssueList = __webpack_require__(26);
+	var _IssueList = __webpack_require__(27);
 	
 	var _IssueList2 = _interopRequireDefault(_IssueList);
 	
-	var _IssueEdit = __webpack_require__(29);
+	var _IssueEdit = __webpack_require__(30);
 	
 	var _IssueEdit2 = _interopRequireDefault(_IssueEdit);
 	
-	var _IssueReport = __webpack_require__(32);
+	var _IssueReport = __webpack_require__(33);
 	
 	var _IssueReport2 = _interopRequireDefault(_IssueReport);
 	
@@ -1207,7 +1207,7 @@
 	
 	var _SignInNavItem2 = _interopRequireDefault(_SignInNavItem);
 	
-	var _withToast = __webpack_require__(24);
+	var _withToast = __webpack_require__(25);
 	
 	var _withToast2 = _interopRequireDefault(_withToast);
 	
@@ -1589,11 +1589,11 @@
 	
 	      this.hideModal();
 	      var auth2 = window.gapi.auth2.getAuthInstance();
-	      auth2.signIn().then(function (googelUser) {
+	      auth2.signIn().then(function (googleUser) {
 	        fetch('/signin', {
 	          method: 'POST',
 	          headers: { 'Content-Type': 'application/json' },
-	          body: JSON.stringify({ id_token: googelUser.getAuthResponse().id_token })
+	          body: JSON.stringify({ id_token: googleUser.getAuthResponse().id_token })
 	        }).then(function (response) {
 	          if (response.ok) {
 	            responce.json().then(function (user) {
@@ -1679,7 +1679,7 @@
 	            _react2.default.createElement(
 	              _reactBootstrap.Button,
 	              { block: true, disabled: this.state.disabled, onClick: this.signin },
-	              _react2.default.createElement('img', { src: '/btn_google_signin_dark_normal_web.png', alt: 'Signin' })
+	              _react2.default.createElement('img', { src: '/btn_google_signin_dark_normal_web.png', alt: 'Sign in' })
 	            )
 	          ),
 	          _react2.default.createElement(
@@ -1710,7 +1710,8 @@
 	};
 
 /***/ }),
-/* 24 */
+/* 24 */,
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1729,7 +1730,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _Toast = __webpack_require__(25);
+	var _Toast = __webpack_require__(26);
 	
 	var _Toast2 = _interopRequireDefault(_Toast);
 	
@@ -1794,7 +1795,7 @@
 	}
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1880,7 +1881,7 @@
 	};
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1895,7 +1896,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	__webpack_require__(27);
+	__webpack_require__(28);
 	
 	var _propTypes = __webpack_require__(17);
 	
@@ -1905,11 +1906,11 @@
 	
 	var _reactBootstrap = __webpack_require__(19);
 	
-	var _IssueFilter = __webpack_require__(28);
+	var _IssueFilter = __webpack_require__(29);
 	
 	var _IssueFilter2 = _interopRequireDefault(_IssueFilter);
 	
-	var _withToast = __webpack_require__(24);
+	var _withToast = __webpack_require__(25);
 	
 	var _withToast2 = _interopRequireDefault(_withToast);
 	
@@ -2216,13 +2217,13 @@
 	exports.default = IssueListWithToast;
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ (function(module, exports) {
 
 	module.exports = require("isomorphic-fetch");
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2488,7 +2489,7 @@
 	};
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2511,15 +2512,15 @@
 	
 	var _propTypes2 = _interopRequireDefault(_propTypes);
 	
-	var _NumInput = __webpack_require__(30);
+	var _NumInput = __webpack_require__(31);
 	
 	var _NumInput2 = _interopRequireDefault(_NumInput);
 	
-	var _DateInput = __webpack_require__(31);
+	var _DateInput = __webpack_require__(32);
 	
 	var _DateInput2 = _interopRequireDefault(_DateInput);
 	
-	var _withToast = __webpack_require__(24);
+	var _withToast = __webpack_require__(25);
 	
 	var _withToast2 = _interopRequireDefault(_withToast);
 	
@@ -2904,7 +2905,7 @@
 	exports.default = IssueEditWithToast;
 
 /***/ }),
-/* 30 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -3004,7 +3005,7 @@
 	};
 
 /***/ }),
-/* 31 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -3136,7 +3137,7 @@
 	};
 
 /***/ }),
-/* 32 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -3157,11 +3158,11 @@
 	
 	var _propTypes2 = _interopRequireDefault(_propTypes);
 	
-	var _IssueFilter = __webpack_require__(28);
+	var _IssueFilter = __webpack_require__(29);
 	
 	var _IssueFilter2 = _interopRequireDefault(_IssueFilter);
 	
-	var _withToast = __webpack_require__(24);
+	var _withToast = __webpack_require__(25);
 	
 	var _withToast2 = _interopRequireDefault(_withToast);
 	
@@ -3327,7 +3328,7 @@
 	exports.default = IssueReportWithToast;
 
 /***/ }),
-/* 33 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -3390,7 +3391,7 @@
 	};
 
 /***/ }),
-/* 34 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(__resourceQuery) {/*
@@ -3421,7 +3422,7 @@
 						if(fromUpdate) console.log("[HMR] Update applied.");
 						return;
 					}
-					__webpack_require__(35)(updatedModules, updatedModules);
+					__webpack_require__(36)(updatedModules, updatedModules);
 					checkForUpdate(true);
 				});
 			}
@@ -3434,7 +3435,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, "?1000"))
 
 /***/ }),
-/* 35 */
+/* 36 */
 /***/ (function(module, exports) {
 
 	/*
