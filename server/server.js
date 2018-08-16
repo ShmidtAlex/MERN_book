@@ -5,7 +5,7 @@ import bodyParser from 'body-parser';
 import { ObjectId } from 'mongodb';
 import Issue from './issue.js';
 import renderedPageRouter from './renderedPageRouter.jsx';
-
+import session from 'express-session';
 //create express instance
 const app = express();
 //using middleware static, show that static files placed in 'static' folder
@@ -13,8 +13,22 @@ app.use(express.static('static'));
 //create and mount bodyParser middleware, which helps to parse .json file 
 //to simple object, at the application level
 app.use(bodyParser.json());
+app.use(session({ secret: 'h7e3f5s6', resave: false, saveUninitialized: true }));
 //create global variable for mongoDB connection
 let db;
+app.all('/api/*', (req, res, next) => {
+  if (req.method === 'DELETE' || requ.method === 'POST' || req.method === 'PUT') {
+    if (!req.session || !req.session.user) {
+      res.status(403).send({
+        message: 'You are not authorised to perform the operation',
+      });
+    } else {
+      next();
+    }
+  } else {
+    next();
+  }
+});
 
 //this API is designed for finding issues by filter
 //'/api' is a prefix, which shows that issues is an API, it's not path
@@ -188,6 +202,44 @@ app.delete('/api/issues/:id', (req, res) => {
     res.status(500).json({ message: `Internal server error: ${error}`});
   });
 });
+
+
+app.get('/api/users/me', (req, res) => {
+  if (req.session && req.session.user) {
+    res.json(req.session.user);
+  } else {
+    res.json({ signedIn: false, name: '' });
+  }
+});
+app.post('/signin', (req, res) => {
+  if (!req.body.id_token) {
+    res.status(400).send({ code: 400, message: 'Missing Token' });
+    return
+  }
+  fetch(`https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=${req.body.id_token} `)
+  .then(response => {
+    if(!response.ok) {
+      response.json().then(error => Promise.reject(error));
+    }
+    response.json().then(data => {
+      req.session.user = {
+        signedIn: true, name: data.given_name,
+      };
+      res.json(req.session.user);
+    });
+  })
+  .catch(error => {
+    console.log(error);
+    res.status(500).json({ message: `Internal Server Error: ${error}` });
+  });
+});
+app.post('/signout', (req, res) => {
+  if (req.session) {
+    req.session.destroy();
+    res.json({ status: 'ok' });
+  }
+})
+
 app.use('/', renderedPageRouter);
 //MongoClient is an object provided by mongodb module, allows us act as a client
 //'connect' method connecting the database from Node.js

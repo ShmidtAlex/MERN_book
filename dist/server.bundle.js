@@ -27,7 +27,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "d7728ea872f93e3e47c6"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "06518cd581aeaad80391"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -649,19 +649,37 @@
 	
 	var _renderedPageRouter2 = _interopRequireDefault(_renderedPageRouter);
 	
+	var _expressSession = __webpack_require__(37);
+	
+	var _expressSession2 = _interopRequireDefault(_expressSession);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	//create express instance
-	var app = (0, _express2.default)();
-	//using middleware static, show that static files placed in 'static' folder
 	
 	//import mongodb driver features
+	var app = (0, _express2.default)();
+	//using middleware static, show that static files placed in 'static' folder
 	app.use(_express2.default.static('static'));
 	//create and mount bodyParser middleware, which helps to parse .json file 
 	//to simple object, at the application level
 	app.use(_bodyParser2.default.json());
+	app.use((0, _expressSession2.default)({ secret: 'h7e3f5s6', resave: false, saveUninitialized: true }));
 	//create global variable for mongoDB connection
 	var db = void 0;
+	app.all('/api/*', function (req, res, next) {
+	  if (req.method === 'DELETE' || requ.method === 'POST' || req.method === 'PUT') {
+	    if (!req.session || !req.session.user) {
+	      res.status(403).send({
+	        message: 'You are not authorised to perform the operation'
+	      });
+	    } else {
+	      next();
+	    }
+	  } else {
+	    next();
+	  }
+	});
 	
 	//this API is designed for finding issues by filter
 	//'/api' is a prefix, which shows that issues is an API, it's not path
@@ -817,6 +835,43 @@
 	    res.status(500).json({ message: 'Internal server error: ' + error });
 	  });
 	});
+	
+	app.get('/api/users/me', function (req, res) {
+	  if (req.session && req.session.user) {
+	    res.json(req.session.user);
+	  } else {
+	    res.json({ signedIn: false, name: '' });
+	  }
+	});
+	app.post('/signin', function (req, res) {
+	  if (!req.body.id_token) {
+	    res.status(400).send({ code: 400, message: 'Missing Token' });
+	    return;
+	  }
+	  fetch('https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=' + req.body.id_token + ' ').then(function (response) {
+	    if (!response.ok) {
+	      response.json().then(function (error) {
+	        return Promise.reject(error);
+	      });
+	    }
+	    response.json().then(function (data) {
+	      req.session.user = {
+	        signedIn: true, name: data.given_name
+	      };
+	      res.json(req.session.user);
+	    });
+	  }).catch(function (error) {
+	    console.log(error);
+	    res.status(500).json({ message: 'Internal Server Error: ' + error });
+	  });
+	});
+	app.post('/signout', function (req, res) {
+	  if (req.session) {
+	    req.session.destroy();
+	    res.json({ status: 'ok' });
+	  }
+	});
+	
 	app.use('/', _renderedPageRouter2.default);
 	//MongoClient is an object provided by mongodb module, allows us act as a client
 	//'connect' method connecting the database from Node.js
@@ -3464,6 +3519,12 @@
 		}
 	};
 
+
+/***/ }),
+/* 37 */
+/***/ (function(module, exports) {
+
+	module.exports = require("express-session");
 
 /***/ })
 /******/ ])));
