@@ -36,7 +36,7 @@ export default class SingInNavItem extends React.Component {
         body: JSON.stringify({ id_token: googleUser.getAuthResponse().id_token }),
       }).then(response => {
         if (response.ok) {
-          responce.json().then(user => {
+          response.json().then(user => {
             this.props.onSignin(user.name);
           });
         } else {
@@ -60,6 +60,7 @@ export default class SingInNavItem extends React.Component {
     }).then(response => {
       if (response.ok) {
        auth2.singnOut().then(() => {
+
          this.props.showSuccess('Successfully signed out.');
          this.props.onSignout();
        });

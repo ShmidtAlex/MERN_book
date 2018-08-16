@@ -1,11 +1,11 @@
 
 import express from "express";
+import session from 'express-session';
 import bodyParser from 'body-parser';
 //import mongodb driver features
 import { ObjectId } from 'mongodb';
 import Issue from './issue.js';
 import renderedPageRouter from './renderedPageRouter.jsx';
-import session from 'express-session';
 //create express instance
 const app = express();
 //using middleware static, show that static files placed in 'static' folder
@@ -13,11 +13,14 @@ app.use(express.static('static'));
 //create and mount bodyParser middleware, which helps to parse .json file 
 //to simple object, at the application level
 app.use(bodyParser.json());
-app.use(session({ secret: 'h7e3f5s6', resave: false, saveUninitialized: true }));
+
 //create global variable for mongoDB connection
 let db;
+
+app.use(session({ secret: 'h7e3f5s6', resave: false, saveUninitialized: true }));
+
 app.all('/api/*', (req, res, next) => {
-  if (req.method === 'DELETE' || requ.method === 'POST' || req.method === 'PUT') {
+  if (req.method === 'DELETE' || req.method === 'POST' || req.method === 'PUT') {
     if (!req.session || !req.session.user) {
       res.status(403).send({
         message: 'You are not authorised to perform the operation',
@@ -214,7 +217,7 @@ app.get('/api/users/me', (req, res) => {
 app.post('/signin', (req, res) => {
   if (!req.body.id_token) {
     res.status(400).send({ code: 400, message: 'Missing Token' });
-    return
+    return;
   }
   fetch(`https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=${req.body.id_token} `)
   .then(response => {
