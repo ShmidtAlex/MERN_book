@@ -27,7 +27,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "ef37dd99b6253b936915"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "488576356b0abcf4543b"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -2037,7 +2037,7 @@
 	      null,
 	      props.issue.title
 	    ),
-	    _react2.default.createElement(
+	    props.deleteIssue ? _react2.default.createElement(
 	      'td',
 	      null,
 	      _react2.default.createElement(
@@ -2045,12 +2045,12 @@
 	        { bsSize: 'xsmall', onClick: onDeleteClick },
 	        _react2.default.createElement(_reactBootstrap.Glyphicon, { glyph: 'trash' })
 	      )
-	    )
+	    ) : null
 	  );
 	};
 	IssueRow.propTypes = {
 	  issue: _propTypes2.default.object.isRequired, // eslint-disable-line react/forbid-prop-types
-	  deleteIssue: _propTypes2.default.func.isRequired
+	  deleteIssue: _propTypes2.default.func
 	};
 	function IssueTable(props) {
 	  //here props mean the array of issues
@@ -2101,11 +2101,11 @@
 	          null,
 	          'Title'
 	        ),
-	        _react2.default.createElement(
+	        props.deleteIssue ? _react2.default.createElement(
 	          'th',
 	          null,
 	          'Action'
-	        )
+	        ) : null
 	      )
 	    ),
 	    _react2.default.createElement(
@@ -2117,7 +2117,7 @@
 	}
 	IssueTable.propTypes = {
 	  issues: _propTypes2.default.array.isRequired, // eslint-disable-line react/forbid-prop-types
-	  deleteIssue: _propTypes2.default.func.isRequired
+	  deleteIssue: _propTypes2.default.func
 	};
 	var PAGE_SIZE = 10;
 	
@@ -2257,7 +2257,7 @@
 	        ),
 	        _react2.default.createElement(_reactBootstrap.Pagination, { items: Math.ceil(this.state.totalCount / PAGE_SIZE), activePage: parseInt(this.props.location.query._page || '1', 10), onSelect: this.selectPage, maxButtons: 7, next: true, prev: true, boundaryLinks: true }),
 	        _react2.default.createElement('hr', null),
-	        _react2.default.createElement(IssueTable, { issues: this.state.issues, deleteIssue: this.deleteIssue }),
+	        _react2.default.createElement(IssueTable, { issues: this.state.issues, deleteIssue: this.props.user.signedIn ? this.deleteIssue : null }),
 	        _react2.default.createElement('hr', null)
 	      );
 	    }
@@ -2269,7 +2269,8 @@
 	IssueList.propTypes = {
 	  location: _propTypes2.default.object.isRequired,
 	  router: _propTypes2.default.object,
-	  showError: _propTypes2.default.func.isRequired
+	  showError: _propTypes2.default.func.isRequired,
+	  user: _propTypes2.default.object.isRequired
 	};
 	IssueList.contextTypes = {
 	  initialState: _propTypes2.default.object

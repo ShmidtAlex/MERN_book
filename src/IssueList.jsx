@@ -29,17 +29,19 @@ const IssueRow = (props) => {
       <td>{props.issue.effort}</td>
       <td>{props.issue.completionDate ? props.issue.completionDate.toDateString() : ''}</td>
       <td>{props.issue.title}</td>
-      <td>
-        <Button bsSize="xsmall" onClick={onDeleteClick}>
-          <Glyphicon glyph="trash" />
-        </Button>
-      </td>
+      {props.deleteIssue ? (
+        <td>
+          <Button bsSize="xsmall" onClick={onDeleteClick}>
+            <Glyphicon glyph="trash" />
+          </Button>
+        </td>
+      ) : null}
     </tr>
   );
 };
 IssueRow.propTypes = {
   issue: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
-  deleteIssue: PropTypes.func.isRequired,
+  deleteIssue: PropTypes.func,
 };
 function IssueTable(props) {
   //here props mean the array of issues
@@ -55,7 +57,7 @@ function IssueTable(props) {
           <th>Effort</th>
           <th>Completion Date</th>
           <th>Title</th>
-          <th>Action</th>
+          {props.deleteIssue ? <th>Action</th> : null}
         </tr>
       </thead>
       <tbody>{issueRows}</tbody>
@@ -64,9 +66,10 @@ function IssueTable(props) {
 }
 IssueTable.propTypes = {
   issues: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
-  deleteIssue: PropTypes.func.isRequired,
+  deleteIssue: PropTypes.func,
 };
 const PAGE_SIZE = 10;
+
 class IssueList extends React.Component {
   static dataFetcher({ urlBase, location }) {
     const query = Object.assign({}, location.query);
@@ -162,7 +165,7 @@ class IssueList extends React.Component {
         </Panel>
         <Pagination items={Math.ceil(this.state.totalCount / PAGE_SIZE) } activePage={parseInt(this.props.location.query._page || '1', 10)} onSelect={this.selectPage} maxButtons={7} next prev boundaryLinks />
         <hr />
-        <IssueTable issues={this.state.issues} deleteIssue={this.deleteIssue} />
+        <IssueTable issues={this.state.issues} deleteIssue={this.props.user.signedIn ? this.deleteIssue : null} />
         <hr />
       </div>
     );
@@ -172,6 +175,7 @@ IssueList.propTypes = {
   location: PropTypes.object.isRequired,
   router: PropTypes.object,
   showError: PropTypes.func.isRequired,
+  user: PropTypes.object.isRequired,
 }
 IssueList.contextTypes = {
   initialState: PropTypes.object,
