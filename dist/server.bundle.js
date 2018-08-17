@@ -27,7 +27,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "244b51b90cffab34ebbf"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "ef37dd99b6253b936915"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -1368,7 +1368,7 @@
 	      _react2.default.createElement(
 	        _reactBootstrap.Nav,
 	        { pullRight: true },
-	        _react2.default.createElement(_IssueAddNavItem2.default, { showError: props.showError }),
+	        props.user.signedIn ? _react2.default.createElement(_IssueAddNavItem2.default, { showError: props.showError }) : null,
 	        _react2.default.createElement(_SignInNavItem2.default, {
 	          user: props.user, onSignin: props.onSignin, onSignout: props.onSignout,
 	          showError: props.showError, showSuccess: props.showSuccess })
