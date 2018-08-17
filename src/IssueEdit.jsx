@@ -81,7 +81,7 @@ class IssueEdit extends React.Component {
     if (Object.keys(this.state.invalidFields).length !== 0) {
       return;
     }
-      fetch(`/api/issues/${this.props.params.id}`, {
+    fetch(`/api/issues/${this.props.params.id}`, {
       method: 'PUT',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(this.state.issue),
@@ -198,7 +198,7 @@ class IssueEdit extends React.Component {
         <FormGroup>
           <Col smOffset={3} sm={6}> 
             <ButtonToolbar>
-              <Button bsStyle="primary" type="submit">Submit</Button>
+              <Button bsStyle="primary" type="submit" disabled={!this.props.user.signedIn}>Submit</Button>
               <LinkContainer to="/issues"> 
                 <Button bsStyle="link" type="submit">Back</Button>
               </LinkContainer>
@@ -222,6 +222,7 @@ IssueEdit.propTypes = {
   params: PropTypes.object.isRequired,
   showSuccess: PropTypes.func.isRequired,
   showError: PropTypes.func.isRequired,
+  user: PropTypes.object.isRequired,
 };
 
 IssueEdit.contextTypes = {

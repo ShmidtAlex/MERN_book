@@ -27,7 +27,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "d0656a79b2ec65681087"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "244b51b90cffab34ebbf"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -2923,7 +2923,7 @@
 	                null,
 	                _react2.default.createElement(
 	                  _reactBootstrap.Button,
-	                  { bsStyle: 'primary', type: 'submit' },
+	                  { bsStyle: 'primary', type: 'submit', disabled: !this.props.user.signedIn },
 	                  'Submit'
 	                ),
 	                _react2.default.createElement(
@@ -2958,7 +2958,8 @@
 	IssueEdit.propTypes = {
 	  params: _propTypes2.default.object.isRequired,
 	  showSuccess: _propTypes2.default.func.isRequired,
-	  showError: _propTypes2.default.func.isRequired
+	  showError: _propTypes2.default.func.isRequired,
+	  user: _propTypes2.default.object.isRequired
 	};
 	
 	IssueEdit.contextTypes = {
