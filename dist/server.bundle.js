@@ -27,7 +27,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "049f5a1b87e09bcde50d"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "c0f2942ca10c59a36c95"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -1165,13 +1165,34 @@
 	var App = function (_React$Component) {
 	  _inherits(App, _React$Component);
 	
-	  function App(props) {
+	  _createClass(App, null, [{
+	    key: 'dataFetcher',
+	    value: function dataFetcher(_ref) {
+	      var urlBase = _ref.urlBase,
+	          cookie = _ref.cookie;
+	
+	      var headers = cookie ? { headers: { Cookie: cookie } } : null;
+	      return fetch((urlBase || '') + '/api/users/me', headers).then(function (response) {
+	        if (!response.ok) {
+	          return response.json().then(function (error) {
+	            return Promise.reject(error);
+	          });
+	        }
+	        return response.json().then(function (data) {
+	          return { App: data };
+	        });
+	      });
+	    }
+	  }]);
+	
+	  function App(props, context) {
 	    _classCallCheck(this, App);
 	
-	    var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
+	    var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props, context));
 	
+	    var user = context.initialState.App ? context.initialState.App : {};
 	    _this.state = {
-	      user: { signedIn: false, name: '' }
+	      user: user
 	    };
 	    _this.onSignin = _this.onSignin.bind(_this);
 	    _this.onSignout = _this.onSignout.bind(_this);
@@ -1179,6 +1200,16 @@
 	  }
 	
 	  _createClass(App, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      var _this2 = this;
+	
+	      App.dataFetcher({}).then(function (data) {
+	        var user = data.App;
+	        _this2.setState({ user: user });
+	      });
+	    }
+	  }, {
 	    key: 'onSignin',
 	    value: function onSignin(name) {
 	      this.setState({ user: { signedIn: true, name: name } });
@@ -1191,6 +1222,11 @@
 	  }, {
 	    key: 'render',
 	    value: function render() {
+	      var _this3 = this;
+	
+	      var childrenWithUser = _react2.default.Children.map(this.props.children, function (child) {
+	        return _react2.default.cloneElement(child, { user: _this3.state.user });
+	      });
 	      return _react2.default.createElement(
 	        'div',
 	        null,
@@ -1198,7 +1234,7 @@
 	        _react2.default.createElement(
 	          'div',
 	          { className: 'container-fluid' },
-	          this.props.children,
+	          childrenWithUser,
 	          _react2.default.createElement('hr', null),
 	          _react2.default.createElement(
 	            'h5',
@@ -1225,6 +1261,9 @@
 	
 	exports.default = App;
 	
+	App.contextTypes = {
+	  initialState: _propTypes2.default.object
+	};
 	
 	App.propTypes = {
 	  children: _propTypes2.default.object.isRequired
