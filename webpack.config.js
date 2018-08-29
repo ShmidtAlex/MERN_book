@@ -4,35 +4,36 @@
 const path = require('path');
 
 module.exports = {
-  mode: 'development',
-  entry: {
-    app: './src/App.jsx',
-    vendor: ['react', 'react-dom', 'whatwg-fetch', 'react-router', 'react-bootstrap', 'react-router-bootstrap'],
-  },
-  output: {
-    path: path.resolve(__dirname, './static'),
-    filename: '[name].bundle.js',
-  },
-  module: {
-    rules: [
-      {
-        test: /\.jsx$/,
-        loader: 'babel-loader',
-        query: {
-          presets: ['react', 'es2015'],
-        },
-      },
-    ],
-  },
-  devServer: {
-    port: 8000,
-    contentBase: 'static',
-    proxy: {
-      '/api/*': {
-        target: 'http://localhost:3000',
-      },
-    },
-    historyApiFallback: true,
-  },
-  devtool: 'source-map',
+
+	mode: 'development',
+	entry: {
+		app: ["./src/App.jsx"],
+		vendor: ['react', 'react-dom', 'whatwg-fetch']
+	},
+	output: {
+		path: path.resolve(__dirname, "./static"),
+		filename: "[name].bundle.js"
+	},
+	
+	module: {
+		rules: [
+			{
+				test:/\.jsx$/,
+				loader: "babel-loader",
+				query: {
+					presets: ['react', 'es2015']
+				}
+			},
+		]
+	},
+	devServer: {
+		port: 8000,
+		contentBase: 'static',
+		proxy: {
+			'/api/*':{
+				target: 'http://localhost:3000'
+			}
+		}
+	}
 };
+

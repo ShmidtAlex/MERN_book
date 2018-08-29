@@ -15,8 +15,6 @@ app.use(express.static('static'));
 //create and mount bodyParser middleware, which helps to parse .json file 
 //to simple object, at the application level
 app.use(bodyParser.json());
-//create global variable for mongoDB connection
-let db;
 
 //this API is designed for finding issues by filter
 //'/api' is a prefix, which shows that issues is an API, it's not path
