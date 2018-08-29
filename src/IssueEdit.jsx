@@ -4,28 +4,39 @@ import {Form, Col, FormGroup, FormControl, ControlLabel, ButtonToolbar, Button, 
 import PropTypes from 'prop-types';
 import NumInput from './NumInput.jsx';
 import DateInput from './DateInput.jsx';
-import Toast from './Toast.jsx';
+import WithToast from './withToast.jsx';
 
-export default class IssueEdit extends React.Component {
-  constructor() {
-    super();
+class IssueEdit extends React.Component {
+  static dataFetcher({ params, urlBase }) {
+    return fetch(`${urlBase || ''}/api/issues/${params.id}`).then(response => {
+      if(!response.ok) return response.json().then(error => Promise.reject(error));
+      return response.json().then(data => ({ IssueEdit: data}));
+    });
+  }
+  constructor(props, context) {
+    super(props, context);
+    //props = history, location, params, route, routeParams
+    //context = initialState of IssueEdit
+    let issue;
+    if (context.initialState.IssueEdit) {
+      issue = context.initialState.IssueEdit;
+      issue.created = new Date(issue.created);
+      issue.completionDate = issue.completionDate != null ? new Date(issue.completionDate) : null;
+    } else {
+      issue = {
+        _id: '', title: '', status: '', owner: '', effort: null, completionDate: null,
+        created: null,
+      };
+    }
     this.state = {
-      issue: {
-        //these are the properties of issue object and names for each inputs both
-        _id:'', title: '', status: '', owner: '', effort: null, 
-        completionDate: null, created: null,
-      },
+      issue,
       invalidFields: {}, showingValidation: false,
-      toastVisible: false, toastMessage: '', toastType: 'success',
     };
     this.onChange = this.onChange.bind(this);
     this.onValidityChange = this.onValidityChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.dismissValidation = this.dismissValidation.bind(this);
     this.showValidation = this.showValidation.bind(this);
-    this.showSuccess = this.showSuccess.bind(this);
-    this.showError = this.showError.bind(this);
-    this.dismissToast = this.dismissToast.bind(this);
   }
   componentDidMount() {
     this.loadData();
@@ -70,7 +81,7 @@ export default class IssueEdit extends React.Component {
     if (Object.keys(this.state.invalidFields).length !== 0) {
       return;
     }
-      fetch(`/api/issues/${this.props.params.id}`, {
+    fetch(`/api/issues/${this.props.params.id}`, {
       method: 'PUT',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(this.state.issue),
@@ -82,35 +93,26 @@ export default class IssueEdit extends React.Component {
             updatedIssue.completionDate = new Date(updatedIssue.completionDate);
           }
           this.setState({ issue: updatedIssue });
-          this.showSuccess('Updated issue successfully.');
+          this.props.showSuccess('Updated issue successfully.');
         });
       } else {
         response.json().then(error => {
-          this.showError(`Failed to update issue: ${error.message}`);
+          this.props.showError(`Failed to update issue: ${error.message}`);
         });
       }
     }).catch(err => {
-      this.showError(`Error in sending data to server: ${err.message}`);
+      this.props.showError(`Error in sending data to server: ${err.message}`);
     });
   }
  
   loadData() {
     //this.props.params.id means the issue id
-    fetch(`/api/issues/${this.props.params.id}`).then(response => {
-      if(response.ok) {
-        response.json().then(issue => {
-          //convert date to string
-          issue.created = new Date(issue.created);
-          //if issue.comletionDate NOT equal null, convert given new Date object to string, else - leave it empty
-          issue.completionDate = issue.completionDate != null ? new Date(issue.completionDate) : null;
-          //change this.state accordingly converted data
-          this.setState({ issue });
-        });
-      } else {
-        response.json().then(error => {
-          this.showError(`Failed to fetch issue: ${error.message}`);
-        });
-      }
+    IssueEdit.dataFetcher({ params: this.props.params })
+    .then(data => {
+      const issue = data.IssueEdit;
+      issue.created = new Date(issue.created);
+      issue.completionDate = issue.completionDate != null ? new Date(issue.completionDate) : null;
+      this.setState({ issue });
     }).catch(err => {
       this.showError(`Error in fetching data from server: ${err.message}`);
     });
@@ -121,15 +123,7 @@ export default class IssueEdit extends React.Component {
   dismissValidation() {
     this.setState({ showingValidation: false });
   }
-  showSuccess(message) {
-    this.setState({ toastVisible: true, toastMessage: message, toastType: 'success' });
-  }
-  showError(message) {
-    this.setState({ toastVisible: true, toastMessage: message, toastType: 'danger'});
-  }
-  dismissToast() {
-    this.setState({ toastVisible: false });
-  }
+  
   render() {
     const issue = this.state.issue;
     let validationMessage  = null; 
@@ -204,7 +198,7 @@ export default class IssueEdit extends React.Component {
         <FormGroup>
           <Col smOffset={3} sm={6}> 
             <ButtonToolbar>
-              <Button bsStyle="primary" type="submit">Submit</Button>
+              <Button bsStyle="primary" type="submit" disabled={!this.props.user.signedIn}>Submit</Button>
               <LinkContainer to="/issues"> 
                 <Button bsStyle="link" type="submit">Back</Button>
               </LinkContainer>
@@ -215,9 +209,7 @@ export default class IssueEdit extends React.Component {
           <Col smOffset={3} sm={6}>{validationMessage}</Col>
         </FormGroup>
         </Form>
-        <Toast showing={this.state.toastVisible} message={this.state.toastMessage} onDismiss={this.dismissToast}
-        bsStyle={this.state.toastType}/>
-        {/*every input, including 'select', has 'name' property for differetiate one from one for onChange
+        {/*every input, including 'select', has 'name' property for differentiate one from one for onChange
           function, which is common method for all of the inputs*/}
         {/*'this' helps us identify a target of event in onChange() function*/}
       {/*LinkContainer allows styling button as a link and send user to issues page*/}
@@ -228,5 +220,14 @@ export default class IssueEdit extends React.Component {
 }
 IssueEdit.propTypes = {
   params: PropTypes.object.isRequired,
+  showSuccess: PropTypes.func.isRequired,
+  showError: PropTypes.func.isRequired,
+  user: PropTypes.object.isRequired,
 };
 
+IssueEdit.contextTypes = {
+  initialState: PropTypes.object,
+}
+const IssueEditWithToast = WithToast(IssueEdit);
+IssueEditWithToast.dataFetcher = IssueEdit.dataFetcher;
+export default IssueEditWithToast;

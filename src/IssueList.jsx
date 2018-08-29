@@ -1,14 +1,18 @@
 
 import React from 'react';
-import 'whatwg-fetch';
+import 'isomorphic-fetch';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
-import { Button, Glyphicon, Table, Panel } from 'react-bootstrap';
+import { Button, Glyphicon, Table, Panel, Pagination } from 'react-bootstrap';
+
 import IssueFilter from './IssueFilter.jsx';
-import Toast from './Toast.jsx';
-import IssueAddNavItem from './IssueAddNavItem.jsx';
+import WithToast from './withToast.jsx';
+//import IssueAddNavItem from './IssueAddNavItem.jsx';
+/*temporary constant for constrains number of issues on one page
+in future it'll be a variable, setted by user */
 
 const IssueRow = (props) => {
+  //console.log(props);
   function onDeleteClick() {
     props.deleteIssue(props.issue._id);
   }
@@ -25,19 +29,22 @@ const IssueRow = (props) => {
       <td>{props.issue.effort}</td>
       <td>{props.issue.completionDate ? props.issue.completionDate.toDateString() : ''}</td>
       <td>{props.issue.title}</td>
-      <td>
-        <Button bsSize="xsmall" onClick={onDeleteClick}>
-          <Glyphicon glyph="trash" />
-        </Button>
-      </td>
+      {props.deleteIssue ? (
+        <td>
+          <Button bsSize="xsmall" onClick={onDeleteClick}>
+            <Glyphicon glyph="trash" />
+          </Button>
+        </td>
+      ) : null}
     </tr>
   );
 };
 IssueRow.propTypes = {
   issue: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
-  deleteIssue: PropTypes.func.isRequired,
+  deleteIssue: PropTypes.func,
 };
 function IssueTable(props) {
+  //here props mean the array of issues
   const issueRows = props.issues.map(issue => <IssueRow key={issue._id} issue={issue} deleteIssue={props.deleteIssue} />);
   return (
     <Table bordered condensed responsive hover>
@@ -50,7 +57,7 @@ function IssueTable(props) {
           <th>Effort</th>
           <th>Completion Date</th>
           <th>Title</th>
-          <th>Action</th>
+          {props.deleteIssue ? <th>Action</th> : null}
         </tr>
       </thead>
       <tbody>{issueRows}</tbody>
@@ -59,20 +66,43 @@ function IssueTable(props) {
 }
 IssueTable.propTypes = {
   issues: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
-  deleteIssue: PropTypes.func.isRequired,
+  deleteIssue: PropTypes.func,
 };
+const PAGE_SIZE = 10;
 
-export default class IssueList extends React.Component {
-  constructor() {
-    super();
+class IssueList extends React.Component {
+  static dataFetcher({ urlBase, location }) {
+    const query = Object.assign({}, location.query);
+    const pageStr = query._page;
+    if (pageStr) {
+      delete query._page;
+      query._offset = (parseInt(pageStr, 10) -1) * PAGE_SIZE;
+    }
+    query._limit = PAGE_SIZE;
+    const search = Object.keys(query).map(k => `${k}=${query[k]}`).join('&');
+    return fetch(`${urlBase || ''}/api/issues?${search}`).then(response => {
+      if(!response.ok) return response.json().then(error => Promise.reject(error));
+      return  response.json().then(data => ({ IssueList: data}));
+    });
+  }
+  constructor(props, context) {
+    //context = initialState of IssueList, props = location, history etc
+    super(props, context);
+    const data = context.initialState.IssueList ? context.initialState.IssueList : { metadata: {totalCount:0}, records: [] };
+    const issues = data.records;
+    issues.forEach(issue => {
+      issue.created = new Date(issue.created);
+      if (issue.completionDate) {
+        issue.completionDate = new Date(issue.completionDate);
+      }
+    });
     this.state = { 
-      issues: [],
-      toastVisible: false, toastMessage: '', toastType: 'success',
+      issues,
+      totalCount: data.metadata.totalCount,
     };
     this.setFilter = this.setFilter.bind(this);
     this.deleteIssue = this.deleteIssue.bind(this);
-    this.showError = this.showError.bind(this);
-    this.dismissToast = this.dismissToast.bind(this);
+    this.selectPage = this.selectPage.bind(this);
   }
   componentDidMount() {
     this.loadData();
@@ -84,39 +114,31 @@ export default class IssueList extends React.Component {
     //if comparing show no changes, return prevProps as it was
     if (oldQuery.status === newQuery.status &&
         oldQuery.effort_gte === newQuery.effort_gte &&
-        oldQuery.effort_lte === newQuery.effort_lte) {
+        oldQuery.effort_lte === newQuery.effort_lte &&
+        oldQuery._page === newQuery._page) {
       return;
     }
     this.loadData();
   }
-  showError(message) {
-    this.setState({ toastVisible: true, toastMessage: message, toastType: 'danger' });
-  }
-  dismissToast() {
-    this.setState({ toastVisible: false });
+  selectPage(eventKey) {
+    const query = Object.assign(this.props.location.query, {_page: eventKey });
+    this.props.router.push({ pathname: this.props.location.pathname, query });
   }
   loadData() {
     //this.props.location.search = ?effort_gte=some_number&status(filter value in unparsed URL)
-    fetch(`/api/issues${this.props.location.search}`).then(response => {
-      if (response.ok) {// ok = true and means, that response was successful
-        response.json().then((data) => {
-          //data is a variable, which get data from server, _metadata is an object of that data
-          console.log('Total count of records:', data._metadata.total_count);//total count is a property of metadata
-          data.records.forEach((issue) => {//records is a property which keeps issues = [{...}] inside it
-            issue.created = new Date(issue.created);//assign date of creation issue
-            if (issue.completionDate) { // if user appointed date to complete issue
-              issue.completionDate = new Date(issue.completionDate);//take this and put in object Date()
-            }
-          });
-          this.setState({ issues: data.records });//then change the state issues:[] to real issues data
-        });
-      } else {
-        response.json().then((error) => {
-          this.showError(`Failed to fetch issues:${error.message}`);
-        });
-      }
-    }).catch((err) => {
-      this.showError('Error in fetching data from server:', err);
+    IssueList.dataFetcher({ location: this.props.location })
+    .then(data => {
+      const issues = data.IssueList.records;
+      issues.forEach(issue => {
+        issue.created = new Date(issue.created);
+        if (issue.completionDate) {
+          issue.completionDate = new Date(issue.completionDate);
+        }
+      });
+      this.setState({ issues, totalCount: data.IssueList.metadata.totalCount });
+
+    }).catch(err => {
+      this.props.showError('Error in fetching data from server:', err);
     });
   }
   //this method calls from the IssueFilter component
@@ -129,7 +151,7 @@ export default class IssueList extends React.Component {
   deleteIssue(id) {
     fetch(`/api/issues/${id}`, {method: 'DELETE'}).then(response => {
       if (!response.ok) {
-        this.showError('Failed to delete issue');
+        this.props.showError('Failed to delete issue');
       } else {
         this.loadData();
       }
@@ -141,11 +163,10 @@ export default class IssueList extends React.Component {
         <Panel collapsible header="Filter">
           <IssueFilter setFilter={this.setFilter} initFilter={this.props.location.query} />
         </Panel>
+        <Pagination items={Math.ceil(this.state.totalCount / PAGE_SIZE) } activePage={parseInt(this.props.location.query._page || '1', 10)} onSelect={this.selectPage} maxButtons={7} next prev boundaryLinks />
         <hr />
-        <IssueTable issues={this.state.issues} deleteIssue={this.deleteIssue} />
+        <IssueTable issues={this.state.issues} deleteIssue={this.props.user.signedIn ? this.deleteIssue : null} />
         <hr />
-        <Toast showing={this.state.toastVisible} message={this.state.toastMessage} onDismiss={this.dismissToast} 
-        bsStyle={this.state.toastType}/>
       </div>
     );
   }
@@ -153,4 +174,14 @@ export default class IssueList extends React.Component {
 IssueList.propTypes = {
   location: PropTypes.object.isRequired,
   router: PropTypes.object,
+  showError: PropTypes.func.isRequired,
+  user: PropTypes.object.isRequired,
 }
+IssueList.contextTypes = {
+  initialState: PropTypes.object,
+}
+
+const IssueListWithToast = WithToast(IssueList);
+IssueListWithToast.dataFetcher = IssueList.dataFetcher;
+
+export default IssueListWithToast;

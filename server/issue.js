@@ -1,30 +1,33 @@
-
 const validIssueStatus = {
-	New: true,
-	Open: true,
-	Assigned: true,
-	Fixed: true,
-	Verified: true,
-	Closed: true
+  New: true,
+  Open: true,
+  Assigned: true,
+  Fixed: true,
+  Verified: true,
+  Closed: true,
 };
+
 const issueFieldType = {
-	status: "required",
-	owner: "required",
-	effort: "optional",
-	created: "required",
-	completionDate: "optional",
-	title: "required"
+  status: 'required',
+  owner: 'required',
+  effort: 'optional',
+  created: 'required',
+  completionDate: 'optional',
+  title: 'required',
 };
-//validateIssue has to be decoupled to two functions for eslint validation
-//'fucntion parameter reassignment is disallowed'
+
 function cleanupIssue(issue) {
   const cleanedUpIssue = {};
-    Object.keys(issue).forEach(field => {
-      if (issueFieldType[field]) {
-        cleanedUpIssue[field] = issue[field];
-      }
-    });
+  Object.keys(issue).forEach(field => {
+    if (issueFieldType[field]) cleanedUpIssue[field] = issue[field];
+  });
   return cleanedUpIssue;
+}
+
+function convertIssue(issue) {
+  if (issue.created) issue.created = new Date(issue.created);
+  if (issue.completionDate) issue.completionDate = new Date(issue.completionDate);
+  return cleanupIssue(issue);
 }
 
 function validateIssue(issue) {
@@ -34,20 +37,14 @@ function validateIssue(issue) {
       errors.push(`Missing mandatory field: ${field}`);
     }
   });
-  if (!validIssueStatus[issue.status]){
+
+  if (!validIssueStatus[issue.status]) {
     errors.push(`${issue.status} is not a valid status.`);
   }
+
   return (errors.length ? errors.join('; ') : null);
 }
-function convertIssue(issue) {
-  if (issue.created) {
-    issue.created = new Date(issue.created);
-  }
-  if (issue.completionDate) {
-    issue.completionDate = new Date(issue.completionDate);
-  }
-  return cleanupIssue(issue);
-}
+
 export default {
   validateIssue,
   cleanupIssue,

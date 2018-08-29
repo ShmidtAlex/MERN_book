@@ -1,13 +1,11 @@
-import SourceMapSupport from 'source-map-support';
-SourceMapSupport.install();
-import 'babel-polyfill';
 
 import express from "express";
+import session from 'express-session';
 import bodyParser from 'body-parser';
-import path from 'path';
 //import mongodb driver features
-import { MongoClient, ObjectId } from 'mongodb';
-import Issue from './issue.js'
+import { ObjectId } from 'mongodb';
+import Issue from './issue.js';
+import renderedPageRouter from './renderedPageRouter.jsx';
 //create express instance
 const app = express();
 //using middleware static, show that static files placed in 'static' folder
@@ -15,6 +13,21 @@ app.use(express.static('static'));
 //create and mount bodyParser middleware, which helps to parse .json file 
 //to simple object, at the application level
 app.use(bodyParser.json());
+app.use(session({ secret: 'h7e3f5s6', resave: false, saveUninitialized: true }));
+
+app.all('/api/*', (req, res, next) => {
+  if (req.method === 'DELETE' || req.method === 'POST' || req.method === 'PUT') {
+    if (!req.session || !req.session.user) {
+      res.status(403).send({
+        message: 'You are not authorised to perform the operation',
+      });
+    } else {
+      next();
+    }
+  } else {
+    next();
+  }
+});
 
 //this API is designed for finding issues by filter
 //'/api' is a prefix, which shows that issues is an API, it's not path
@@ -33,18 +46,54 @@ app.get('/api/issues', (req, res) => {
   if (req.query.effort_gte ) {
     filter.effort.$gte = parseInt(req.query.effort_gte, 10);
   }
+  if (req.query.search) {
+    filter.$text = { $search: req.query.search };
+  }
+  if (req.query._summary === undefined) {
+    const offset = req.query._offset ? parseInt(req.query._offset, 10) : 0;
+    let limit = req.query.limit ? parseInt(req.query._limit, 10) : 20;
+    if (limit > 50) {
+      limit = 50;
+    }
+    const cursor = db.collection('issues').find(filter).sort({ _id:1 })
+    .skip(offset)
+    .limit(limit);
+    let totalCount;
+    cursor.count(false).then(result => {
+      totalCount = result;
+      return cursor.toArray();
+    })
+    .then(issues => {
+      //returning document given by find(filter) method
+      res.json({ metadata: { totalCount }, records: issues });
+    })
+    .catch(error => {
+      console.log(error);
+      res.status(500).json({ message: `Internal Server error ${error}` });
+    });
+  } else {
+    db.collection('issues').aggregate([
+      {$match: filter},
+      {$group: {_id: {owner: '$owner', status: '$status'}, count: {$sum: 1}}},
+    ]).toArray()
+    .then(results => {
+      const stats = {};
+      results.forEach(result => {
+        if (!stats[result._id.owner]) {
+          stats[result._id.owner] = {};
+        }
+        stats[result._id.owner][result._id.status] = result.count;
+      });
+      res.json(stats);
+    })
+    .catch(error => {
+      console.log(error);
+      res.status(500).json({ message: `Internal server error:${error}`});
+    });
+  }
   //any collection in mongo DB has method 'collection', which allows us supply the name
   //of collection (issues in this case), to indicate exactly which collection from data base
-  db.collection('issues').find(filter).toArray()
-  .then(issues => {
-    //returning document given by find(filter) method 
-    const metadata = { total_count: issues.length };
-    res.json({ _metadata: metadata, records: issues });
-  })
-  .catch(error => {
-    console.log(error);
-    res.status(500).json({ message: `Internal Server error ${error}` });
-  });
+  
 });
 
 
@@ -152,20 +201,48 @@ app.delete('/api/issues/:id', (req, res) => {
     res.status(500).json({ message: `Internal server error: ${error}`});
   });
 });
-app.get('*', (req, res) => {
-  res.sendFile(path.resolve('static/index.html'));//sendFile(path) respons that exacly file corresponds to exaxtly path
+
+
+app.get('/api/users/me', (req, res) => {
+  if (req.session && req.session.user) {
+    res.json(req.session.user);
+  } else {
+    res.json({ signedIn: false, name: '' });
+  }
 });
+app.post('/signin', (req, res) => {
+  if (!req.body.id_token) {
+    res.status(400).send({ code: 400, message: 'Missing Token' });
+    return;
+  }
+  fetch(`https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=${req.body.id_token} `)
+  .then(response => {
+    if(!response.ok) {
+      response.json().then(error => Promise.reject(error));
+    }
+    response.json().then(data => {
+      req.session.user = {
+        signedIn: true, name: data.given_name,
+      };
+      res.json(req.session.user);
+    });
+  })
+  .catch(error => {
+    console.log(error);
+    res.status(500).json({ message: `Internal Server Error: ${error}` });
+  });
+});
+app.post('/signout', (req, res) => {
+  if (req.session) {
+    req.session.destroy();
+    res.json({ status: 'ok' });
+  }
+})
+
+app.use('/', renderedPageRouter);
 //MongoClient is an object provided by mongodb module, allows us act as a client
 //'connect' method connecting the database from Node.js
-MongoClient.connect('mongodb://localhost/IssueTracker').then(connection => {
-  //assign our connection with mongo database (called IssueTracker) to global varibale db
-	db = connection.db('IssueTracker');
-	app.listen(3000, () => {//start express server after getting connection
-		console.log("App started on port 3000");
-	});	
-}).catch(error => {
-	console.log('ERROR:', error);
-});
-//returning one and only one real page in our SPA for avoid situation, when router
-//can't find correct path /api/issues,(instead it find /issues) 
-//after hitting 'reload' button in browser/ it also affects webpack.config 'historyApiFallback'
+function setDb(newDb) {
+  db = newDb;
+}
+export { app, setDb };
